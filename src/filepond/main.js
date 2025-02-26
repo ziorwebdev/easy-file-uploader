@@ -49,12 +49,8 @@ function getFilePondConfiguration(configuration) {
                 onload: (response) => {
                     try {
                         const json = JSON.parse(response);
-                        if (json.success && json?.data?.url) {
-                            return json?.data?.url;
-                        } else {
-                            return "";
-                        }
-                    } catch (error) {
+                        return json.success ? json?.data?.url ?? "" : "";
+                    } catch {
                         return "";
                     }
                 },

@@ -2,7 +2,7 @@
 /*
 Plugin Name:  WP FilePond
 Plugin URI:   https://ziorweb.dev
-Description:  Adds a FilePond uploader field to Elementor Pro Forms.
+Description:  Adds a FilePond uploader field to Elementor Pro forms enabling seamless file uploads.
 Author:       ZiorWeb.Dev
 Author URI:   https://ziorweb.dev
 Version:      1.0.0
@@ -92,6 +92,8 @@ class Plugin {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
+		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'wp_filepond_add_settings_link' ) );
+
 	}
 
 	/**
@@ -128,6 +130,23 @@ class Plugin {
 	 * This function is executed when the plugin is deactivated.
 	 */
 	public function deactivate_plugin(): void {}
+
+	/**
+	 * Adds a "Settings" link on the plugins page.
+	 *
+	 * @param array $links The existing action links.
+	 * @return array Modified action links with the "Settings" link.
+	 */
+	public function wp_filepond_add_settings_link( array $links ): array {
+		// Define the settings link URL
+		$settings_url  = admin_url( 'options-general.php?page=wp-filepond' );
+		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'wp-filepond' ) . '</a>';
+
+		// Prepend the settings link to the existing links.
+		array_unshift( $links, $settings_link );
+
+		return $links;
+	}
 }
 
 /**
