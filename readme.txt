@@ -8,7 +8,7 @@ Stable tag: 1.0.0
 License: GPL-2.0-or-later  
 License URI: https://www.gnu.org/licenses/gpl-2.0.html  
 
-Adds a FilePond uploader field to Elementor Pro Forms for seamless file uploads.
+Adds a FilePond drag and drop uploader field to Elementor Pro Forms for seamless file uploads.
 
 == Description ==
 

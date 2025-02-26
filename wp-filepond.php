@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  WP FilePond
  * Plugin URI:   
- * Description:  Adds a FilePond uploader field to Elementor Pro forms enabling seamless file uploads.
+ * Description:  Adds a FilePond drag and drop uploader field to Elementor Pro Forms for seamless file uploads.
  * Author:       ZiorWeb.Dev
  * Author URI:   https://ziorweb.dev
  * Version:      1.0.0
