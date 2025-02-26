@@ -2,7 +2,7 @@ import createFilePondInstance from "./filepond/main.js";
 
 $(document).ready(function () {
     const filePondInstances = new Map();
-    const fileUploaderFields = $(".wp-filepond-upload");
+    const fileUploaderFields = $(".filepond-wp-integration-upload");
     const filePondIntegration = wpFilePondIntegration || {};
 
     filePondIntegration.allowImagePreview = wpFilePondIntegration.allowImagePreview === "1";

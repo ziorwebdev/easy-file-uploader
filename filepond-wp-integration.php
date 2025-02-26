@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:  WP FilePond
+ * Plugin Name:  FilePond WP Integration
  * Plugin URI:   
  * Description:  Adds a FilePond drag and drop uploader field to Elementor Pro Forms for seamless file uploads.
  * Author:       ZiorWeb.Dev
@@ -10,7 +10,7 @@
  * Requires WP:  6.0
  * License:      GPL-2.0-or-later
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:  wp-filepond
+ * Text Domain:  filepond-wp-integration
  * Domain Path:  /languages
  */
 
@@ -111,7 +111,7 @@ class Plugin {
 	 * Loads plugin text domain for translations.
 	 */
 	public function load_plugin_textdomain(): void {
-		load_plugin_textdomain( 'wp-filepond', false, PLUGIN_DIR . '/languages' );
+		load_plugin_textdomain( 'filepond-wp-integration', false, PLUGIN_DIR . '/languages' );
 	}
 
 	/**
@@ -137,7 +137,7 @@ class Plugin {
 	public function wp_filepond_add_settings_link( array $links ): array {
 		// Define the settings link URL
 		$settings_url  = admin_url( 'options-general.php?page=wp-filepond' );
-		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'wp-filepond' ) . '</a>';
+		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'filepond-wp-integration' ) . '</a>';
 
 		// Prepend the settings link to the existing links.
 		array_unshift( $links, $settings_link );

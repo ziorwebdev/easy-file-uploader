@@ -108,8 +108,8 @@ class FilePond {
 		$configuration = get_configuration();
 
 		wp_enqueue_style( 'wp-filepond-admin', PLUGIN_URL . 'dist/main.min.css', array(), null );
-		wp_enqueue_script( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
-		wp_enqueue_script( 'wp-filepond-admin', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'wp-filepond' ), null, true );
+		wp_enqueue_script( 'filepond-wp-integration', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
+		wp_enqueue_script( 'wp-filepond-admin', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'filepond-wp-integration' ), null, true );
 		wp_localize_script( 'wp-filepond-admin', 'wpFilePondIntegration', $configuration );
 	}
 
@@ -119,10 +119,10 @@ class FilePond {
 	public function enqueue_frontend_scripts(): void {
 		$configuration = get_configuration();
 
-		wp_enqueue_style( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.css', array(), null );
+		wp_enqueue_style( 'filepond-wp-integration', PLUGIN_URL . 'dist/filepond.min.css', array(), null );
 		wp_enqueue_style( 'wp-filepond-public', PLUGIN_URL . 'dist/main.min.css', array(), null );
-		wp_enqueue_script( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
-		wp_enqueue_script( 'wp-filepond-public', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'wp-filepond' ), null, true );
+		wp_enqueue_script( 'filepond-wp-integration', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
+		wp_enqueue_script( 'wp-filepond-public', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'filepond-wp-integration' ), null, true );
 		wp_localize_script( 'wp-filepond-public', 'wpFilePondIntegration', $configuration );
 	}
 
@@ -150,7 +150,7 @@ class FilePond {
 	public function handle_filepond_remove(): void {
 		// Verify security nonce.
 		if ( ! $this->verify_nonce() ) {
-			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'wp-filepond' ) ), 403 );
+			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'filepond-wp-integration' ) ), 403 );
 		}
 
 		// Retrieve the file URL from the request body.
@@ -158,7 +158,7 @@ class FilePond {
 
 		if ( ! $file_url ) {
 			wp_send_json_error(
-				array( 'message' => __( 'Invalid file URL.', 'wp-filepond' ) )
+				array( 'message' => __( 'Invalid file URL.', 'filepond-wp-integration' ) )
 			);
 		}
 
@@ -170,11 +170,11 @@ class FilePond {
 		if ( file_exists( $file_path ) ) {
 			wp_delete_file( $file_path );
 			wp_send_json_success(
-				array( 'message' => __( 'File deleted successfully.', 'wp-filepond' ) )
+				array( 'message' => __( 'File deleted successfully.', 'filepond-wp-integration' ) )
 			);
 		} else {
 			wp_send_json_error(
-				array( 'message' => __( 'File not found.', 'wp-filepond' ) )
+				array( 'message' => __( 'File not found.', 'filepond-wp-integration' ) )
 			);
 		}
 	}
@@ -190,20 +190,20 @@ class FilePond {
 	public function handle_filepond_upload(): void {
 		// Verify security nonce.
 		if ( ! $this->verify_nonce() ) {
-			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'wp-filepond' ) ), 403 );
+			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'filepond-wp-integration' ) ), 403 );
 		}
 
 		// Retrieve and validate uploaded file.
 		$file = $this->get_uploaded_file();
 		if ( empty( $file ) ) {
-			wp_send_json_error( array( 'error' => __( 'No valid file uploaded.', 'wp-filepond' ) ) );
+			wp_send_json_error( array( 'error' => __( 'No valid file uploaded.', 'filepond-wp-integration' ) ) );
 		}
 
 		// Retrieve secret key.
 		$secret_key = sanitize_text_field( wp_unslash( $_POST['secret_key'] ?? '' ) );
 
 		if ( empty( $secret_key ) ) {
-			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'wp-filepond' ) ), 403 );
+			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'filepond-wp-integration' ) ), 403 );
 		}
 
 		// Retrieve and validate file properties.

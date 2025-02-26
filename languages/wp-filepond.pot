@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 
 #: <div class="wrap">
-#: <h1><?php esc_html_e( 'Settings', 'wp-filepond' ); ?></h1>
+#: <h1><?php esc_html_e( 'Settings', 'filepond-wp-integration' ); ?></h1>
 #: <form method="post" action="options.php">
 # wpml-name: f4f70727dc34561dfde1a3c529b6205c
 msgid "Settings"
