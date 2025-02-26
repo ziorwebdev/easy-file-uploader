@@ -1,6 +1,5 @@
 <?php
 namespace ZIOR\WP\FilePond;
-use ZIOR\WP\FilePond\PLUGIN_DIR;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

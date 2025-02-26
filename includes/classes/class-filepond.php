@@ -1,7 +1,6 @@
 <?php
 namespace ZIOR\WP\FilePond;
 
-use ZIOR\WP\FilePond\PLUGIN_URL;
 use ElementorPro\Modules\ThemeBuilder\Module;
 use ElementorPro\Modules\ThemeBuilder\Classes\Conditions_Manager;
 use Elementor\Plugin;
@@ -105,13 +104,11 @@ class FilePond {
 	 * Enqueues scripts and styles for the admin area.
 	 */
 	public function enqueue_admin_scripts(): void {
-		wp_enqueue_style( 'wp-filepond-admin', PLUGIN_URL . 'dist/main.min.css', array(), null );
-
-		wp_enqueue_script( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
-		wp_enqueue_script( 'wp-filepond-admin', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'wp-filepond' ), null, true );
-
 		$configuration = get_configuration();
 
+		wp_enqueue_style( 'wp-filepond-admin', PLUGIN_URL . 'dist/main.min.css', array(), null );
+		wp_enqueue_script( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
+		wp_enqueue_script( 'wp-filepond-admin', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'wp-filepond' ), null, true );
 		wp_localize_script( 'wp-filepond-admin', 'wpFilePondIntegration', $configuration );
 	}
 
@@ -119,14 +116,12 @@ class FilePond {
 	 * Enqueues scripts and styles for the front-end.
 	 */
 	public function enqueue_frontend_scripts(): void {
-		wp_enqueue_style( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.css', array(), null );
-		wp_enqueue_style( 'wp-filepond-public', PLUGIN_URL . 'dist/main.min.css', array(), null );
-
-		wp_enqueue_script( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
-		wp_enqueue_script( 'wp-filepond-public', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'wp-filepond' ), null, true );
-
 		$configuration = get_configuration();
 
+		wp_enqueue_style( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.css', array(), null );
+		wp_enqueue_style( 'wp-filepond-public', PLUGIN_URL . 'dist/main.min.css', array(), null );
+		wp_enqueue_script( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
+		wp_enqueue_script( 'wp-filepond-public', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'wp-filepond' ), null, true );
 		wp_localize_script( 'wp-filepond-public', 'wpFilePondIntegration', $configuration );
 	}
 
@@ -242,68 +237,68 @@ class FilePond {
 		}
 	}
 
-    /**
-     * Modify the upload directory based on the custom setting.
-     *
-     * @param array $dirs Array of upload directory paths.
-     * @return array Modified upload directory paths.
-     */
-    public function set_upload_directory( array $dirs ): array {
-        $custom_location = get_option( 'wp_fp_upload_location', '' );
-        $custom_location = sanitize_text_field( $custom_location );
+	/**
+	 * Modify the upload directory based on the custom setting.
+	 *
+	 * @param array $dirs Array of upload directory paths.
+	 * @return array Modified upload directory paths.
+	 */
+	public function set_upload_directory( array $dirs ): array {
+		$custom_location = get_option( 'wp_fp_upload_location', '' );
+		$custom_location = sanitize_text_field( $custom_location );
 
-        if ( empty( $custom_location ) ) {
-            return $dirs;
-        }
+		if ( empty( $custom_location ) ) {
+			return $dirs;
+		}
 
-        $upload_location = '/uploads/' . $custom_location;
-        $absolute_path   = WP_CONTENT_DIR . $upload_location;
+		$upload_location = '/uploads/' . $custom_location;
+		$absolute_path   = WP_CONTENT_DIR . $upload_location;
 
-        // Check if the directory exists; if not, create it.
-        if ( ! file_exists( $absolute_path ) ) {
-            wp_mkdir_p( $absolute_path );
-        }
+		// Check if the directory exists; if not, create it.
+		if ( ! file_exists( $absolute_path ) ) {
+			wp_mkdir_p( $absolute_path );
+		}
 
-        $dirs['path']   = $absolute_path;
-        $dirs['url']    = WP_CONTENT_URL . $upload_location;
-        $dirs['subdir'] = $upload_location;
+		$dirs['path']   = $absolute_path;
+		$dirs['url']    = WP_CONTENT_URL . $upload_location;
+		$dirs['subdir'] = $upload_location;
 
-        return $dirs;
-    }
+		return $dirs;
+	}
 
-    /**
-     * Validate if the uploaded file size is within the allowed limit.
-     *
-     * @param bool  $valid    Whether the file is already considered valid.
-     * @param array $file     Uploaded file data from $_FILES.
-     * @param int   $max_size Maximum allowed file size in bytes.
-     * @return bool True if the file size is valid, false otherwise.
-     */
-    public function validate_file_size( bool $valid, array $file, int $max_size ): bool {
-        if ( $valid ) {
-            return true;
-        }
+	/**
+	 * Validate if the uploaded file size is within the allowed limit.
+	 *
+	 * @param bool  $valid    Whether the file is already considered valid.
+	 * @param array $file     Uploaded file data from $_FILES.
+	 * @param int   $max_size Maximum allowed file size in bytes.
+	 * @return bool True if the file size is valid, false otherwise.
+	 */
+	public function validate_file_size( bool $valid, array $file, int $max_size ): bool {
+		if ( $valid ) {
+			return true;
+		}
 
-        return ( $file['size'] <= $max_size );
-    }
+		return ( $file['size'] <= $max_size );
+	}
 
-    /**
-     * Validate if the uploaded file type is allowed.
-     *
-     * @param bool   $valid         Whether the file is already considered valid.
-     * @param array  $file          Uploaded file data from $_FILES.
-     * @param array  $allowed_types List of allowed MIME types (e.g., ['image/png', 'image/jpeg']).
-     * @return bool True if the file type is valid, false otherwise.
-     */
-    public function validate_file_type( bool $valid, array $file, array $allowed_types ): bool {
-        if ( $valid ) {
-            return true;
-        }
+	/**
+	 * Validate if the uploaded file type is allowed.
+	 *
+	 * @param bool   $valid         Whether the file is already considered valid.
+	 * @param array  $file          Uploaded file data from $_FILES.
+	 * @param array  $allowed_types List of allowed MIME types (e.g., ['image/png', 'image/jpeg']).
+	 * @return bool True if the file type is valid, false otherwise.
+	 */
+	public function validate_file_type( bool $valid, array $file, array $allowed_types ): bool {
+		if ( $valid ) {
+			return true;
+		}
 
-        // Get the MIME type using wp_check_filetype.
-        $file_type = wp_check_filetype( $file['name'] );
+		// Get the MIME type using wp_check_filetype.
+		$file_type = wp_check_filetype( $file['name'] );
 
-        // Validate file type against allowed MIME types.
-        return ( ! empty( $file_type['type'] ) && in_array( $file_type['type'], $allowed_types, true ) );
-    }
+		// Validate file type against allowed MIME types.
+		return ( ! empty( $file_type['type'] ) && in_array( $file_type['type'], $allowed_types, true ) );
+	}
 }

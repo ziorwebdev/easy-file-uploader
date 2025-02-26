@@ -1,7 +1,6 @@
 <?php
 namespace ZIOR\WP\FilePond\Elementor;
 
-use ZIOR\WP\FilePond\PLUGIN_URL;
 use ElementorPro\Modules\Forms\Fields\Field_Base;
 use Elementor\Controls_Manager;
 use ElementorPro\Plugin;
