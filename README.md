@@ -35,10 +35,10 @@
 ## Screenshots
 
 ### Plugin Settings Page  
-![Admin Settings](screenshots/admin.png)
+![Admin Settings](assets/screenshot-1.png)
 
 ### FilePond Upload Field in Elementor Form  
-![Frontend](screenshots/frontend.png)
+![Frontend](assets/screenshot-2.png)
 
 ## Frequently Asked Questions
 

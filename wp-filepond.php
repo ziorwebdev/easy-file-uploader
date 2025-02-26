@@ -1,22 +1,20 @@
 <?php
-/*
-Plugin Name:  WP FilePond
-Plugin URI:   https://ziorweb.dev
-Description:  Adds a FilePond uploader field to Elementor Pro forms enabling seamless file uploads.
-Author:       ZiorWeb.Dev
-Author URI:   https://ziorweb.dev
-Version:      1.0.0
-Requires PHP: 8.0
-Requires WP:  6.0
-License:      
-License URI:  
-Text Domain:  wp-filepond
-Domain Path: /languages
-*/
+/**
+ * Plugin Name:  WP FilePond
+ * Plugin URI:   
+ * Description:  Adds a FilePond uploader field to Elementor Pro forms enabling seamless file uploads.
+ * Author:       ZiorWeb.Dev
+ * Author URI:   https://ziorweb.dev
+ * Version:      1.0.0
+ * Requires PHP: 8.0
+ * Requires WP:  6.0
+ * License:      GPL-2.0-or-later
+ * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:  wp-filepond
+ * Domain Path:  /languages
+ */
 
 namespace ZIOR\WP\FilePond;
-
-use ZIOR\PLUGIN_DIR;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -93,7 +91,6 @@ class Plugin {
 	public function __construct() {
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'wp_filepond_add_settings_link' ) );
-
 	}
 
 	/**
@@ -114,7 +111,7 @@ class Plugin {
 	 * Loads plugin text domain for translations.
 	 */
 	public function load_plugin_textdomain(): void {
-		load_plugin_textdomain( 'wp-filepond', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+		load_plugin_textdomain( 'wp-filepond', false, PLUGIN_DIR . '/languages' );
 	}
 
 	/**

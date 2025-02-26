@@ -1,7 +1,6 @@
 <?php
 namespace ZIOR\WP\FilePond;
 
-use ZIOR\WP\FilePond\PLUGIN_DIR;
 use ZIOR\WP\FilePond\Elementor\FilePondUpload;
 use ElementorPro\Modules\Forms\Classes\Fields;
 use ElementorPro\Modules\Forms\Registrars\Form_Fields_Registrar;
