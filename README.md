@@ -34,7 +34,11 @@
 
 ## Screenshots
 
-*(Add screenshots here showcasing the plugin in action.)*
+### Plugin Settings Page  
+![image](image.png)
+
+### FilePond Upload Field in Elementor Form  
+![image](image-1.png)
 
 ## Frequently Asked Questions
 
