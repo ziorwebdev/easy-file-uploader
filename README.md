@@ -35,13 +35,13 @@
 ## Screenshots
 
 ### Plugin Settings Page  
-![Admin Settings](assets/screenshot-1.png)
+<img src="assets/screenshot-1.png" width="600">
 
 ### FilePond Upload Field in Elementor Form  
-![Frontend](assets/screenshot-2.png)
+<img src="assets/screenshot-2.png" width="600">
 
 ### Elementor Form Builder with FilePond Upload Field  
-![Elementor Form Builder](assets/screenshot-3.png)
+<img src="assets/screenshot-3.png" width="600">
 
 ## Frequently Asked Questions
 
