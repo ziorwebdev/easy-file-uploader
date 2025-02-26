@@ -1,0 +1,14 @@
+{
+    "name": "ziorweb/wp-filepond",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Rey C",
+            "email": "reygcalantaol@gmail.com"
+        }
+    ],
+    "require": {
+        "league/mime-type-detection": "^1.16",
+        "ralouphie/mimey": "^1.0"
+    }
+}

@@ -1,0 +1,142 @@
+<?php
+/*
+Plugin Name:  WP FilePond
+Plugin URI:   https://ziorweb.dev
+Description:  Adds a FilePond uploader field to Elementor Pro Forms.
+Author:       ZiorWeb.Dev
+Author URI:   https://ziorweb.dev
+Version:      1.0.0
+Requires PHP: 8.0
+Requires WP:  6.0
+License:      
+License URI:  
+Text Domain:  wp-filepond
+Domain Path: /languages
+*/
+
+namespace ZIOR\WP\FilePond;
+
+use ZIOR\PLUGIN_DIR;
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Main plugin class.
+ *
+ * Handles plugin initialization, constants, includes, and hooks.
+ */
+class Plugin {
+
+	/**
+	 * The single instance of the plugin.
+	 *
+	 * @var Plugin|null
+	 */
+	protected static ?Plugin $instance = null;
+
+
+	/**
+	 * Initializes the plugin.
+	 *
+	 * Sets up constants, includes required files, and loads the plugin.
+	 */
+	private function init(): void {
+		$this->setup_constants();
+		$this->includes();
+
+		$loader = Loader::get_instance();
+		$loader->load();
+	}
+
+	/**
+	 * Defines plugin constants.
+	 *
+	 * Ensures constants are only defined once to prevent conflicts.
+	 */
+	private function setup_constants(): void {
+		$namespace = __NAMESPACE__;
+
+		if ( ! defined( "{$namespace}\\PLUGIN_DIR" ) ) {
+			define( "{$namespace}\\PLUGIN_DIR", plugin_dir_path( __FILE__ ) );
+		}
+
+		if ( ! defined( "{$namespace}\\PLUGIN_URL" ) ) {
+			define( "{$namespace}\\PLUGIN_URL", plugin_dir_url( __FILE__ ) );
+		}
+
+		if ( ! defined( "{$namespace}\\PLUGIN_FILE" ) ) {
+			define( "{$namespace}\\PLUGIN_FILE", __FILE__ );
+		}
+
+		if ( ! defined( "{$namespace}\\ENCRYPT_KEY" ) ) {
+			define( "{$namespace}\\ENCRYPT_KEY", 'GBJJylX5wL8B15h55BlON9PUn7eLtL9R' );
+		}
+	}
+
+	/**
+	 * Includes necessary plugin files.
+	 */
+	private function includes(): void {
+		require_once PLUGIN_DIR . 'vendor/autoload.php';
+		require_once PLUGIN_DIR . 'includes/loader.php';
+		require_once PLUGIN_DIR . 'includes/functions.php';
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * Initializes hooks required for the plugin.
+	 */
+	public function __construct() {
+		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
+	}
+
+	/**
+	 * Retrieves the singleton instance of the plugin.
+	 *
+	 * @return Plugin The single instance of the plugin.
+	 */
+	public static function get_instance(): Plugin {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+			self::$instance->init();
+		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * Loads plugin text domain for translations.
+	 */
+	public function load_plugin_textdomain(): void {
+		load_plugin_textdomain( 'wp-filepond', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	}
+
+	/**
+	 * Plugin activation callback.
+	 *
+	 * This function is executed when the plugin is activated.
+	 */
+	public function activate_plugin(): void {}
+
+	/**
+	 * Plugin deactivation callback.
+	 *
+	 * This function is executed when the plugin is deactivated.
+	 */
+	public function deactivate_plugin(): void {}
+}
+
+/**
+ * Initializes and starts the plugin.
+ */
+$plugin = Plugin::get_instance();
+
+/**
+ * Registers plugin activation and deactivation hooks.
+ */
+register_activation_hook( PLUGIN_FILE, array( $plugin, 'activate_plugin' ) );
+register_deactivation_hook( PLUGIN_FILE, array( $plugin, 'deactivate_plugin' ) );
