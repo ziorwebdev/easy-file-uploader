@@ -29,7 +29,7 @@ class FilePond {
 	 * @return bool True if nonce is valid, false otherwise.
 	 */
 	private function verify_nonce(): bool {
-		$nonce = $_SERVER['HTTP_X_WP_NONCE'] ?? '';
+		$nonce = isset( $_SERVER['HTTP_X_WP_NONCE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_WP_NONCE'] ) ) : '';
 
 		return ! empty( $nonce ) && wp_verify_nonce( $nonce, 'wp_filepond_upload_nonce' );
 	}
@@ -41,6 +41,7 @@ class FilePond {
 	 */
 	private function get_uploaded_file(): array|bool {
 		$files = $_FILES['form_fields'] ?? array();
+
 		if ( empty( $files ) || ! is_array( $files ) ) {
 			return false;
 		}
@@ -147,12 +148,9 @@ class FilePond {
 	 * @return void Outputs JSON response indicating success or failure.
 	 */
 	public function handle_filepond_remove(): void {
-		// Verify the nonce for security.
-		if ( ! isset( $_SERVER['HTTP_X_WP_NONCE'] ) || ! wp_verify_nonce( $_SERVER['HTTP_X_WP_NONCE'], 'wp_filepond_upload_nonce' ) ) {
-			wp_send_json_error(
-				array( 'error' => __( 'Security check failed.', 'wp-filepond' ) ),
-				403
-			);
+		// Verify security nonce.
+		if ( ! $this->verify_nonce() ) {
+			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'wp-filepond' ) ), 403 );
 		}
 
 		// Retrieve the file URL from the request body.
@@ -170,7 +168,7 @@ class FilePond {
 
 		// Check if the file exists and delete it.
 		if ( file_exists( $file_path ) ) {
-			unlink( $file_path );
+			wp_delete_file( $file_path );
 			wp_send_json_success(
 				array( 'message' => __( 'File deleted successfully.', 'wp-filepond' ) )
 			);
@@ -202,7 +200,8 @@ class FilePond {
 		}
 
 		// Retrieve secret key.
-		$secret_key = sanitize_text_field( $_POST['secret_key'] ?? '' );
+		$secret_key = sanitize_text_field( wp_unslash( $_POST['secret_key'] ?? '' ) );
+
 		if ( empty( $secret_key ) ) {
 			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'wp-filepond' ) ), 403 );
 		}

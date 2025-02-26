@@ -98,13 +98,33 @@ class Settings {
 	 */
 	public function register_settings(): void {
 		// Register settings
-		register_setting( 'wp_filepond_options_group', 'wp_fp_button_label' );
-		register_setting( 'wp_filepond_options_group', 'wp_fp_file_types_allowed' );
-		register_setting( 'wp_filepond_options_group', 'wp_fp_enable_preview' );
-		register_setting( 'wp_filepond_options_group', 'wp_fp_preview_height' );
-		register_setting( 'wp_filepond_options_group', 'wp_fp_file_type_error' );
-		register_setting( 'wp_filepond_options_group', 'wp_fp_file_size_error' );
-		register_setting( 'wp_filepond_options_group', 'wp_fp_max_file_size' );
+		register_setting( 'wp_filepond_options_group', 'wp_fp_button_label', array(
+			'sanitize_callback' => 'sanitize_text_field'
+		) );
+
+		register_setting( 'wp_filepond_options_group', 'wp_fp_file_types_allowed', array(
+			'sanitize_callback' => 'sanitize_text_field'
+		) );
+
+		register_setting( 'wp_filepond_options_group', 'wp_fp_enable_preview', array(
+			'sanitize_callback' => 'absint'
+		) );
+
+		register_setting( 'wp_filepond_options_group', 'wp_fp_preview_height', array(
+			'sanitize_callback' => 'absint'
+		) );
+
+		register_setting( 'wp_filepond_options_group', 'wp_fp_file_type_error', array(
+			'sanitize_callback' => 'sanitize_text_field'
+		) );
+
+		register_setting( 'wp_filepond_options_group', 'wp_fp_file_size_error', array(
+			'sanitize_callback' => 'sanitize_text_field'
+		) );
+
+		register_setting( 'wp_filepond_options_group', 'wp_fp_max_file_size', array(
+			'sanitize_callback' => 'absint'
+		) );
 
 		// Add the main settings section
 		add_settings_section(
@@ -314,17 +334,11 @@ class Settings {
 		$enable_preview = get_option( 'wp_fp_enable_preview', false );
 		$enable_preview = (bool) $enable_preview; // Ensure it's strictly boolean
 
-		// Description for the checkbox, with proper escaping for security.
-		$description = sprintf(
-			'<span class="help-text">%s</span>',
-			esc_html__( 'Check if you want to preview the file uploaded.', 'wp-filepond' )
-		);
-
 		// Output the checkbox input field with proper escaping and checked attribute handling.
 		printf(
-			'<label><input type="checkbox" name="wp_fp_enable_preview" value="1" %s> %s</label>',
-			checked( $enable_preview, true, false ), // Ensure proper checkbox handling
-			$description
+			'<label><input type="checkbox" name="wp_fp_enable_preview" value="1" %s> <span class="help-text">%s</span></label>',
+			esc_attr( checked( $enable_preview, true, false ) ), // Ensure proper checkbox handling
+			esc_html__( 'Check if you want to preview the file uploaded.', 'wp-filepond' )
 		);
 	}
 
