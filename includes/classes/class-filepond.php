@@ -107,10 +107,10 @@ class FilePond {
 	public function enqueue_admin_scripts(): void {
 		$configuration = get_configuration();
 
-		wp_enqueue_style( 'wp-filepond-admin', PLUGIN_URL . 'dist/main.min.css', array(), null );
+		wp_enqueue_style( 'filepond-wp-integration-admin', PLUGIN_URL . 'dist/main.min.css', array(), null );
 		wp_enqueue_script( 'filepond-wp-integration', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
-		wp_enqueue_script( 'wp-filepond-admin', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'filepond-wp-integration' ), null, true );
-		wp_localize_script( 'wp-filepond-admin', 'wpFilePondIntegration', $configuration );
+		wp_enqueue_script( 'filepond-wp-integration-admin', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'filepond-wp-integration' ), null, true );
+		wp_localize_script( 'filepond-wp-integration-admin', 'wpFilePondIntegration', $configuration );
 	}
 
 	/**
@@ -120,10 +120,10 @@ class FilePond {
 		$configuration = get_configuration();
 
 		wp_enqueue_style( 'filepond-wp-integration', PLUGIN_URL . 'dist/filepond.min.css', array(), null );
-		wp_enqueue_style( 'wp-filepond-public', PLUGIN_URL . 'dist/main.min.css', array(), null );
+		wp_enqueue_style( 'filepond-wp-integration-public', PLUGIN_URL . 'dist/main.min.css', array(), null );
 		wp_enqueue_script( 'filepond-wp-integration', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
-		wp_enqueue_script( 'wp-filepond-public', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'filepond-wp-integration' ), null, true );
-		wp_localize_script( 'wp-filepond-public', 'wpFilePondIntegration', $configuration );
+		wp_enqueue_script( 'filepond-wp-integration-public', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'filepond-wp-integration' ), null, true );
+		wp_localize_script( 'filepond-wp-integration-public', 'wpFilePondIntegration', $configuration );
 	}
 
 	/**

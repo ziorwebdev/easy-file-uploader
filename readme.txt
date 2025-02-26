@@ -1,4 +1,4 @@
-=== WP FilePond ===
+=== FilePond WP Integration ===
 Contributors: reygcalantaol  
 Tags: file upload, elementor, filepond, drag and drop, ajax upload  
 Requires at least: 6.0  
@@ -23,7 +23,7 @@ Adds a FilePond drag and drop uploader field to Elementor Pro Forms for seamless
 
 == Installation ==
 
-1. Download the plugin and upload it to `/wp-content/plugins/wp-filepond` directory.
+1. Download the plugin and upload it to `/wp-content/plugins/filepond-wp-integration` directory.
 2. Activate the plugin via **Plugins → Installed Plugins** in WordPress.
 3. Go to **Settings → WP FilePond** to configure the plugin.
 4. Edit an Elementor Pro Form and add the **FilePond Upload** field.

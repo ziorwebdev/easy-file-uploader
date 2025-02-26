@@ -136,7 +136,7 @@ class Plugin {
 	 */
 	public function wp_filepond_add_settings_link( array $links ): array {
 		// Define the settings link URL
-		$settings_url  = admin_url( 'options-general.php?page=wp-filepond' );
+		$settings_url  = admin_url( 'options-general.php?page=filepond-wp-integration' );
 		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'filepond-wp-integration' ) . '</a>';
 
 		// Prepend the settings link to the existing links.
