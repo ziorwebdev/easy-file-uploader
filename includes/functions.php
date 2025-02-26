@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Retrieves the WP FilePond configuration settings.
+ * Retrieves the FilePond WP Integration configuration settings.
  *
  * This function fetches stored options related to file handling and
  * applies the 'wp_filepond_configuration' filter for customization.

@@ -166,15 +166,13 @@ class FilePond {
 		$upload_dir = wp_upload_dir();
 		$file_path  = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $file_url );
 
-		// Check if the file exists and delete it.
-		if ( file_exists( $file_path ) ) {
-			wp_delete_file( $file_path );
+		if ( wp_delete_file( $file_path ) ) {
 			wp_send_json_success(
 				array( 'message' => __( 'File deleted successfully.', 'filepond-wp-integration' ) )
 			);
 		} else {
 			wp_send_json_error(
-				array( 'message' => __( 'File not found.', 'filepond-wp-integration' ) )
+				array( 'message' => __( 'Failed to delete file.', 'filepond-wp-integration' ) )
 			);
 		}
 	}

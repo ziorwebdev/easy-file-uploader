@@ -18,10 +18,10 @@
 
 2. **Activate the Plugin:**  
    - Go to **Plugins** in the WordPress admin panel.
-   - Find **WP FilePond** and click **Activate**.
+   - Find **FilePond WP Integration** and click **Activate**.
 
 3. **Configure Settings:**  
-   - Navigate to **Settings → WP FilePond** to configure upload options.
+   - Navigate to **Settings → FilePond WP Integration** to configure upload options.
 
 ## Usage
 

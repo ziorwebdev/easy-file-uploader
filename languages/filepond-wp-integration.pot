@@ -113,7 +113,7 @@ msgid "Main Settings"
 msgstr ""
 
 # wpml-name: 40b840febdf8d5ed26e52e1e269f6422
-msgid "WP FilePond"
+msgid "FilePond WP Integration"
 msgstr ""
 
 # wpml-name: bea78808b2840598dfc4d712b39ac34a

@@ -12,7 +12,7 @@ Adds a FilePond drag and drop uploader field to Elementor Pro Forms for seamless
 
 == Description ==
 
-**WP FilePond** is a WordPress plugin that integrates [FilePond](https://pqina.nl/filepond/) with Elementor Pro Forms, allowing seamless file uploads with advanced features like image previews, drag-and-drop, and asynchronous uploads.
+**FilePond WP Integration** is a WordPress plugin that integrates [FilePond](https://pqina.nl/filepond/) with Elementor Pro Forms, allowing seamless file uploads with advanced features like image previews, drag-and-drop, and asynchronous uploads.
 
 ### **Key Features**
 - **Drag & Drop Uploads** – Simplifies file uploads with an intuitive UI.
@@ -25,7 +25,7 @@ Adds a FilePond drag and drop uploader field to Elementor Pro Forms for seamless
 
 1. Download the plugin and upload it to `/wp-content/plugins/filepond-wp-integration` directory.
 2. Activate the plugin via **Plugins → Installed Plugins** in WordPress.
-3. Go to **Settings → WP FilePond** to configure the plugin.
+3. Go to **Settings → FilePond WP Integration** to configure the plugin.
 4. Edit an Elementor Pro Form and add the **FilePond Upload** field.
 
 == Frequently Asked Questions ==

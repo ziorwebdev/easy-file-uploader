@@ -80,8 +80,8 @@ class Settings {
 	 */
 	public function add_settings_page(): void {
 		add_options_page(
-			__( 'WP FilePond', 'filepond-wp-integration' ), // Page title
-			__( 'WP FilePond', 'filepond-wp-integration' ), // Menu title
+			__( 'FilePond WP Integration', 'filepond-wp-integration' ), // Page title
+			__( 'FilePond WP Integration', 'filepond-wp-integration' ), // Menu title
 			'manage_options',                   // Required capability
 			'filepond-wp-integration',                       // Menu slug
 			array( $this, 'render_settings_page' ) // Callback function
