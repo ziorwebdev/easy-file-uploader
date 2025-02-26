@@ -1,7 +1,6 @@
 <?php
 namespace ZIOR\WP\FilePond;
 
-use ZIOR\WP\FilePond\PLUGIN_URL;
 use ElementorPro\Modules\ThemeBuilder\Module;
 use ElementorPro\Modules\ThemeBuilder\Classes\Conditions_Manager;
 use Elementor\Plugin;

@@ -40,6 +40,9 @@
 ### FilePond Upload Field in Elementor Form  
 ![Frontend](assets/screenshot-2.png)
 
+### Elementor Form Builder with FilePond Upload Field  
+![Elementor Form Builder](assets/screenshot-3.png)
+
 ## Frequently Asked Questions
 
 ### Q: Does this work without Elementor Pro?  

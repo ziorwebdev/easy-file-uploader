@@ -41,8 +41,9 @@ Yes, you can set allowed file types in the plugin settings.
 
 == Screenshots ==
 
-1. Screenshot of FilePond upload field in Elementor.
-2. Screenshot of the plugin settings page.
+1. Screenshot of the plugin settings page.
+2. Screenshot of FilePond upload field in the frontend.
+3. Screenshot of the Elementor form builder with the FilePond upload field.
 
 == Changelog ==
 
