@@ -90,7 +90,7 @@ class Plugin {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
-		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'wp_filepond_add_settings_link' ) );
+		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_settings_link' ) );
 	}
 
 	/**
@@ -134,7 +134,7 @@ class Plugin {
 	 * @param array $links The existing action links.
 	 * @return array Modified action links with the "Settings" link.
 	 */
-	public function wp_filepond_add_settings_link( array $links ): array {
+	public function add_settings_link( array $links ): array {
 		// Define the settings link URL
 		$settings_url  = admin_url( 'options-general.php?page=filepond-wp-integration' );
 		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'filepond-wp-integration' ) . '</a>';
