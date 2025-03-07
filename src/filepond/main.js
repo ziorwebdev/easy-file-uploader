@@ -62,14 +62,14 @@ function getFilePondConfiguration(configuration) {
                 headers: {
                     'X-WP-Nonce': configuration.nonce
                 },
-                url: `${configuration.ajaxUrl}?action=wp_filepond_upload` 
+                url: `${configuration.ajaxUrl}?action=filepond_wp_integration_upload` 
             },
             revert: {
                 headers: {
                     'X-WP-Nonce': configuration.nonce
                 },
                 method: "POST",
-                url: `${configuration.ajaxUrl}?action=wp_filepond_remove`
+                url: `${configuration.ajaxUrl}?action=filepond_wp_integration_remove`
             }
         }
     };

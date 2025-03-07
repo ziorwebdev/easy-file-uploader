@@ -14,7 +14,7 @@
  * Domain Path:  /languages
  */
 
-namespace ZIOR\WP\FilePond;
+namespace ZIOR\FilePond;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

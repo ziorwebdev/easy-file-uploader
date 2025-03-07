@@ -1,7 +1,7 @@
 <?php
-namespace ZIOR\WP\FilePond;
+namespace ZIOR\FilePond;
 
-use ZIOR\WP\FilePond\Elementor\FilePondUpload;
+use ZIOR\FilePond\Elementor\FilePondUpload;
 use ElementorPro\Modules\Forms\Classes\Fields;
 use ElementorPro\Modules\Forms\Registrars\Form_Fields_Registrar;
 

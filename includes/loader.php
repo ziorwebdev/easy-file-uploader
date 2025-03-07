@@ -1,5 +1,5 @@
 <?php
-namespace ZIOR\WP\FilePond;
+namespace ZIOR\FilePond;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -39,12 +39,12 @@ class Loader {
 	public function load() {
 		// Set up SPL autoloader.
 		spl_autoload_register( function ( $class ) {
-			if ( ! preg_match( "/^ZIOR\\\\WP\\\\FilePond.+$/", $class ) ) {
+			if ( ! preg_match( "/^ZIOR\\\\FilePond.+$/", $class ) ) {
 				return;
 			}
 
 			$classes = array(
-				'FilePond'       => PLUGIN_DIR . 'includes/classes/class-filepond.php',
+				'Uploader'       => PLUGIN_DIR . 'includes/classes/class-uploader.php',
 				'FilePondUpload' => PLUGIN_DIR . 'includes/classes/integration/elementor/class-filepond-upload.php',
 				'Register'       => PLUGIN_DIR . 'includes/classes/class-register.php',
 				'Settings'       => PLUGIN_DIR . 'includes/classes/class-settings.php',
@@ -57,7 +57,7 @@ class Loader {
 			}
 		} );
 
-		FilePond::get_instance();
+		Uploader::get_instance();
 		Register::get_instance();
 		Settings::get_instance();
 	}

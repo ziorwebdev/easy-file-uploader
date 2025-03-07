@@ -1,10 +1,5 @@
 <?php
-namespace ZIOR\WP\FilePond;
-
-use ElementorPro\Modules\ThemeBuilder\Module;
-use ElementorPro\Modules\ThemeBuilder\Classes\Conditions_Manager;
-use Elementor\Plugin;
-use ElementorPro\Plugin as PluginPro;
+namespace ZIOR\FilePond;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Handles FilePond integration for WordPress.
  */
-class FilePond {
+class Uploader {
 
 	/**
 	 * Singleton instance of the class.
@@ -24,20 +19,26 @@ class FilePond {
 	private static ?FilePond $instance = null;
 
 	/**
-	 * Verifies the security nonce.
+	 * Verify the nonce for security validation.
 	 *
-	 * @return bool True if nonce is valid, false otherwise.
+	 * This function retrieves the nonce from the request headers, sanitizes it,
+	 * and verifies its validity using `wp_verify_nonce()`.
+	 *
+	 * @return bool True if the nonce is valid, false otherwise.
 	 */
 	private function verify_nonce(): bool {
 		$nonce = isset( $_SERVER['HTTP_X_WP_NONCE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_WP_NONCE'] ) ) : '';
 
-		return ! empty( $nonce ) && wp_verify_nonce( $nonce, 'wp_filepond_upload_nonce' );
+		return ! empty( $nonce ) && wp_verify_nonce( $nonce, 'filepond_uploader_nonce' );
 	}
 
 	/**
-	 * Retrieves and structures the uploaded file.
+	 * Retrieve the uploaded file data from the form submission.
 	 *
-	 * @return array|false The structured file array or false on failure.
+	 * This function extracts the uploaded file details from the `$_FILES` array
+	 * and structures it into a standard file data array.
+	 *
+	 * @return array|bool An associative array containing file data or false if no valid file is found.
 	 */
 	private function get_uploaded_file(): array|bool {
 		$files = $_FILES['form_fields'] ?? array();
@@ -50,6 +51,7 @@ class FilePond {
 		$file_keys  = array( 'name', 'type', 'tmp_name', 'error', 'size' );
 		$file       = array();
 
+		// Extract the first file from the multidimensional $_FILES structure.
 		foreach ( $file_keys as $key ) {
 			$file[ $key ] = is_array( $files[ $key ][ $field_name ] ) ? $files[ $key ][ $field_name ][0] : $files[ $key ][ $field_name ];
 		}
@@ -58,30 +60,33 @@ class FilePond {
 	}
 
 	/**
-	 * Validates the uploaded file type and size.
+	 * Validate the file type against allowed types.
 	 *
-	 * @param array  $file       The uploaded file array.
-	 * @param array  $valid_types Allowed file types.
-	 * @param int    $max_size   Maximum file size in bytes.
+	 * This function applies the 'fp_wpi_validate_file_type' filter to allow
+	 * external modification of the validation logic.
 	 *
-	 * @return bool True if valid, false otherwise.
+	 * @param array $file        File data array containing file details.
+	 * @param array $valid_types Array of allowed file types.
+	 * 
+	 * @return bool True if the file type is valid, false otherwise.
 	 */
-	private function is_valid_file( array $file, array $valid_types, int $max_size ): bool {
-		$valid_file_type = apply_filters( 'wp_filepond_validate_file_type', false, $file, $valid_types );
+	private function is_valid_file_type( array $file, array $valid_types ): bool {
+		return apply_filters( 'fp_wpi_validate_file_type', false, $file, $valid_types );
+	}
 
-		if ( ! $valid_file_type ) {
-			wp_send_json_error( array( 'error' => get_option( 'wp_fp_file_type_error', '' ) ), 415 );
-			return false;
-		}
-
-		$valid_file_size = apply_filters( 'wp_filepond_validate_file_size', false, $file, $max_size );
-
-		if ( ! $valid_file_size ) {
-			wp_send_json_error( array( 'error' => get_option( 'wp_fp_file_size_error', '' ) ), 413 );
-			return false;
-		}
-
-		return true;
+	/**
+	 * Validate the file size against the maximum allowed size.
+	 *
+	 * This function applies the 'fp_wpi_validate_file_size' filter to allow
+	 * external modification of the validation logic.
+	 *
+	 * @param array $file    File data array containing file details.
+	 * @param int   $max_size Maximum allowed file size in bytes.
+	 * 
+	 * @return bool True if the file size is valid, false otherwise.
+	 */
+	private function is_valid_file_size( array $file, int $max_size ): bool {
+		return apply_filters( 'fp_wpi_validate_file_size', false, $file, $max_size );
 	}
 
 	/**
@@ -92,13 +97,13 @@ class FilePond {
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ), 10 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_scripts' ), 10 );
-		add_action( 'wp_ajax_wp_filepond_upload', array( $this, 'handle_filepond_upload' ), 10 );
-		add_action( 'wp_ajax_nopriv_wp_filepond_upload', array( $this, 'handle_filepond_upload' ), 10 );
-		add_action( 'wp_ajax_wp_filepond_remove', array( $this, 'handle_filepond_remove' ), 10 );
-		add_action( 'wp_ajax_nopriv_wp_filepond_remove', array( $this, 'handle_filepond_remove' ), 10 );
+		add_action( 'wp_ajax_fp_wpi_upload', array( $this, 'handle_filepond_upload' ), 10 );
+		add_action( 'wp_ajax_nopriv_fp_wpi_upload', array( $this, 'handle_filepond_upload' ), 10 );
+		add_action( 'wp_ajax_fp_wpi_remove', array( $this, 'handle_filepond_remove' ), 10 );
+		add_action( 'wp_ajax_nopriv_fp_wpi_remove', array( $this, 'handle_filepond_remove' ), 10 );
 
-		add_filter( 'wp_filepond_validate_file_type', array( $this, 'validate_file_type' ), 10, 3 );
-		add_filter( 'wp_filepond_validate_file_size', array( $this, 'validate_file_size' ), 10, 3 );
+		add_filter( 'fp_wpi_validate_file_type', array( $this, 'validate_file_type' ), 10, 3 );
+		add_filter( 'fp_wpi_validate_file_size', array( $this, 'validate_file_size' ), 10, 3 );
 	}
 
 	/**
@@ -189,26 +194,33 @@ class FilePond {
 		// Verify security nonce.
 		if ( ! $this->verify_nonce() ) {
 			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'filepond-wp-integration' ) ), 403 );
+
+			return;
 		}
 
 		// Retrieve and validate uploaded file.
 		$file = $this->get_uploaded_file();
+
 		if ( empty( $file ) ) {
 			wp_send_json_error( array( 'error' => __( 'No valid file uploaded.', 'filepond-wp-integration' ) ) );
-		}
 
-		// Retrieve secret key.
-		$secret_key = sanitize_text_field( wp_unslash( $_POST['secret_key'] ?? '' ) );
-
-		if ( empty( $secret_key ) ) {
-			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'filepond-wp-integration' ) ), 403 );
+			return;
 		}
 
 		// Retrieve and validate file properties.
+		$secret_key  = sanitize_text_field( wp_unslash( $_POST['secret_key'] ?? '' ) );
 		$args        = decrypt_data( $secret_key );
 		$valid_types = explode( ',', $args['types'] );
 
-		if ( ! $this->is_valid_file( $file, $valid_types, $args['size'] ) ) {
+		if ( ! $this->is_valid_file_type( $file, $valid_types ) ) {
+			wp_send_json_error( array( 'error' => get_option( 'fp_wpi_file_type_error', '' ) ), 415 );
+
+			return;
+		}
+
+		if ( ! $this->is_valid_file_size( $file, $args['size'] ) ) {
+			wp_send_json_error( array( 'error' => get_option( 'fp_wpi_file_size_error', '' ) ), 413 );
+
 			return;
 		}
 
@@ -217,14 +229,14 @@ class FilePond {
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 		}
 
-		// Temporarily modify the upload directory.
-		add_filter( 'upload_dir', array( $this, 'set_upload_directory' ) );
+		// Trigger a custom action before the file upload process starts.
+		do_action( 'fp_wpi_before_upload', $file, $args );
 
-		// Upload the file.
+		// Upload the file using WordPress' built-in file upload handler.
 		$uploaded = wp_handle_upload( $file, array( 'test_form' => false ) );
 
-		// Restore the default upload directory.
-		remove_filter( 'upload_dir', array( $this, 'set_upload_directory' ) );
+		// Trigger a custom action after the file upload process is complete.
+		do_action( 'fp_wpi_after_upload', $uploaded, $file, $args );
 
 		// Respond with the upload result.
 		if ( $uploaded && ! isset( $uploaded['error'] ) ) {
@@ -232,35 +244,6 @@ class FilePond {
 		} else {
 			wp_send_json_error( $uploaded, 400 );
 		}
-	}
-
-	/**
-	 * Modify the upload directory based on the custom setting.
-	 *
-	 * @param array $dirs Array of upload directory paths.
-	 * @return array Modified upload directory paths.
-	 */
-	public function set_upload_directory( array $dirs ): array {
-		$custom_location = get_option( 'wp_fp_upload_location', '' );
-		$custom_location = sanitize_text_field( $custom_location );
-
-		if ( empty( $custom_location ) ) {
-			return $dirs;
-		}
-
-		$upload_location = '/uploads/' . $custom_location;
-		$absolute_path   = WP_CONTENT_DIR . $upload_location;
-
-		// Check if the directory exists; if not, create it.
-		if ( ! file_exists( $absolute_path ) ) {
-			wp_mkdir_p( $absolute_path );
-		}
-
-		$dirs['path']   = $absolute_path;
-		$dirs['url']    = WP_CONTENT_URL . $upload_location;
-		$dirs['subdir'] = $upload_location;
-
-		return $dirs;
 	}
 
 	/**

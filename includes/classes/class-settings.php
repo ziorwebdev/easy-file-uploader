@@ -1,5 +1,5 @@
 <?php
-namespace ZIOR\WP\FilePond;
+namespace ZIOR\FilePond;
 
 use ZIOR\WP\PLUGIN_DIR;
 
@@ -98,96 +98,96 @@ class Settings {
 	 */
 	public function register_settings(): void {
 		// Register settings
-		register_setting( 'wp_filepond_options_group', 'wp_fp_button_label', array(
+		register_setting( 'fp_wpi_options_group', 'fp_wpi_button_label', array(
 			'sanitize_callback' => 'sanitize_text_field'
 		) );
 
-		register_setting( 'wp_filepond_options_group', 'wp_fp_file_types_allowed', array(
+		register_setting( 'fp_wpi_options_group', 'fp_wpi_file_types_allowed', array(
 			'sanitize_callback' => 'sanitize_text_field'
 		) );
 
-		register_setting( 'wp_filepond_options_group', 'wp_fp_enable_preview', array(
+		register_setting( 'fp_wpi_options_group', 'fp_wpi_enable_preview', array(
 			'sanitize_callback' => 'absint'
 		) );
 
-		register_setting( 'wp_filepond_options_group', 'wp_fp_preview_height', array(
+		register_setting( 'fp_wpi_options_group', 'fp_wpi_preview_height', array(
 			'sanitize_callback' => 'absint'
 		) );
 
-		register_setting( 'wp_filepond_options_group', 'wp_fp_file_type_error', array(
+		register_setting( 'fp_wpi_options_group', 'fp_wpi_file_type_error', array(
 			'sanitize_callback' => 'sanitize_text_field'
 		) );
 
-		register_setting( 'wp_filepond_options_group', 'wp_fp_file_size_error', array(
+		register_setting( 'fp_wpi_options_group', 'fp_wpi_file_size_error', array(
 			'sanitize_callback' => 'sanitize_text_field'
 		) );
 
-		register_setting( 'wp_filepond_options_group', 'wp_fp_max_file_size', array(
+		register_setting( 'fp_wpi_options_group', 'fp_wpi_max_file_size', array(
 			'sanitize_callback' => 'absint'
 		) );
 
 		// Add the main settings section
 		add_settings_section(
-			'wp_filepond_main_section',
+			'fp_wpi_main_section',
 			__( 'Main Settings', 'filepond-wp-integration' ),
 			array( $this, 'section_callback' ),
 			'filepond-wp-integration'
 		);
 
 		add_settings_field(
-			'wp_fp_enable_preview',
+			'fp_wpi_enable_preview',
 			__( 'Enable Preview', 'filepond-wp-integration' ),
 			array( $this, 'enable_preview_callback' ),
 			'filepond-wp-integration',
-			'wp_filepond_main_section'
+			'fp_wpi_main_section'
 		);
 
 		add_settings_field(
-			'wp_fp_max_file_size',
+			'fp_wpi_max_file_size',
 			__( 'Max. File Size', 'filepond-wp-integration' ),
 			array( $this, 'max_file_size_callback' ),
 			'filepond-wp-integration',
-			'wp_filepond_main_section'
+			'fp_wpi_main_section'
 		);
 
 		add_settings_field(
-			'wp_fp_preview_height',
+			'fp_wpi_preview_height',
 			__( 'Preview Height', 'filepond-wp-integration' ),
 			array( $this, 'preview_height_callback' ),
 			'filepond-wp-integration',
-			'wp_filepond_main_section'
+			'fp_wpi_main_section'
 		);
 
 		add_settings_field(
-			'wp_fp_button_label',
+			'fp_wpi_button_label',
 			__( 'Default Button Label', 'filepond-wp-integration' ),
 			array( $this, 'button_label_callback' ),
 			'filepond-wp-integration',
-			'wp_filepond_main_section'
+			'fp_wpi_main_section'
 		);
 
 		add_settings_field(
-			'wp_fp_file_types_allowed',
+			'fp_wpi_file_types_allowed',
 			__( 'Default File Types Allowed', 'filepond-wp-integration' ),
 			array( $this, 'file_types_allowed_callback' ),
 			'filepond-wp-integration',
-			'wp_filepond_main_section'
+			'fp_wpi_main_section'
 		);
 
 		add_settings_field(
-			'wp_fp_file_type_error',
+			'fp_wpi_file_type_error',
 			__( 'File Type Error Message', 'filepond-wp-integration' ),
 			array( $this, 'file_type_error_message_callback' ),
 			'filepond-wp-integration',
-			'wp_filepond_main_section'
+			'fp_wpi_main_section'
 		);
 
 		add_settings_field(
-			'wp_fp_file_size_error',
+			'fp_wpi_file_size_error',
 			__( 'File Size Error Message', 'filepond-wp-integration' ),
 			array( $this, 'file_size_error_message_callback' ),
 			'filepond-wp-integration',
-			'wp_filepond_main_section'
+			'fp_wpi_main_section'
 		);
 	}
 
@@ -201,7 +201,7 @@ class Settings {
 	public function render_settings_page(): void {
 		// Data to pass to the template
 		$data = array(
-			'options_group' => 'wp_filepond_options_group',
+			'options_group' => 'fp_wpi_options_group',
 			'page_slug'     => 'filepond-wp-integration',
 		);
 
@@ -232,12 +232,12 @@ class Settings {
 	 */
 	public function file_type_error_message_callback(): void {
 		// Retrieve the file type error message, defaulting to an empty string.
-		$message = get_option( 'wp_fp_file_type_error', '' );
+		$message = get_option( 'fp_wpi_file_type_error', '' );
 		$message = sanitize_textarea_field( $message ); // Ensure safe text output
 
 		// Output the textarea field with proper escaping.
 		printf(
-			'<textarea name="wp_fp_file_type_error" rows="3" cols="50" maxlength="120">%s</textarea>',
+			'<textarea name="fp_wpi_file_type_error" rows="3" cols="50" maxlength="120">%s</textarea>',
 			esc_textarea( $message ) // Escape output to prevent XSS
 		);
 
@@ -258,12 +258,12 @@ class Settings {
 	 */
 	public function file_size_error_message_callback(): void {
 		// Retrieve the file size error message, defaulting to an empty string.
-		$message = get_option( 'wp_fp_file_size_error', '' );
+		$message = get_option( 'fp_wpi_file_size_error', '' );
 		$message = sanitize_textarea_field( $message ); // Ensure safe text output
 
 		// Output the textarea field with proper escaping.
 		printf(
-			'<textarea name="wp_fp_file_size_error" rows="3" cols="50" maxlength="120">%s</textarea>',
+			'<textarea name="fp_wpi_file_size_error" rows="3" cols="50" maxlength="120">%s</textarea>',
 			esc_textarea( $message ) // Escape output to prevent XSS
 		);
 
@@ -284,12 +284,12 @@ class Settings {
 	 */
 	public function button_label_callback(): void {
 		// Retrieve the button label option from the database, defaulting to an empty string.
-		$button_label = get_option( 'wp_fp_button_label', '' );
+		$button_label = get_option( 'fp_wpi_button_label', '' );
 		$button_label = sanitize_text_field( $button_label ); // Ensure safe text output
 
 		// Output the input field with proper escaping.
 		printf(
-			'<input type="text" name="wp_fp_button_label" value="%s">',
+			'<input type="text" name="fp_wpi_button_label" value="%s">',
 			esc_attr( $button_label ) // Escape output to prevent XSS
 		);
 	}
@@ -305,12 +305,12 @@ class Settings {
 	 */
 	public function file_types_allowed_callback(): void {
 		// Retrieve the allowed file types option from the database, defaulting to an empty string.
-		$file_types = get_option( 'wp_fp_file_types_allowed', '' );
+		$file_types = get_option( 'fp_wpi_file_types_allowed', '' );
 		$file_types = is_string( $file_types ) ? sanitize_text_field( $file_types ) : ''; // Ensure it's a clean string
 
 		// Output the input field with proper escaping to prevent XSS.
 		printf(
-			'<input type="text" name="wp_fp_file_types_allowed" value="%s">',
+			'<input type="text" name="fp_wpi_file_types_allowed" value="%s">',
 			esc_attr( $file_types ) // Escape output to prevent XSS
 		);
 
@@ -331,12 +331,12 @@ class Settings {
 	 */
 	public function enable_preview_callback(): void {
 		// Retrieve the enable_preview option from the database, defaulting to false.
-		$enable_preview = get_option( 'wp_fp_enable_preview', false );
+		$enable_preview = get_option( 'fp_wpi_enable_preview', false );
 		$enable_preview = (bool) $enable_preview; // Ensure it's strictly boolean
 
 		// Output the checkbox input field with proper escaping and checked attribute handling.
 		printf(
-			'<label><input type="checkbox" name="wp_fp_enable_preview" value="1" %s> <span class="help-text">%s</span></label>',
+			'<label><input type="checkbox" name="fp_wpi_enable_preview" value="1" %s> <span class="help-text">%s</span></label>',
 			esc_attr( checked( $enable_preview, true, false ) ), // Ensure proper checkbox handling
 			esc_html__( 'Check if you want to preview the file uploaded.', 'filepond-wp-integration' )
 		);
@@ -351,12 +351,12 @@ class Settings {
 	 */
 	public function max_file_size_callback(): void {
 		// Retrieve the max file size setting from the database, defaulting to 100 MB.
-		$max_file_size = get_option( 'wp_fp_max_file_size', 100 );
+		$max_file_size = get_option( 'fp_wpi_max_file_size', 100 );
 		$max_file_size = (int) $max_file_size; // Ensure it is strictly an integer.
 
 		// Output a number input field with proper escaping and value handling.
 		printf(
-			'<input type="number" name="wp_fp_max_file_size" value="%d" min="1" step="1">',
+			'<input type="number" name="fp_wpi_max_file_size" value="%d" min="1" step="1">',
 			esc_attr( $max_file_size ) // Escape for output safety.
 		);
 
@@ -377,12 +377,12 @@ class Settings {
 	 */
 	public function preview_height_callback(): void {
 		// Retrieve the preview height option from the database, defaulting to 100.
-		$preview_height = get_option( 'wp_fp_preview_height', 100 );
+		$preview_height = get_option( 'fp_wpi_preview_height', 100 );
 		$preview_height = is_numeric( $preview_height ) ? intval( $preview_height ) : 100; // Ensure it's a valid integer
 
 		// Output the input field with proper escaping.
 		printf(
-			'<input type="number" name="wp_fp_preview_height" value="%d" min="1" step="1">',
+			'<input type="number" name="fp_wpi_preview_height" value="%d" min="1" step="1">',
 			esc_attr( $preview_height ) // Escape output to prevent XSS
 		);
 
@@ -403,11 +403,11 @@ class Settings {
 	 */
 	public function upload_location_callback(): void {
 		// Retrieve the upload location option from the database, defaulting to an empty string.
-		$upload_location = get_option( 'wp_fp_upload_location', '' );
+		$upload_location = get_option( 'fp_wpi_upload_location', '' );
 	
 		// Output the input field with proper escaping.
 		printf(
-			'<input type="text" name="wp_fp_upload_location" value="%s">',
+			'<input type="text" name="fp_wpi_upload_location" value="%s">',
 			esc_attr( $upload_location ) // Escape output to prevent XSS
 		);
 
