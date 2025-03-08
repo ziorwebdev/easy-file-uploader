@@ -7,12 +7,18 @@ import 'filepond/dist/filepond.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import "./style.css";
 
-// Register FilePond plugins
-registerPlugin(
+// Array of FilePond plugins to register
+let filePondPlugins = [
     FilePondPluginFileValidateSize,
     FilePondPluginFileValidateType,
     FilePondPluginImagePreview
-);
+];
+
+// Allow developers to modify the plugin list via "wp_filepond_filepond_plugins" filter
+filePondPlugins = wpFilePond.applyFilters("wp_filepond_filepond_plugins", filePondPlugins);
+
+// Register FilePond plugins
+registerPlugin(...filePondPlugins);
 
 function convertToBytes(sizeString) {
     const units = { B: 1, KB: 1024, MB: 1024 ** 2, GB: 1024 ** 3 };
@@ -74,7 +80,7 @@ function getFilePondConfiguration(configuration) {
         }
     };
 
-    return Object.assign({}, configuration, defaultConfiguration);
+    return wpFilePond.applyFilters("wp_filepond_configuration", Object.assign({}, configuration, defaultConfiguration));
 }
 
 function createFilePondInstance(fileInput, configuration = {}) {

@@ -62,7 +62,7 @@ class Uploader {
 	/**
 	 * Validate the file type against allowed types.
 	 *
-	 * This function applies the 'fp_wpi_validate_file_type' filter to allow
+	 * This function applies the 'wp_filepond_validate_file_type' filter to allow
 	 * external modification of the validation logic.
 	 *
 	 * @param array $file        File data array containing file details.
@@ -71,13 +71,13 @@ class Uploader {
 	 * @return bool True if the file type is valid, false otherwise.
 	 */
 	private function is_valid_file_type( array $file, array $valid_types ): bool {
-		return apply_filters( 'fp_wpi_validate_file_type', false, $file, $valid_types );
+		return apply_filters( 'wp_filepond_validate_file_type', false, $file, $valid_types );
 	}
 
 	/**
 	 * Validate the file size against the maximum allowed size.
 	 *
-	 * This function applies the 'fp_wpi_validate_file_size' filter to allow
+	 * This function applies the 'wp_filepond_validate_file_size' filter to allow
 	 * external modification of the validation logic.
 	 *
 	 * @param array $file    File data array containing file details.
@@ -86,7 +86,7 @@ class Uploader {
 	 * @return bool True if the file size is valid, false otherwise.
 	 */
 	private function is_valid_file_size( array $file, int $max_size ): bool {
-		return apply_filters( 'fp_wpi_validate_file_size', false, $file, $max_size );
+		return apply_filters( 'wp_filepond_validate_file_size', false, $file, $max_size );
 	}
 
 	/**
@@ -97,13 +97,13 @@ class Uploader {
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ), 10 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_scripts' ), 10 );
-		add_action( 'wp_ajax_fp_wpi_upload', array( $this, 'handle_filepond_upload' ), 10 );
-		add_action( 'wp_ajax_nopriv_fp_wpi_upload', array( $this, 'handle_filepond_upload' ), 10 );
-		add_action( 'wp_ajax_fp_wpi_remove', array( $this, 'handle_filepond_remove' ), 10 );
-		add_action( 'wp_ajax_nopriv_fp_wpi_remove', array( $this, 'handle_filepond_remove' ), 10 );
+		add_action( 'wp_ajax_wp_filepond_upload', array( $this, 'handle_filepond_upload' ), 10 );
+		add_action( 'wp_ajax_nopriv_wp_filepond_upload', array( $this, 'handle_filepond_upload' ), 10 );
+		add_action( 'wp_ajax_wp_filepond_remove', array( $this, 'handle_filepond_remove' ), 10 );
+		add_action( 'wp_ajax_nopriv_wp_filepond_remove', array( $this, 'handle_filepond_remove' ), 10 );
 
-		add_filter( 'fp_wpi_validate_file_type', array( $this, 'validate_file_type' ), 10, 3 );
-		add_filter( 'fp_wpi_validate_file_size', array( $this, 'validate_file_size' ), 10, 3 );
+		add_filter( 'wp_filepond_validate_file_type', array( $this, 'validate_file_type' ), 10, 3 );
+		add_filter( 'wp_filepond_validate_file_size', array( $this, 'validate_file_size' ), 10, 3 );
 	}
 
 	/**
@@ -113,8 +113,8 @@ class Uploader {
 		$configuration = get_configuration();
 
 		wp_enqueue_style( 'filepond-wp-integration-admin', PLUGIN_URL . 'dist/main.min.css', array(), null );
-		wp_enqueue_script( 'filepond-wp-integration', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
-		wp_enqueue_script( 'filepond-wp-integration-admin', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'filepond-wp-integration' ), null, true );
+		wp_enqueue_script( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
+		wp_enqueue_script( 'filepond-wp-integration-admin', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'wp-filepond' ), null, true );
 		wp_localize_script( 'filepond-wp-integration-admin', 'FilePondIntegration', $configuration );
 	}
 
@@ -124,10 +124,10 @@ class Uploader {
 	public function enqueue_frontend_scripts(): void {
 		$configuration = get_configuration();
 
-		wp_enqueue_style( 'filepond-wp-integration', PLUGIN_URL . 'dist/filepond.min.css', array(), null );
+		wp_enqueue_style( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.css', array(), null );
 		wp_enqueue_style( 'filepond-wp-integration-public', PLUGIN_URL . 'dist/main.min.css', array(), null );
-		wp_enqueue_script( 'filepond-wp-integration', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
-		wp_enqueue_script( 'filepond-wp-integration-public', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'filepond-wp-integration' ), null, true );
+		wp_enqueue_script( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
+		wp_enqueue_script( 'filepond-wp-integration-public', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'wp-filepond' ), null, true );
 		wp_localize_script( 'filepond-wp-integration-public', 'FilePondIntegration', $configuration );
 	}
 
@@ -155,7 +155,7 @@ class Uploader {
 	public function handle_filepond_remove(): void {
 		// Verify security nonce.
 		if ( ! $this->verify_nonce() ) {
-			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'filepond-wp-integration' ) ), 403 );
+			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'wp-filepond' ) ), 403 );
 		}
 
 		// Retrieve the file URL from the request body.
@@ -163,7 +163,7 @@ class Uploader {
 
 		if ( ! $file_url ) {
 			wp_send_json_error(
-				array( 'message' => __( 'Invalid file URL.', 'filepond-wp-integration' ) )
+				array( 'message' => __( 'Invalid file URL.', 'wp-filepond' ) )
 			);
 		}
 
@@ -173,11 +173,11 @@ class Uploader {
 
 		if ( wp_delete_file( $file_path ) ) {
 			wp_send_json_success(
-				array( 'message' => __( 'File deleted successfully.', 'filepond-wp-integration' ) )
+				array( 'message' => __( 'File deleted successfully.', 'wp-filepond' ) )
 			);
 		} else {
 			wp_send_json_error(
-				array( 'message' => __( 'Failed to delete file.', 'filepond-wp-integration' ) )
+				array( 'message' => __( 'Failed to delete file.', 'wp-filepond' ) )
 			);
 		}
 	}
@@ -193,7 +193,7 @@ class Uploader {
 	public function handle_filepond_upload(): void {
 		// Verify security nonce.
 		if ( ! $this->verify_nonce() ) {
-			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'filepond-wp-integration' ) ), 403 );
+			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'wp-filepond' ) ), 403 );
 
 			return;
 		}
@@ -202,7 +202,7 @@ class Uploader {
 		$file = $this->get_uploaded_file();
 
 		if ( empty( $file ) ) {
-			wp_send_json_error( array( 'error' => __( 'No valid file uploaded.', 'filepond-wp-integration' ) ) );
+			wp_send_json_error( array( 'error' => __( 'No valid file uploaded.', 'wp-filepond' ) ) );
 
 			return;
 		}
@@ -213,13 +213,13 @@ class Uploader {
 		$valid_types = explode( ',', $args['types'] );
 
 		if ( ! $this->is_valid_file_type( $file, $valid_types ) ) {
-			wp_send_json_error( array( 'error' => get_option( 'fp_wpi_file_type_error', '' ) ), 415 );
+			wp_send_json_error( array( 'error' => get_option( 'wp_filepond_file_type_error', '' ) ), 415 );
 
 			return;
 		}
 
 		if ( ! $this->is_valid_file_size( $file, $args['size'] ) ) {
-			wp_send_json_error( array( 'error' => get_option( 'fp_wpi_file_size_error', '' ) ), 413 );
+			wp_send_json_error( array( 'error' => get_option( 'wp_filepond_file_size_error', '' ) ), 413 );
 
 			return;
 		}
@@ -230,13 +230,13 @@ class Uploader {
 		}
 
 		// Trigger a custom action before the file upload process starts.
-		do_action( 'fp_wpi_before_upload', $file, $args );
+		do_action( 'wp_filepond_before_upload', $file, $args );
 
 		// Upload the file using WordPress' built-in file upload handler.
 		$uploaded = wp_handle_upload( $file, array( 'test_form' => false ) );
 
 		// Trigger a custom action after the file upload process is complete.
-		do_action( 'fp_wpi_after_upload', $uploaded, $file, $args );
+		do_action( 'wp_filepond_after_upload', $uploaded, $file, $args );
 
 		// Respond with the upload result.
 		if ( $uploaded && ! isset( $uploaded['error'] ) ) {

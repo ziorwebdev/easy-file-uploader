@@ -111,7 +111,7 @@ class Plugin {
 	 * Loads plugin text domain for translations.
 	 */
 	public function load_plugin_textdomain(): void {
-		load_plugin_textdomain( 'filepond-wp-integration', false, PLUGIN_DIR . '/languages' );
+		load_plugin_textdomain( 'wp-filepond', false, PLUGIN_DIR . '/languages' );
 	}
 
 	/**
@@ -137,7 +137,7 @@ class Plugin {
 	public function add_settings_link( array $links ): array {
 		// Define the settings link URL
 		$settings_url  = admin_url( 'options-general.php?page=filepond-wp-integration' );
-		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'filepond-wp-integration' ) . '</a>';
+		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'wp-filepond' ) . '</a>';
 
 		// Prepend the settings link to the existing links.
 		array_unshift( $links, $settings_link );
