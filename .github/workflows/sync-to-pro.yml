@@ -1,4 +1,4 @@
-name: Sync to PRO Repo
+name: Clone the PRO Repository
 
 on:
   push:
