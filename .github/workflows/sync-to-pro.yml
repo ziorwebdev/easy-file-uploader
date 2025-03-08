@@ -38,5 +38,3 @@ jobs:
           # Merge the latest changes from filepond-wp-integration/main
           git remote add free https://github.com/ZIORWebDev/filepond-wp-integration.git || echo "Remote already exists"
           git fetch free main
-
-          
