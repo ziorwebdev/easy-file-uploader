@@ -23,7 +23,7 @@ jobs:
           cd pro-repo
 
           # Ensure 'develop' branch exists and switch to it
-          if git show-ref --verify --quiet refs/heads/develop; then
+          if git ls-remote --exit-code --heads origin develop; then
             git checkout develop
             git pull origin develop --rebase  # Fetch latest changes
           else
@@ -32,7 +32,7 @@ jobs:
           fi
           
           # Sync files while excluding unwanted ones
-          rsync -av --exclude=".git/" \
+          rsync -av --delete --exclude=".git/" \
                   --exclude="/filepond-wp-integration.php" \
                   --exclude="/webpack.config.js" \
                   --exclude="/package.json" \
@@ -54,5 +54,5 @@ jobs:
           git add .
           git commit -m "Sync from filepond-wp-integration: $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
           
-          # Push changes
+          # Push changes, retry if necessary
           git push origin develop || (git pull origin develop --rebase && git push origin develop)
