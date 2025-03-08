@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout Free Version (Public)
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Clone the PRO Repository
         env:
@@ -23,7 +25,7 @@ jobs:
           # Ensure 'develop' branch exists and switch to it
           if git show-ref --verify --quiet refs/heads/develop; then
             git checkout develop
-            git pull origin develop --rebase  # Fetch latest changes before push
+            git pull origin develop --rebase  # Fetch latest changes
           else
             git checkout -b develop
             git push origin develop
@@ -40,7 +42,7 @@ jobs:
                   --exclude="README.md" \
                   --exclude=".yarn/" \
                   --exclude=".github/workflows/" \
-                  ../filepond-wp-integration/ ./
+                  ../ .  # Fixed: Use '../' instead of '../filepond-wp-integration/'
 
           # Configure Git and commit changes
           git config user.name "github-actions[bot]"
@@ -48,5 +50,5 @@ jobs:
           git add .
           git commit -m "Sync from filepond-wp-integration: $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
           
-          # Force push only if necessary (use with caution)
+          # Push changes
           git push origin develop || (git pull origin develop --rebase && git push origin develop)
