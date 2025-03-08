@@ -14,9 +14,9 @@ class Uploader {
 	/**
 	 * Singleton instance of the class.
 	 *
-	 * @var FilePond|null
+	 * @var Uploader|null
 	 */
-	private static ?FilePond $instance = null;
+	private static ?Uploader $instance = null;
 
 	/**
 	 * Verify the nonce for security validation.
@@ -134,9 +134,9 @@ class Uploader {
 	/**
 	 * Retrieves the singleton instance of the class.
 	 *
-	 * @return FilePond The single instance of the class.
+	 * @return Uploader The single instance of the class.
 	 */
-	public static function get_instance(): FilePond {
+	public static function get_instance(): Uploader {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 		}
