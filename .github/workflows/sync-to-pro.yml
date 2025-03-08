@@ -19,8 +19,19 @@ jobs:
         run: |
           git clone --depth 1 https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/filepond-wp-integration-pro.git pro-repo
           cd pro-repo
-          git checkout develop
-          rsync -av --exclude=".git/" ../ ./
+          
+          # Check if 'develop' branch exists, create it if missing
+          if git show-ref --verify --quiet refs/heads/develop; then
+            git checkout develop
+          else
+            git checkout -b develop
+            git push origin develop
+          fi
+          
+          # Sync files from public repo
+          rsync -av --exclude=".git/" ../ ./ 
+          
+          # Configure Git and commit changes
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
