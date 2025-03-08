@@ -28,9 +28,19 @@ jobs:
             git push origin develop
           fi
           
-          # Sync files from public repo
-          rsync -av --exclude=".git/" ../ ./ 
-          
+          # Sync files while excluding unwanted ones
+          rsync -av --exclude=".git/" \
+                  --exclude="filepond-wp-integration.php" \
+                  --exclude="webpack.config.js" \
+                  --exclude="package.json" \
+                  --exclude="composer.json" \
+                  --exclude="composer.lock" \
+                  --exclude=".gitignore" \
+                  --exclude="README.md" \
+                  --exclude=".yarn/" \
+                  --exclude=".github/workflows/" \
+                  ../filepond-wp-integration/ ./
+
           # Configure Git and commit changes
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
