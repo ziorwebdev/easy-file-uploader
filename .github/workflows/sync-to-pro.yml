@@ -19,16 +19,17 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}
         run: |
-          git clone --depth 1 https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/filepond-wp-integration-pro.git pro-repo
+          git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/filepond-wp-integration-pro.git pro-repo
           cd pro-repo
 
-          # Fetch the latest develop branch if it exists
+          # Ensure full history is fetched to avoid non-fast-forward issues
+          git fetch --unshallow || echo "Already unshallowed"
           git fetch origin develop || echo "No remote develop branch found"
 
-          # Ensure we have the latest develop branch
+          # Checkout or create develop branch
           if git show-ref --verify --quiet refs/remotes/origin/develop; then
             git checkout develop
-            git pull --rebase origin develop
+            git reset --hard origin/develop  # Sync with remote without conflicts
           else
             git checkout -b develop
             git push origin develop
@@ -59,5 +60,5 @@ jobs:
           git add .
           git commit -m "Sync from filepond-wp-integration: $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
           
-          # Force push to ensure sync
-          git push --force-with-lease origin develop
+          # Push changes
+          git push origin develop
