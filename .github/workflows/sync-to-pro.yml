@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ZIORWebDev/filepond-wp-integration
-          fetch-depth: 0
+          fetch-depth: 0  # Fetch full history
 
       - name: Clone the PRO Repository
         env:
@@ -24,11 +24,8 @@ jobs:
           git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/filepond-wp-integration-pro.git pro-repo
           cd pro-repo
 
-          # Fetch all history for proper merging
-          git fetch --unshallow || echo "Already unshallowed"
-          git fetch origin develop || echo "No remote develop branch found"
-
-          # Checkout develop branch or create it if it doesn't exist
+          # Fetch all branches to ensure develop exists
+          git fetch origin
           if git show-ref --verify --quiet refs/remotes/origin/develop; then
             git checkout develop
           else
@@ -36,19 +33,20 @@ jobs:
             git push origin develop
           fi
 
-          # Add Free repo as remote and fetch latest updates
+          # Add Free repo as remote and fetch its main branch
           git remote add free https://github.com/ZIORWebDev/filepond-wp-integration.git || echo "Remote already exists"
           git fetch free main
 
-          # Merge Free repo into PRO repo and always prefer Free's changes
-          git merge free/main --strategy-option=theirs || (
+          # Set Git user identity to avoid commit errors
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Merge Free repo into PRO repo while always preferring Free's changes
+          git merge free/main --allow-unrelated-histories --strategy-option=theirs || (
             git checkout --theirs .
             git add .
             git commit -m "Merged updates from filepond-wp-integration/main into develop"
           )
 
           # Push the merged changes
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
           git push origin develop
