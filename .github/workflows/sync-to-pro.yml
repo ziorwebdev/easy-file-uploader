@@ -13,7 +13,8 @@ jobs:
       - name: Checkout Free Version (Public)
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          repository: ZIORWebDev/filepond-wp-integration
+          fetch-depth: 0
 
       - name: Clone the PRO Repository
         env:
@@ -35,6 +36,19 @@ jobs:
             git push origin develop
           fi
 
-          # Merge the latest changes from filepond-wp-integration/main
+          # Add Free repo as remote and fetch latest updates
           git remote add free https://github.com/ZIORWebDev/filepond-wp-integration.git || echo "Remote already exists"
           git fetch free main
+
+          # Merge Free repo into PRO repo and always prefer Free's changes
+          git merge free/main --strategy-option=theirs || (
+            git checkout --theirs .
+            git add .
+            git commit -m "Merged updates from filepond-wp-integration/main into develop"
+          )
+
+          # Push the merged changes
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git push origin develop
