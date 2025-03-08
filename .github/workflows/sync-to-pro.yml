@@ -33,19 +33,20 @@ jobs:
           
           # Sync files while excluding unwanted ones
           rsync -av --exclude=".git/" \
-                  --exclude="filepond-wp-integration.php" \
-                  --exclude="webpack.config.js" \
-                  --exclude="package.json" \
-                  --exclude="composer.json" \
-                  --exclude="composer.lock" \
-                  --exclude=".gitignore" \
-                  --exclude="README.md" \
-                  --exclude=".yarn/" \
-                  --exclude=".github/workflows/" \
-                  --exclude="readme.txt" \
-                  --exclude="yarn.lock" \
-                  --exclude="pro-repo/" \
-                  ../ .  # Fixed: Use '../' instead of '../filepond-wp-integration/'
+                  --exclude="/filepond-wp-integration.php" \
+                  --exclude="/webpack.config.js" \
+                  --exclude="/package.json" \
+                  --exclude="/composer.json" \
+                  --exclude="/composer.lock" \
+                  --exclude="/.gitignore" \
+                  --exclude="/README.md" \
+                  --exclude="/.yarn/" \
+                  --exclude="/.github/workflows/" \
+                  --exclude="/readme.txt" \
+                  --exclude="/yarn.lock" \
+                  --exclude="/pro-repo/" \
+                  --exclude="/index.php" \
+                  ../ .
 
           # Configure Git and commit changes
           git config user.name "github-actions[bot]"
