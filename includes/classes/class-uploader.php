@@ -115,7 +115,7 @@ class Uploader {
 		wp_enqueue_style( 'filepond-wp-integration-admin', PLUGIN_URL . 'dist/main.min.css', array(), null );
 		wp_enqueue_script( 'filepond-wp-integration', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
 		wp_enqueue_script( 'filepond-wp-integration-admin', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'filepond-wp-integration' ), null, true );
-		wp_localize_script( 'filepond-wp-integration-admin', 'wpFilePondIntegration', $configuration );
+		wp_localize_script( 'filepond-wp-integration-admin', 'FilePondIntegration', $configuration );
 	}
 
 	/**
@@ -128,7 +128,7 @@ class Uploader {
 		wp_enqueue_style( 'filepond-wp-integration-public', PLUGIN_URL . 'dist/main.min.css', array(), null );
 		wp_enqueue_script( 'filepond-wp-integration', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
 		wp_enqueue_script( 'filepond-wp-integration-public', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'filepond-wp-integration' ), null, true );
-		wp_localize_script( 'filepond-wp-integration-public', 'wpFilePondIntegration', $configuration );
+		wp_localize_script( 'filepond-wp-integration-public', 'FilePondIntegration', $configuration );
 	}
 
 	/**

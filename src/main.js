@@ -3,11 +3,11 @@ import createFilePondInstance from "./filepond/main.js";
 $(document).ready(function () {
     const filePondInstances = new Map();
     const fileUploaderFields = $(".filepond-wp-integration-upload");
-    const filePondIntegration = wpFilePondIntegration || {};
+    const filePondIntegration = FilePondIntegration || {};
 
-    filePondIntegration.allowImagePreview = wpFilePondIntegration.allowImagePreview === "1";
-    filePondIntegration.imagePreviewHeight = parseInt(wpFilePondIntegration.imagePreviewHeight);
-    filePondIntegration.allowMultiple = wpFilePondIntegration.allowMultiple === "1";
+    filePondIntegration.allowImagePreview = FilePondIntegration.allowImagePreview === "1";
+    filePondIntegration.imagePreviewHeight = parseInt(FilePondIntegration.imagePreviewHeight);
+    filePondIntegration.allowMultiple = FilePondIntegration.allowMultiple === "1";
 
     fileUploaderFields.each(function () {
         const configuration = Object.assign({}, getConfiguration($(this)), filePondIntegration);
