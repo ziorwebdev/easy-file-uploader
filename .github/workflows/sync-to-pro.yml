@@ -1,4 +1,4 @@
-name: Clone the PRO Repository
+name: Merge Free Version into PRO Repository
 
 on:
   push:
@@ -19,46 +19,24 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}
         run: |
+          # Clone the PRO repository
           git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/filepond-wp-integration-pro.git pro-repo
           cd pro-repo
 
-          # Ensure full history is fetched to avoid non-fast-forward issues
+          # Fetch all history for proper merging
           git fetch --unshallow || echo "Already unshallowed"
           git fetch origin develop || echo "No remote develop branch found"
 
-          # Checkout or create develop branch
+          # Checkout develop branch or create it if it doesn't exist
           if git show-ref --verify --quiet refs/remotes/origin/develop; then
             git checkout develop
-            git reset --hard origin/develop  # Sync with remote without conflicts
           else
             git checkout -b develop
             git push origin develop
           fi
-          
-          # Sync files while excluding unwanted ones
-          rsync -av --delete --exclude=".git/" \
-                  --exclude="/filepond-wp-integration.php" \
-                  --exclude="/webpack.config.js" \
-                  --exclude="/package.json" \
-                  --exclude="/composer.json" \
-                  --exclude="/composer.lock" \
-                  --exclude="/.gitignore" \
-                  --exclude="/README.md" \
-                  --exclude="/.yarn/" \
-                  --exclude="/.github/workflows/" \
-                  --exclude="/readme.txt" \
-                  --exclude="/yarn.lock" \
-                  --exclude="/pro-repo/" \
-                  --exclude="/index.php" \
-                  ../ .
 
-          # Configure Git
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Merge the latest changes from filepond-wp-integration/main
+          git remote add free https://github.com/ZIORWebDev/filepond-wp-integration.git || echo "Remote already exists"
+          git fetch free main
 
-          # Commit changes
-          git add .
-          git commit -m "Sync from filepond-wp-integration: $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
           
-          # Push changes
-          git push origin develop
