@@ -22,22 +22,15 @@ jobs:
           git clone --depth 1 https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/filepond-wp-integration-pro.git pro-repo
           cd pro-repo
 
-          # Check if the develop branch exists remotely and has commits
-          if git ls-remote --heads origin develop | grep develop; then
-            git fetch origin develop
-            if git rev-parse --verify origin/develop >/dev/null 2>&1; then
-              git checkout -t origin/develop
-              git pull origin develop --rebase
-            else
-              git checkout -b develop
-              git push origin develop
-            fi
+          # Fetch the latest develop branch if it exists
+          git fetch origin develop || echo "No remote develop branch found"
+
+          # Ensure we have the latest develop branch
+          if git show-ref --verify --quiet refs/remotes/origin/develop; then
+            git checkout develop
+            git pull --rebase origin develop
           else
-            # If develop branch is empty, create it and push an initial commit
             git checkout -b develop
-            touch .placeholder
-            git add .placeholder
-            git commit -m "Initial commit to develop branch"
             git push origin develop
           fi
           
@@ -58,11 +51,13 @@ jobs:
                   --exclude="/index.php" \
                   ../ .
 
-          # Configure Git and commit changes
+          # Configure Git
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Commit changes
           git add .
           git commit -m "Sync from filepond-wp-integration: $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
           
-          # Push changes, retry if necessary
-          git push origin develop || (git pull origin develop --rebase && git push origin develop)
+          # Force push to ensure sync
+          git push --force-with-lease origin develop
