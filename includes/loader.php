@@ -44,6 +44,7 @@ class Loader {
 			}
 
 			$classes = array(
+				'Assets'         => PLUGIN_DIR . 'includes/classes/class-assets.php',
 				'Uploader'       => PLUGIN_DIR . 'includes/classes/class-uploader.php',
 				'FilePondUpload' => PLUGIN_DIR . 'includes/classes/integration/elementor/class-filepond-upload.php',
 				'Register'       => PLUGIN_DIR . 'includes/classes/class-register.php',
@@ -57,6 +58,7 @@ class Loader {
 			}
 		} );
 
+		Assets::get_instance();	
 		Uploader::get_instance();
 		Register::get_instance();
 		Settings::get_instance();

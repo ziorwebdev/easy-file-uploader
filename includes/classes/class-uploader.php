@@ -95,8 +95,6 @@ class Uploader {
 	 * Hooks into WordPress to enqueue scripts and styles.
 	 */
 	public function __construct() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ), 10 );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_scripts' ), 10 );
 		add_action( 'wp_ajax_wp_filepond_upload', array( $this, 'handle_filepond_upload' ), 10 );
 		add_action( 'wp_ajax_nopriv_wp_filepond_upload', array( $this, 'handle_filepond_upload' ), 10 );
 		add_action( 'wp_ajax_wp_filepond_remove', array( $this, 'handle_filepond_remove' ), 10 );
@@ -104,31 +102,6 @@ class Uploader {
 
 		add_filter( 'wp_filepond_validate_file_type', array( $this, 'validate_file_type' ), 10, 3 );
 		add_filter( 'wp_filepond_validate_file_size', array( $this, 'validate_file_size' ), 10, 3 );
-	}
-
-	/**
-	 * Enqueues scripts and styles for the admin area.
-	 */
-	public function enqueue_admin_scripts(): void {
-		$configuration = get_configuration();
-
-		wp_enqueue_style( 'filepond-wp-integration-admin', PLUGIN_URL . 'dist/main.min.css', array(), null );
-		wp_enqueue_script( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
-		wp_enqueue_script( 'filepond-wp-integration-admin', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'wp-filepond' ), null, true );
-		wp_localize_script( 'filepond-wp-integration-admin', 'FilePondIntegration', $configuration );
-	}
-
-	/**
-	 * Enqueues scripts and styles for the front-end.
-	 */
-	public function enqueue_frontend_scripts(): void {
-		$configuration = get_configuration();
-
-		wp_enqueue_style( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.css', array(), null );
-		wp_enqueue_style( 'filepond-wp-integration-public', PLUGIN_URL . 'dist/main.min.css', array(), null );
-		wp_enqueue_script( 'wp-filepond', PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
-		wp_enqueue_script( 'filepond-wp-integration-public', PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'wp-filepond' ), null, true );
-		wp_localize_script( 'filepond-wp-integration-public', 'FilePondIntegration', $configuration );
 	}
 
 	/**

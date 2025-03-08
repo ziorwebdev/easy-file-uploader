@@ -181,6 +181,9 @@ class FilePondUpload extends Field_Base {
 		$file_types      = array();
 		$file_extensions = array_map( 'trim', explode( ',', $item['wp_filepond_file_types'] ) );
 
+		// Allow developers to modify the file extensions
+		$file_extensions = apply_filters( 'wp_filepond_file_extensions', $file_extensions );
+
 		foreach( $file_extensions as $extension ) {
 			$file_type = get_mime_type( $extension );
 
@@ -201,6 +204,9 @@ class FilePondUpload extends Field_Base {
 			);
 
 		$form->add_render_attribute( 'input' . $item_index, $attributes );
+		
+		// Allow developers to modify the input attributes
+		do_action( 'wp_filepond_before_render_input', $form->get_render_attribute_string( 'input' . $item_index ) );
 
 		echo '<input ' . $form->get_render_attribute_string( 'input' . $item_index ) . '>';
 	}

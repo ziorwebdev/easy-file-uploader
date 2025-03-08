@@ -7,4 +7,5 @@
         submit_button();
         ?>
     </form>
+    <?php do_action( 'wp_filepond_settings_after' ); ?>
 </div>

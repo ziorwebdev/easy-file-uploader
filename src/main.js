@@ -3,7 +3,7 @@ import createFilePondInstance from "./filepond/main.js";
 $(document).ready(function () {
     const filePondInstances = new Map();
     const fileUploaderFields = $(".filepond-wp-integration-upload");
-    const filePondIntegration = FilePondIntegration || {};
+    let filePondIntegration = FilePondIntegration || {};
 
     filePondIntegration.allowImagePreview = FilePondIntegration.allowImagePreview === "1";
     filePondIntegration.imagePreviewHeight = parseInt(FilePondIntegration.imagePreviewHeight);

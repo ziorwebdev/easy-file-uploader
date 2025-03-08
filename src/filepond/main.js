@@ -2,6 +2,7 @@ import { create, registerPlugin } from 'filepond';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import wpFilepond from "./helpers.js";
 
 import 'filepond/dist/filepond.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
@@ -14,8 +15,8 @@ let filePondPlugins = [
     FilePondPluginImagePreview
 ];
 
-// Allow developers to modify the plugin list via "wp_filepond_filepond_plugins" filter
-filePondPlugins = wpFilePond.applyFilters("wp_filepond_filepond_plugins", filePondPlugins);
+// Allow developers to modify the plugin list via "wp_filepond_plugins" filter
+filePondPlugins = wpFilepond.applyFilters("wp_filepond_plugins", filePondPlugins);
 
 // Register FilePond plugins
 registerPlugin(...filePondPlugins);
@@ -55,8 +56,15 @@ function getFilePondConfiguration(configuration) {
                 onload: (response) => {
                     try {
                         const json = JSON.parse(response);
+
+                        // Trigger wp_filepond_upload_success event
+                        $(document).trigger("wp_filepond_upload_success", json);
+
                         return json.success ? json?.data?.url ?? "" : "";
                     } catch {
+                        // Trigger wp_filepond_upload_error event
+                        $(document).trigger("wp_filepond_upload_error", {});
+
                         return "";
                     }
                 },
@@ -68,19 +76,19 @@ function getFilePondConfiguration(configuration) {
                 headers: {
                     'X-WP-Nonce': configuration.nonce
                 },
-                url: `${configuration.ajaxUrl}?action=filepond_wp_integration_upload` 
+                url: `${configuration.ajaxUrl}?action=wp_filepond_upload` 
             },
             revert: {
                 headers: {
                     'X-WP-Nonce': configuration.nonce
                 },
                 method: "POST",
-                url: `${configuration.ajaxUrl}?action=filepond_wp_integration_remove`
+                url: `${configuration.ajaxUrl}?action=wp_filepond_remove`
             }
         }
     };
 
-    return wpFilePond.applyFilters("wp_filepond_configuration", Object.assign({}, configuration, defaultConfiguration));
+    return wpFilepond.applyFilters("wp_filepond_configuration", Object.assign({}, configuration, defaultConfiguration));
 }
 
 function createFilePondInstance(fileInput, configuration = {}) {

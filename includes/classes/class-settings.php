@@ -81,7 +81,7 @@ class Settings {
 	public function add_settings_page(): void {
 		add_options_page(
 			__( 'WP FilePond', 'wp-filepond' ), // Page title
-			__( 'WP FilePond Integration', 'wp-filepond' ), // Menu title
+			__( 'WP FilePond', 'wp-filepond' ), // Menu title
 			'manage_options',                   // Required capability
 			'wp-filepond',                       // Menu slug
 			array( $this, 'render_settings_page' ) // Callback function
@@ -98,33 +98,49 @@ class Settings {
 	 */
 	public function register_settings(): void {
 		// Register settings
-		register_setting( 'wp_filepond_options_group', 'wp_filepond_button_label', array(
-			'sanitize_callback' => 'sanitize_text_field'
-		) );
+		$settings = apply_filters( 'wp_filepond_register_settings', array(
+			array(
+				'option_group' => 'wp_filepond_options_group',
+				'option_name'  => 'wp_filepond_button_label',
+				'sanitize'     => 'sanitize_text_field',
+			),
+			array(
+				'option_group' => 'wp_filepond_options_group',
+				'option_name'  => 'wp_filepond_file_types_allowed',
+				'sanitize'     => 'sanitize_text_field',
+			),
+			array(
+				'option_group' => 'wp_filepond_options_group',
+				'option_name'  => 'wp_filepond_enable_preview',
+				'sanitize'     => 'absint',
+			),
+			array(
+				'option_group' => 'wp_filepond_options_group',
+				'option_name'  => 'wp_filepond_preview_height',
+				'sanitize'     => 'absint',
+			),
+			array(
+				'option_group' => 'wp_filepond_options_group',
+				'option_name'  => 'wp_filepond_file_type_error',
+				'sanitize'     => 'sanitize_text_field',
+			),
+			array(
+				'option_group' => 'wp_filepond_options_group',
+				'option_name'  => 'wp_filepond_file_size_error',
+				'sanitize'     => 'sanitize_text_field',
+			),
+			array(
+				'option_group' => 'wp_filepond_options_group',
+				'option_name'  => 'wp_filepond_max_file_size',
+				'sanitize'     => 'absint',
+			),
+		));
 
-		register_setting( 'wp_filepond_options_group', 'wp_filepond_file_types_allowed', array(
-			'sanitize_callback' => 'sanitize_text_field'
-		) );
-
-		register_setting( 'wp_filepond_options_group', 'wp_filepond_enable_preview', array(
-			'sanitize_callback' => 'absint'
-		) );
-
-		register_setting( 'wp_filepond_options_group', 'wp_filepond_preview_height', array(
-			'sanitize_callback' => 'absint'
-		) );
-
-		register_setting( 'wp_filepond_options_group', 'wp_filepond_file_type_error', array(
-			'sanitize_callback' => 'sanitize_text_field'
-		) );
-
-		register_setting( 'wp_filepond_options_group', 'wp_filepond_file_size_error', array(
-			'sanitize_callback' => 'sanitize_text_field'
-		) );
-
-		register_setting( 'wp_filepond_options_group', 'wp_filepond_max_file_size', array(
-			'sanitize_callback' => 'absint'
-		) );
+		foreach ( $settings as $setting ) {
+			register_setting( $setting['option_group'], $setting['option_name'], array(
+				'sanitize_callback' => $setting['sanitize']
+			) );
+		}
 
 		// Add the main settings section
 		add_settings_section(
@@ -134,61 +150,55 @@ class Settings {
 			'wp-filepond'
 		);
 
-		add_settings_field(
-			'wp_filepond_enable_preview',
-			__( 'Enable Preview', 'wp-filepond' ),
-			array( $this, 'enable_preview_callback' ),
-			'wp-filepond',
-			'wp_filepond_main_section'
-		);
+		// Define fields
+		$fields = apply_filters( 'wp_filepond_register_fields', array(
+			array(
+				'id'       => 'wp_filepond_enable_preview',
+				'title'    => __( 'Enable Preview', 'wp-filepond' ),
+				'callback' => array( $this, 'enable_preview_callback' ),
+			),
+			array(
+				'id'       => 'wp_filepond_max_file_size',
+				'title'    => __( 'Max. File Size', 'wp-filepond' ),
+				'callback' => array( $this, 'max_file_size_callback' ),
+			),
+			array(
+				'id'       => 'wp_filepond_preview_height',
+				'title'    => __( 'Preview Height', 'wp-filepond' ),
+				'callback' => array( $this, 'preview_height_callback' ),
+			),
+			array(
+				'id'       => 'wp_filepond_button_label',
+				'title'    => __( 'Default Button Label', 'wp-filepond' ),
+				'callback' => array( $this, 'button_label_callback' ),
+			),
+			array(
+				'id'       => 'wp_filepond_file_types_allowed',
+				'title'    => __( 'Default File Types Allowed', 'wp-filepond' ),
+				'callback' => array( $this, 'file_types_allowed_callback' ),
+			),
+			array(
+				'id'       => 'wp_filepond_file_type_error',
+				'title'    => __( 'File Type Error Message', 'wp-filepond' ),
+				'callback' => array( $this, 'file_type_error_message_callback' ),
+			),
+			array(
+				'id'       => 'wp_filepond_file_size_error',
+				'title'    => __( 'File Size Error Message', 'wp-filepond' ),
+				'callback' => array( $this, 'file_size_error_message_callback' ),
+			),
+		));
 
-		add_settings_field(
-			'wp_filepond_max_file_size',
-			__( 'Max. File Size', 'wp-filepond' ),
-			array( $this, 'max_file_size_callback' ),
-			'wp-filepond',
-			'wp_filepond_main_section'
-		);
-
-		add_settings_field(
-			'wp_filepond_preview_height',
-			__( 'Preview Height', 'wp-filepond' ),
-			array( $this, 'preview_height_callback' ),
-			'wp-filepond',
-			'wp_filepond_main_section'
-		);
-
-		add_settings_field(
-			'wp_filepond_button_label',
-			__( 'Default Button Label', 'wp-filepond' ),
-			array( $this, 'button_label_callback' ),
-			'wp-filepond',
-			'wp_filepond_main_section'
-		);
-
-		add_settings_field(
-			'wp_filepond_file_types_allowed',
-			__( 'Default File Types Allowed', 'wp-filepond' ),
-			array( $this, 'file_types_allowed_callback' ),
-			'wp-filepond',
-			'wp_filepond_main_section'
-		);
-
-		add_settings_field(
-			'wp_filepond_file_type_error',
-			__( 'File Type Error Message', 'wp-filepond' ),
-			array( $this, 'file_type_error_message_callback' ),
-			'wp-filepond',
-			'wp_filepond_main_section'
-		);
-
-		add_settings_field(
-			'wp_filepond_file_size_error',
-			__( 'File Size Error Message', 'wp-filepond' ),
-			array( $this, 'file_size_error_message_callback' ),
-			'wp-filepond',
-			'wp_filepond_main_section'
-		);
+		// Register each field
+		foreach ( $fields as $field ) {
+			add_settings_field(
+				$field['id'],
+				$field['title'],
+				$field['callback'],
+				'wp-filepond',
+				'wp_filepond_main_section'
+			);
+		}
 	}
 
 	/**
