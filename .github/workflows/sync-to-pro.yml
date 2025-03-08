@@ -48,5 +48,13 @@ jobs:
             git commit -m "Merged updates from filepond-wp-integration/main into develop"
           )
 
+          # Remove or reset unwanted files before pushing
+          rm -rf .github
+          git checkout HEAD~1 -- .gitignore README.md composer.json filepond-wp-integration.php package.json readme.txt webpack.config.js || true
+
+          # Ensure changes are staged and committed
+          git add .
+          git commit --amend --no-edit
+
           # Push the merged changes
           git push origin develop
