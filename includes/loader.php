@@ -45,10 +45,10 @@ class Loader {
 
 			$classes = array(
 				'Assets'         => PLUGIN_DIR . 'includes/classes/class-assets.php',
-				'Uploader'       => PLUGIN_DIR . 'includes/classes/class-uploader.php',
 				'FilePondUpload' => PLUGIN_DIR . 'includes/classes/integration/elementor/class-filepond-upload.php',
 				'Register'       => PLUGIN_DIR . 'includes/classes/class-register.php',
 				'Settings'       => PLUGIN_DIR . 'includes/classes/class-settings.php',
+				'Uploader'       => PLUGIN_DIR . 'includes/classes/class-uploader.php',
 			);
 
 			$class_name = explode( "\\", $class );
