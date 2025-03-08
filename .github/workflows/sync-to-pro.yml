@@ -22,13 +22,22 @@ jobs:
           git clone --depth 1 https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/filepond-wp-integration-pro.git pro-repo
           cd pro-repo
 
-          # Ensure 'develop' branch exists and switch to it
-          if git ls-remote --exit-code --heads origin develop; then
+          # Check if the develop branch exists remotely and has commits
+          if git ls-remote --heads origin develop | grep develop; then
             git fetch origin develop
-            git checkout -t origin/develop
-            git pull origin develop --rebase
+            if git rev-parse --verify origin/develop >/dev/null 2>&1; then
+              git checkout -t origin/develop
+              git pull origin develop --rebase
+            else
+              git checkout -b develop
+              git push origin develop
+            fi
           else
+            # If develop branch is empty, create it and push an initial commit
             git checkout -b develop
+            touch .placeholder
+            git add .placeholder
+            git commit -m "Initial commit to develop branch"
             git push origin develop
           fi
           
