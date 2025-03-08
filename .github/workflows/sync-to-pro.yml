@@ -22,21 +22,34 @@ jobs:
         run: |
           git remote add free https://github.com/ZIORWebDev/filepond-wp-integration.git || echo "Remote already exists"
           git fetch free main
-
+          
+          # Debugging info
+          git remote -v
+          git branch -a
+          
           # Ensure we are on the develop branch
           git checkout develop || git checkout -b develop
-
+          
+          # Debugging info
+          git status
+          
           # Merge Free's main branch into develop with "theirs" strategy (use Free's copy for conflicts)
           git merge --strategy=recursive --strategy-option=theirs free/main || echo "No merge conflicts"
-
+          
+          # Debugging info
+          git status
+          
           # Reset unwanted files to keep PRO's versions
           git checkout HEAD -- yarn.lock readme.txt package.json composer.json composer.lock .gitignore .yarn README.md .github
-
+          
           # Configure Git identity
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
+          
           # Commit and push changes
           git add .
           git commit -m "Merged filepond-wp-integration/main into develop, preserving PRO-specific files" || echo "No changes to commit"
           git push origin develop
+          
+          # Final debugging info
+          git status
