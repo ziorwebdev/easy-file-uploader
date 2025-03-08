@@ -24,8 +24,9 @@ jobs:
 
           # Ensure 'develop' branch exists and switch to it
           if git ls-remote --exit-code --heads origin develop; then
-            git checkout develop
-            git pull origin develop --rebase  # Fetch latest changes
+            git fetch origin develop
+            git checkout -t origin/develop
+            git pull origin develop --rebase
           else
             git checkout -b develop
             git push origin develop
