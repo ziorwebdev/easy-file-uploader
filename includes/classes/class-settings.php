@@ -49,26 +49,31 @@ class Settings {
 				'id'       => 'wp_filepond_max_file_size',
 				'title'    => __( 'Max. File Size', 'wp-filepond' ),
 				'callback' => array( $this, 'max_file_size_callback' ),
+				'section'  => 'wp_filepond_general_section',
 			),
 			array(
 				'id'       => 'wp_filepond_button_label',
 				'title'    => __( 'Default Button Label', 'wp-filepond' ),
 				'callback' => array( $this, 'button_label_callback' ),
+				'section'  => 'wp_filepond_general_section',
 			),
 			array(
 				'id'       => 'wp_filepond_file_types_allowed',
 				'title'    => __( 'Default File Types Allowed', 'wp-filepond' ),
 				'callback' => array( $this, 'file_types_allowed_callback' ),
+				'section'  => 'wp_filepond_general_section',
 			),
 			array(
 				'id'       => 'wp_filepond_file_type_error',
 				'title'    => __( 'File Type Error Message', 'wp-filepond' ),
 				'callback' => array( $this, 'file_type_error_message_callback' ),
+				'section'  => 'wp_filepond_general_section',
 			),
 			array(
 				'id'       => 'wp_filepond_file_size_error',
 				'title'    => __( 'File Size Error Message', 'wp-filepond' ),
 				'callback' => array( $this, 'file_size_error_message_callback' ),
+				'section'  => 'wp_filepond_general_section',
 			),
 		);
 
@@ -201,6 +206,7 @@ class Settings {
 
 		// Add each settings section
 		$sections = $this->get_settings_sections();
+		$fields   = $this->get_settings_fields();
 
 		foreach ( $sections as $section_id => $section ) {
 			add_settings_section(
@@ -209,20 +215,34 @@ class Settings {
 				$section['callback'],
 				'wp-filepond'
 			);
+
+			foreach ( $fields as $field ) {
+				if ( $field['section'] !== $section_id ) {
+					continue;
+				}
+
+				add_settings_field(
+					$field['id'],
+					$field['title'],
+					$field['callback'],
+					'wp-filepond',
+					$field['section']
+				);
+			}
 		}
 
-		// Register each field
-		$fields = $this->get_settings_fields();
+		// // Register each field
+		// $fields = $this->get_settings_fields();
 
-		foreach ( $fields as $field ) {
-			add_settings_field(
-				$field['id'],
-				$field['title'],
-				$field['callback'],
-				'wp-filepond',
-				'wp_filepond_general_section'
-			);
-		}
+		// foreach ( $fields as $field ) {
+		// 	add_settings_field(
+		// 		$field['id'],
+		// 		$field['title'],
+		// 		$field['callback'],
+		// 		'wp-filepond',
+		// 		$field['section']
+		// 	);
+		// }
 	}
 
 	/**
