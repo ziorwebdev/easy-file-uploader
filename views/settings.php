@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h1><?php esc_html_e( 'Settings', 'wp-filepond' ); ?></h1>
+    <h2><?php esc_html_e( 'WP FilePond Settings', 'wp-filepond' ); ?></h2>
     <form method="post" action="options.php">
         <?php
         settings_fields( $args['options_group'] );
