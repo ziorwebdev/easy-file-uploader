@@ -230,19 +230,6 @@ class Settings {
 				);
 			}
 		}
-
-		// // Register each field
-		// $fields = $this->get_settings_fields();
-
-		// foreach ( $fields as $field ) {
-		// 	add_settings_field(
-		// 		$field['id'],
-		// 		$field['title'],
-		// 		$field['callback'],
-		// 		'wp-filepond',
-		// 		$field['section']
-		// 	);
-		// }
 	}
 
 	/**
