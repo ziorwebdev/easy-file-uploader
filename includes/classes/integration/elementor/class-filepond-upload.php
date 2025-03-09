@@ -179,10 +179,7 @@ class FilePondUpload extends Field_Base {
 		}
 
 		$file_types      = array();
-		$file_extensions = array_map( 'trim', explode( ',', $item['wp_filepond_file_types'] ) );
-
-		// Allow developers to modify the file extensions
-		$file_extensions = apply_filters( 'wp_filepond_file_extensions', $file_extensions );
+		$file_extensions = convert_extentions_to_mime_types( $item['wp_filepond_file_types'] );
 
 		foreach( $file_extensions as $extension ) {
 			$file_type = get_mime_type( $extension );

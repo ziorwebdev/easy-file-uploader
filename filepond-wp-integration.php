@@ -68,10 +68,6 @@ class Plugin {
 		if ( ! defined( "{$namespace}\\PLUGIN_FILE" ) ) {
 			define( "{$namespace}\\PLUGIN_FILE", __FILE__ );
 		}
-
-		if ( ! defined( "{$namespace}\\ENCRYPT_KEY" ) ) {
-			define( "{$namespace}\\ENCRYPT_KEY", 'GBJJylX5wL8B15h55BlON9PUn7eLtL9R' );
-		}
 	}
 
 	/**
