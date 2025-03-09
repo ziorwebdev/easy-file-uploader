@@ -28,7 +28,7 @@ class Settings {
 	 * @return void
 	 */
 	private function load_template( string $template_name, array $data = [] ): void {
-		$template_file = PLUGIN_DIR . sprintf( 'views/%s.php', $template_name );
+		$template_file = WP_FILEPOND_PLUGIN_DIR . sprintf( 'views/%s.php', $template_name );
 
 		if ( ! file_exists( $template_file ) ) {
 			return;
