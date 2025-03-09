@@ -16,31 +16,29 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array An associative array of configuration settings.
  */
-if ( ! function_exists( 'ZIOR\FilePond\get_configuration' ) ) {
-	function get_configuration(): array {
-		$configuration = array(
-			'ajaxUrl'            => admin_url( 'admin-ajax.php' ),
-			'labelIdle'          => get_option( 'wp_filepond_button_label', 'Browse Image' ),
-			'allowImagePreview'  => (bool) get_option( 'wp_filepond_enable_preview', false ),
-			'imagePreviewHeight' => (int) get_option( 'wp_filepond_preview_height', 100 ),
-			'labelMaxFileSize'   => apply_filters( 'wp_filepond_label_max_file_size', '' ),
-			'nonce'              => wp_create_nonce( 'filepond_uploader_nonce' ),
-		);
-		
-		$file_type_error = get_option( 'wp_filepond_file_type_error', '' );
+function get_configuration(): array {
+	$configuration = array(
+		'ajaxUrl'            => admin_url( 'admin-ajax.php' ),
+		'labelIdle'          => get_option( 'wp_filepond_button_label', 'Browse Image' ),
+		'allowImagePreview'  => (bool) get_option( 'wp_filepond_enable_preview', false ),
+		'imagePreviewHeight' => (int) get_option( 'wp_filepond_preview_height', 100 ),
+		'labelMaxFileSize'   => apply_filters( 'wp_filepond_label_max_file_size', '' ),
+		'nonce'              => wp_create_nonce( 'filepond_uploader_nonce' ),
+	);
+	
+	$file_type_error = get_option( 'wp_filepond_file_type_error', '' );
 
-		if ( ! empty( $file_type_error ) ) {
-			$configuration['labelFileTypeNotAllowed'] = $file_type_error;
-		}
-
-		$file_size_error = get_option( 'wp_filepond_file_size_error', '' );
-
-		if ( ! empty( $file_size_error ) ) {
-			$configuration['labelMaxFileSizeExceeded'] = $file_size_error;
-		}
-
-		return apply_filters( 'wp_filepond_configuration', $configuration );
+	if ( ! empty( $file_type_error ) ) {
+		$configuration['labelFileTypeNotAllowed'] = $file_type_error;
 	}
+
+	$file_size_error = get_option( 'wp_filepond_file_size_error', '' );
+
+	if ( ! empty( $file_size_error ) ) {
+		$configuration['labelMaxFileSizeExceeded'] = $file_size_error;
+	}
+
+	return apply_filters( 'wp_filepond_configuration', $configuration );
 }
 
 /**
