@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array An associative array of configuration settings.
  */
-if ( ! function_exists( 'get_configuration' ) ) {
+if ( ! function_exists( 'ZIOR\FilePond\get_configuration' ) ) {
 	function get_configuration(): array {
 		$configuration = array(
 			'ajaxUrl'            => admin_url( 'admin-ajax.php' ),
