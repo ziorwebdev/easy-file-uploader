@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class FilePondUpload extends Field_Base {
+
 	/**
 	 * Retrieves FilePond fields from the given fields array and sets the 'attachment_type'.
 	 *
@@ -65,7 +66,8 @@ class FilePondUpload extends Field_Base {
 
 	/**
 	 * Constructor.
-	 * Hooks AJAX actions for handling file uploads.
+	 *
+	 * Initializes the FilePondUpload class and hooks AJAX actions for handling file uploads.
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -73,16 +75,30 @@ class FilePondUpload extends Field_Base {
 		add_action( 'elementor_pro/forms/process', array( $this, 'set_file_fields_values' ), 20, 2 );
 	}
 
+	/**
+	 * Gets the field type identifier for Elementor.
+	 *
+	 * @return string The field type slug ('filepond-upload').
+	 */
 	public function get_type() {
 		return 'filepond-upload';
 	}
 
+	/**
+	 * Retrieves the display name of the field.
+	 *
+	 * @return string The translatable name of the field ('FilePond Upload').
+	 */
 	public function get_name() {
 		return esc_html__( 'FilePond Upload', 'wp-filepond' );
 	}
 
 	/**
-	 * @param Widget_Base $widget
+	 * Updates Elementor form controls to include FilePond-specific settings.
+	 *
+	 * Adds custom settings such as max file size, allowed file types, multiple uploads, and max files.
+	 *
+	 * @param Widget_Base $widget The Elementor widget instance.
 	 */
 	public function update_controls( $widget ) {
 		$elementor    = Plugin::elementor();
@@ -208,11 +224,13 @@ class FilePondUpload extends Field_Base {
 	}
 
 	/**
-	 * validate uploaded file field
+	 * Validates the uploaded file field.
 	 *
-	 * @param array                $field
-	 * @param Classes\Form_Record  $record
-	 * @param Classes\Ajax_Handler $ajax_handler
+	 * Checks whether the required file has been uploaded and adds an error message if missing.
+	 *
+	 * @param array                $field The field data.
+	 * @param Classes\Form_Record  $record The form record instance.
+	 * @param Classes\Ajax_Handler $ajax_handler The AJAX handler instance.
 	 */
 	public function validation( $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
 		// is the file required and missing?
@@ -226,12 +244,12 @@ class FilePondUpload extends Field_Base {
 	}
 
 	/**
-	 * Used to set the upload filed values with
-	 * value => file url
-	 * raw_value => file path
+	 * Sets the file upload field values.
 	 *
-	 * @param Classes\Form_Record  $record
-	 * @param Classes\Ajax_Handler $ajax_handler
+	 * Updates the field values with file URLs and file paths after upload.
+	 *
+	 * @param Classes\Form_Record  $record The form record instance.
+	 * @param Classes\Ajax_Handler $ajax_handler The AJAX handler instance.
 	 */
 	public function set_file_fields_values( Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
 		$files = $record->get( 'files' );
