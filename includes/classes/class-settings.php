@@ -72,7 +72,7 @@ class Settings {
 			),
 		);
 
-		return apply_filters( 'wp_filepond_register_fields', $settings_fields );
+		return apply_filters( 'wp_filepond_settings_fields', $settings_fields );
 	}
 
 	/**
@@ -119,7 +119,7 @@ class Settings {
 			),
 		);
 
-		return apply_filters( 'wp_filepond_register_settings_options', $settings_options );
+		return apply_filters( 'wp_filepond_settings_options', $settings_options );
 	}
 
 	/**
