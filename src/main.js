@@ -2,11 +2,9 @@ import createFilePondInstance from "./filepond/main.js";
 
 $(document).ready(function () {
     const filePondInstances = new Map();
-    const fileUploaderFields = $(".filepond-wp-integration-upload");
+    const fileUploaderFields = $(".wp-filepond-upload");
     let filePondIntegration = FilePondIntegration || {};
 
-    filePondIntegration.allowImagePreview = FilePondIntegration.allowImagePreview === "1";
-    filePondIntegration.imagePreviewHeight = parseInt(FilePondIntegration.imagePreviewHeight);
     filePondIntegration.allowMultiple = FilePondIntegration.allowMultiple === "1";
 
     fileUploaderFields.each(function () {
@@ -26,7 +24,7 @@ function getConfiguration(fileInput) {
     const data = $(fileInput).data();
 
     return {
-        acceptedFileTypes: data.filetypes.split(",") ?? null,
+        acceptedFileTypes: data.filetypes?.split(",") ?? null,
         allowMultiple: fileInput.attr("multiple") !== undefined,
         labelIdle: data.label ?? "",
         maxFileSize: data.filesize ? `${data.filesize}MB` : null,
