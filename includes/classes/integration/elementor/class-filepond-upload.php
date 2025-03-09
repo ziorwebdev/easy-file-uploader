@@ -5,10 +5,9 @@ use ElementorPro\Modules\Forms\Fields\Field_Base;
 use Elementor\Controls_Manager;
 use ElementorPro\Plugin;
 use ElementorPro\Modules\Forms\Classes;
-use ElementorPro\Modules\Forms\Widgets\Form;
-use ElementorPro\Core\Utils;
 
 use function ZIOR\FilePond\get_mime_type;
+use function ZIOR\FilePond\convert_extentions_to_mime_types;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

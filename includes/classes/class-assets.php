@@ -49,7 +49,7 @@ class Assets {
 		wp_enqueue_script( 'wp-filepond', WP_FILEPOND_PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
 
 		wp_enqueue_style( 'wp-filepond-integration', WP_FILEPOND_PLUGIN_URL . 'dist/main.min.css', array(), null );
-		wp_enqueue_script( 'wp-filepond-integration', WP_FILEPOND_PLUGIN_URL . 'dist/main.min.js', array( 'jquery', 'wp-filepond' ), null, true );
+		wp_enqueue_script( 'wp-filepond-integration', WP_FILEPOND_PLUGIN_URL . 'dist/main.min.js', array( 'jquery' ), null, true );
 
 		// wp_localize_script( 'wp-filepond-integration', 'FilePondIntegration', $configuration );
 	}
