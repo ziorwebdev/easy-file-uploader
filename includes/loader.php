@@ -58,9 +58,10 @@ class Loader {
 			}
 		} );
 
+		Settings::get_instance();
 		Assets::get_instance();	
 		Uploader::get_instance();
 		Register::get_instance();
-		Settings::get_instance();
+		
 	}
 }

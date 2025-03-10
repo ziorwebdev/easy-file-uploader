@@ -1,6 +1,7 @@
 <?php
 namespace ZIOR\FilePond;
 
+use Mimey\MimeMappingBuilder;
 use Mimey\MimeTypes;
 
 // Exit if accessed directly.
@@ -65,20 +66,6 @@ function get_uploader_configurations(): array {
 }
 
 /**
- * Retrieves the MIME type for a given file extension.
- *
- * Uses the MimeTypes class to determine the appropriate MIME type.
- *
- * @param string $ext The file extension (e.g., 'jpg', 'png', 'pdf').
- * @return string The corresponding MIME type or an empty string if unknown.
- */
-function get_mime_type( string $ext ): string {
-	$mimes = new MimeTypes();
-
-	return $mimes->getMimeType( $ext ) ?? '';
-}
-
-/**
  * Decrypts the given data.
  *
  * This function takes a string of encrypted data.
@@ -97,11 +84,14 @@ function convert_extentions_to_mime_types( string $extentions ): array {
 	$mime_types      = array();
 	$file_extensions = array_map( 'trim', explode( ',', $extentions ) );
 
+	$builder = \Mimey\MimeMappingBuilder::load( WP_FILEPOND_MIME_CACHE_FILE );
+	$mimes   = new \Mimey\MimeTypes( $builder->getMapping() );
+
 	// Allow developers to modify the file extensions
 	$file_extensions = apply_filters( 'wp_filepond_file_extensions', $file_extensions );
 
 	foreach ( $file_extensions as $file_extension ) {
-		$mime_type = get_mime_type( $file_extension );
+		$mime_type = $mimes->getMimeType( $file_extension );
 
 		if ( empty( $mime_type ) ) {
 			continue;

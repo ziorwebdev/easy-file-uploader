@@ -66,6 +66,10 @@ class Plugin {
 		if ( ! defined( "WP_FILEPOND_PLUGIN_FILE" ) ) {
 			define( "WP_FILEPOND_PLUGIN_FILE", __FILE__ );
 		}
+
+		if ( ! defined( "WP_FILEPOND_MIME_CACHE_FILE" ) ) {
+			define( "WP_FILEPOND_MIME_CACHE_FILE", plugin_dir_path( __FILE__ ) . 'cache/mimey.txt' );
+		}
 	}
 
 	/**
@@ -113,7 +117,16 @@ class Plugin {
 	 *
 	 * This function is executed when the plugin is activated.
 	 */
-	public function activate_plugin(): void {}
+	public function activate_plugin(): void {
+		// Create the MIME mapping builder
+		$builder = \Mimey\MimeMappingBuilder::create();
+
+		$builder->add( 'image/heif', 'heif' );
+		$builder->add( 'image/heic', 'heic' );
+
+		// Save conversions to the cache file
+		$builder->save( WP_FILEPOND_MIME_CACHE_FILE );
+	}
 
 	/**
 	 * Plugin deactivation callback.
