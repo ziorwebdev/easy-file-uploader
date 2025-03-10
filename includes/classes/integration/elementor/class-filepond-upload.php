@@ -253,7 +253,7 @@ class FilePondUpload extends Field_Base {
 	 * @param Classes\Form_Record   $record       The form record instance.
 	 * @param Classes\Ajax_Handler  $ajax_handler The AJAX handler instance.
 	 */
-	public function process_field( array $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
+	public function process_field( $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
 		// Allow other developers to process the field values.
 		do_action( 'wp_filepond_process_field', $field );
 	}
