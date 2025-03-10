@@ -159,3 +159,10 @@ function get_options(): array {
 
 	return apply_filters( 'wp_filepond_options', $options );
 }
+
+
+function get_additional_mime_types(): array {
+	return apply_filters( 'wp_filepond_additional_mime_types', [] );
+}
+
+

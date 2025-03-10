@@ -2,6 +2,9 @@
 namespace ZIOR\FilePond;
 
 use function ZIOR\FilePond\get_options;
+use function ZIOR\FilePond\get_additional_mime_types;
+use Mimey\MimeMappingBuilder;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -107,6 +110,7 @@ class Settings {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
+		add_action( 'init', array( $this, 'register_additional_mime_types' ) );
 	}
 
 	/**
@@ -138,6 +142,27 @@ class Settings {
 			'wp-filepond',                       // Menu slug
 			array( $this, 'render_settings_page' ) // Callback function
 		);
+	}
+
+/**
+	 * Registers additional MIME types for handling file uploads.
+	 *
+	 * Retrieves additional MIME types from WordPress and registers them using the Mimey\MimeMappingBuilder.
+	 * This allows support for custom file extensions and their associated MIME types.
+	 *
+	 * @return void
+	 */
+	public function register_additional_mime_types(): void {
+		// Retrieve the list of additional MIME types from WordPress.
+		$mime_types = get_additional_mime_types();
+
+		// Create a new instance of MimeMappingBuilder.
+		$builder = \Mimey\MimeMappingBuilder::create();
+
+		// Iterate through the MIME types and add them to the builder.
+		foreach ( $mime_types as $extension => $mime_type ) {
+			$builder->add( $mime_type, $extension );
+		}
 	}
 
 	/**
