@@ -71,8 +71,6 @@ class FilePondUpload extends Field_Base {
 	 */
 	public function __construct() {
 		parent::__construct();
-
-		add_action( 'elementor_pro/forms/process', array( $this, 'process_form' ), 20, 2 );
 	}
 
 	/**
