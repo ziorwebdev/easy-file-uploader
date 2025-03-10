@@ -81,11 +81,12 @@ function decrypt_data( string $data ): bool|array {
 }
 
 function convert_extentions_to_mime_types( string $extentions ): array {
-	$mime_types      = array();
-	$file_extensions = array_map( 'trim', explode( ',', $extentions ) );
+	$mime_types = array();
+	$extensions = array_map( 'trim', explode( ',', $extentions ) );
+	$mimes      = new MimeTypes();
 
-	$builder = \Mimey\MimeMappingBuilder::load( WP_FILEPOND_MIME_CACHE_FILE );
-	$mimes   = new \Mimey\MimeTypes( $builder->getMapping() );
+	// Allow developers to modify the MimeTypes instance
+	$mimes = apply_filters( 'wp_filepond_mimes_instance', $mimes );
 
 	// Allow developers to modify the file extensions
 	$file_extensions = apply_filters( 'wp_filepond_file_extensions', $file_extensions );
