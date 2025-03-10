@@ -244,25 +244,17 @@ class FilePondUpload extends Field_Base {
 	}
 
 	/**
-	 * Sets the file upload field values.
+	 * Processes a form field.
 	 *
-	 * Updates the field values with file URLs and file paths after upload.
+	 * This function allows other developers to hook into the field processing
+	 * using the `wp_filepond_process_field` action.
 	 *
-	 * @param Classes\Form_Record  $record The form record instance.
-	 * @param Classes\Ajax_Handler $ajax_handler The AJAX handler instance.
+	 * @param mixed                 $field        The field data to process.
+	 * @param Classes\Form_Record   $record       The form record instance.
+	 * @param Classes\Ajax_Handler  $ajax_handler The AJAX handler instance.
 	 */
-	public function process_form( Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
-		$files = $record->get( 'files' );
-
-		if ( empty( $files ) ) {
-			return;
-		}
-
-		foreach ( $files as $id => $files_array ) {
-			$record->update_field( $id, 'value', implode( ' , ', $files_array['url'] ) );
-			$record->update_field( $id, 'raw_value', implode( ' , ', $files_array['path'] ) );
-		}
-
-		do_action( 'wp_filepond_process_form', $files );
+	public function process_field( array $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
+		// Allow other developers to process the field values.
+		do_action( 'wp_filepond_process_field', $field );
 	}
 }
