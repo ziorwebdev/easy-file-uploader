@@ -162,7 +162,7 @@ function get_options(): array {
 
 
 function get_additional_mime_types(): array {
-	return apply_filters( 'wp_filepond_mime_types', [] );
+	return apply_filters( 'wp_filepond_additional_mime_types', [] );
 }
 
 
