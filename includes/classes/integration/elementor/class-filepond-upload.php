@@ -191,20 +191,7 @@ class FilePondUpload extends Field_Base {
 			);
 		}
 
-		$file_types      = array();
-		$file_extensions = convert_extentions_to_mime_types( $item['wp_filepond_file_types'] );
-
-		foreach( $file_extensions as $extension ) {
-			$file_type = get_mime_type( $extension );
-
-			if ( empty( $file_type ) ) {
-				continue;
-			}
-
-			$file_types[] = $file_type;
-		}
-
-		$file_types   = array_filter( $file_types );
+		$file_types   = convert_extentions_to_mime_types( $item['wp_filepond_file_types'] );
 		$default_size = wp_max_upload_size() / 1024 / 1024;
 		$attributes   = array(
 				'data-filesize'  => esc_attr( $item['wp_filepond_max_file_size'] ?? $default_size ),
