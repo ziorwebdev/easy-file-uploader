@@ -72,7 +72,7 @@ class FilePondUpload extends Field_Base {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'elementor_pro/forms/process', array( $this, 'set_file_fields_values' ), 20, 2 );
+		add_action( 'elementor_pro/forms/process', array( $this, 'process_form' ), 20, 2 );
 	}
 
 	/**
@@ -251,7 +251,7 @@ class FilePondUpload extends Field_Base {
 	 * @param Classes\Form_Record  $record The form record instance.
 	 * @param Classes\Ajax_Handler $ajax_handler The AJAX handler instance.
 	 */
-	public function set_file_fields_values( Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
+	public function process_form( Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
 		$files = $record->get( 'files' );
 
 		if ( empty( $files ) ) {
@@ -262,5 +262,7 @@ class FilePondUpload extends Field_Base {
 			$record->update_field( $id, 'value', implode( ' , ', $files_array['url'] ) );
 			$record->update_field( $id, 'raw_value', implode( ' , ', $files_array['path'] ) );
 		}
+
+		do_action( 'wp_filepond_process_form', $files );
 	}
 }
