@@ -3,9 +3,9 @@ import createFilePondInstance from "./filepond/main.js";
 $(document).ready(function () {
     const filePondInstances = new Map();
     const fileUploaderFields = $(".wp-filepond-upload");
-    let filePondIntegration = FilePondIntegration || {};
+    let filePondIntegration = FilePondUploader || {};
 
-    filePondIntegration.allowMultiple = FilePondIntegration.allowMultiple === "1";
+    filePondIntegration.allowMultiple = FilePondUploader.allowMultiple === "1";
 
     fileUploaderFields.each(function () {
         const configuration = Object.assign({}, getConfiguration($(this)), filePondIntegration);

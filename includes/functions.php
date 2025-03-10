@@ -8,39 +8,52 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+function get_plugin_options(): array {
+	$plugin_options = array();
+	$options        = get_options();
+
+	foreach ( $options as $option ) {
+		$option_value = get_option( $option['option_name'] );
+		$plugin_options[ $option['option_name'] ] = $option_value;	
+	}
+
+	return $plugin_options;
+}
+
 /**
- * Retrieves the FilePond WP Integration configuration settings.
+ * Retrieves the FilePond uploader configuration settings.
  *
  * This function fetches stored options related to file handling and
- * applies the 'wp_filepond_configuration' filter for customization.
+ * applies the 'wp_filepond_uploader_configurations' filter for customization.
  *
  * @return array An associative array of configuration settings.
  */
-function get_configuration(): array {
-	$accepted_file_types = get_option( 'wp_filepond_file_types_allowed', '' );
+function get_uploader_configurations(): array {
+	$options             = get_plugin_options();
+	$accepted_file_types = $options['wp_filepond_file_types_allowed'];
 	$accepted_file_types = convert_extentions_to_mime_types( $accepted_file_types );
 
 	$configuration = array(
 		'acceptedFileTypes' => $accepted_file_types,
 		'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
-		'labelIdle'         => get_option( 'wp_filepond_button_label', 'Browse Image' ),
+		'labelIdle'         => $options['wp_filepond_button_label'] ?? 'Browse Image',
 		'labelMaxFileSize'  => apply_filters( 'wp_filepond_label_max_file_size', '' ),	
 		'nonce'             => wp_create_nonce( 'filepond_uploader_nonce' ),
 	);
 	
-	$file_type_error = get_option( 'wp_filepond_file_type_error', '' );
+	$file_type_error = $options['wp_filepond_file_type_error'] ?? '';
 
 	if ( ! empty( $file_type_error ) ) {
 		$configuration['labelFileTypeNotAllowed'] = $file_type_error;
 	}
 
-	$file_size_error = get_option( 'wp_filepond_file_size_error', '' );
+	$file_size_error = $options['wp_filepond_file_size_error'] ?? '';
 
 	if ( ! empty( $file_size_error ) ) {
 		$configuration['labelMaxFileSizeExceeded'] = $file_size_error;
 	}
 
-	return apply_filters( 'wp_filepond_configuration', $configuration );
+	return apply_filters( 'wp_filepond_uploader_configurations', $configuration );
 }
 
 /**
@@ -91,3 +104,50 @@ function convert_extentions_to_mime_types( string $extentions ): array {
 
 	return $mime_types;
 }	
+
+/**
+ * Returns the settings options for the plugin.
+ *
+ * @return array The settings options.
+ */
+function get_options(): array {
+	$options = array(
+		array(
+			'option_group' => 'wp_filepond_options_group',
+			'option_name'  => 'wp_filepond_button_label',
+			'sanitize'     => 'sanitize_text_field',
+		),
+		array(
+			'option_group' => 'wp_filepond_options_group',
+			'option_name'  => 'wp_filepond_file_types_allowed',
+			'sanitize'     => 'sanitize_text_field',
+		),
+		array(
+			'option_group' => 'wp_filepond_options_group',
+			'option_name'  => 'wp_filepond_enable_preview',
+			'sanitize'     => 'absint',
+		),
+		array(
+			'option_group' => 'wp_filepond_options_group',
+			'option_name'  => 'wp_filepond_preview_height',
+			'sanitize'     => 'absint',
+		),
+		array(
+			'option_group' => 'wp_filepond_options_group',
+			'option_name'  => 'wp_filepond_file_type_error',
+			'sanitize'     => 'sanitize_text_field',
+		),
+		array(
+			'option_group' => 'wp_filepond_options_group',
+			'option_name'  => 'wp_filepond_file_size_error',
+			'sanitize'     => 'sanitize_text_field',
+		),
+		array(
+			'option_group' => 'wp_filepond_options_group',
+			'option_name'  => 'wp_filepond_max_file_size',
+			'sanitize'     => 'absint',
+		),
+	);
+
+	return apply_filters( 'wp_filepond_options', $options );
+}

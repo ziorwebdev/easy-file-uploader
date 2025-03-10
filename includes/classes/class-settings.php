@@ -81,53 +81,6 @@ class Settings {
 	}
 
 	/**
-	 * Returns the settings options for the plugin.
-	 *
-	 * @return array The settings options.
-	 */
-	private function get_settings_options(): array {
-		$settings_options = array(
-			array(
-				'option_group' => 'wp_filepond_options_group',
-				'option_name'  => 'wp_filepond_button_label',
-				'sanitize'     => 'sanitize_text_field',
-			),
-			array(
-				'option_group' => 'wp_filepond_options_group',
-				'option_name'  => 'wp_filepond_file_types_allowed',
-				'sanitize'     => 'sanitize_text_field',
-			),
-			array(
-				'option_group' => 'wp_filepond_options_group',
-				'option_name'  => 'wp_filepond_enable_preview',
-				'sanitize'     => 'absint',
-			),
-			array(
-				'option_group' => 'wp_filepond_options_group',
-				'option_name'  => 'wp_filepond_preview_height',
-				'sanitize'     => 'absint',
-			),
-			array(
-				'option_group' => 'wp_filepond_options_group',
-				'option_name'  => 'wp_filepond_file_type_error',
-				'sanitize'     => 'sanitize_text_field',
-			),
-			array(
-				'option_group' => 'wp_filepond_options_group',
-				'option_name'  => 'wp_filepond_file_size_error',
-				'sanitize'     => 'sanitize_text_field',
-			),
-			array(
-				'option_group' => 'wp_filepond_options_group',
-				'option_name'  => 'wp_filepond_max_file_size',
-				'sanitize'     => 'absint',
-			),
-		);
-
-		return apply_filters( 'wp_filepond_settings_options', $settings_options );
-	}
-
-	/**
 	 * Returns the settings sections for the plugin.
 	 *
 	 * @return array The settings sections.
@@ -196,11 +149,11 @@ class Settings {
 	 */
 	public function register_settings(): void {
 		// Register settings
-		$setting_options = $this->get_settings_options();
+		$options = $this->get_options();
 
-		foreach ( $setting_options as $setting_option ) {
-			register_setting( $setting_option['option_group'], $setting_option['option_name'], array(
-				'sanitize_callback' => $setting_option['sanitize']
+		foreach ( $options as $option ) {
+			register_setting( $option['option_group'], $option['option_name'], array(
+				'sanitize_callback' => $option['sanitize']
 			) );
 		}
 
