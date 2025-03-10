@@ -144,7 +144,7 @@ class Settings {
 		);
 	}
 
-/**
+	/**
 	 * Registers additional MIME types for handling file uploads.
 	 *
 	 * Retrieves additional MIME types from WordPress and registers them using the Mimey\MimeMappingBuilder.
