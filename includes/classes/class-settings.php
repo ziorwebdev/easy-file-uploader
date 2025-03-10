@@ -3,7 +3,7 @@ namespace ZIOR\FilePond;
 
 use function ZIOR\FilePond\get_options;
 use function ZIOR\FilePond\get_additional_mime_types;
-use Elephox\Mimey\MimeMappingBuilder;
+use Mimey\MimeMappingBuilder;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

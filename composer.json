@@ -8,6 +8,6 @@
         }
     ],
     "require": {
-        "ralouphie/mimey": "^1.0"
+        "ascteam/mimey": "^3.0"
     }
 }
