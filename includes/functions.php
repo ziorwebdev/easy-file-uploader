@@ -1,7 +1,7 @@
 <?php
 namespace ZIOR\FilePond;
 
-use Mimey\MimeTypes;
+use Elephox\Mimey\MimeTypes;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

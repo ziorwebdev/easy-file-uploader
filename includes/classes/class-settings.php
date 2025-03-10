@@ -3,7 +3,7 @@ namespace ZIOR\FilePond;
 
 use function ZIOR\FilePond\get_options;
 use function ZIOR\FilePond\get_additional_mime_types;
-use Mimey\MimeMappingBuilder;
+use Elephox\Mimey\MimeMappingBuilder;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -157,7 +157,7 @@ class Settings {
 		$mime_types = get_additional_mime_types();
 
 		// Create a new instance of MimeMappingBuilder.
-		$builder = \Mimey\MimeMappingBuilder::create();
+		$builder = MimeMappingBuilder::create();
 
 		// Iterate through the MIME types and add them to the builder.
 		foreach ( $mime_types as $extension => $mime_type ) {
