@@ -1,6 +1,7 @@
 <?php
 namespace ZIOR\FilePond;
 
+use function ZIOR\FilePond\get_options;
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -149,7 +150,7 @@ class Settings {
 	 */
 	public function register_settings(): void {
 		// Register settings
-		$options = $this->get_options();
+		$options = get_options();
 
 		foreach ( $options as $option ) {
 			register_setting( $option['option_group'], $option['option_name'], array(
