@@ -29,31 +29,31 @@ function get_plugin_options(): array {
  * @return array An associative array of configuration settings.
  */
 function get_uploader_configurations(): array {
-	$options             = get_plugin_options();
+	$plugin_options      = get_plugin_options();
 	$accepted_file_types = $options['wp_filepond_file_types_allowed'];
 	$accepted_file_types = convert_extentions_to_mime_types( $accepted_file_types );
 
-	$configuration = array(
+	$uploader_configurations = array(
 		'acceptedFileTypes' => $accepted_file_types,
 		'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
-		'labelIdle'         => $options['wp_filepond_button_label'] ?? 'Browse Image',
+		'labelIdle'         => $plugin_options['wp_filepond_button_label'] ?? 'Browse Image',
 		'labelMaxFileSize'  => apply_filters( 'wp_filepond_label_max_file_size', '' ),	
 		'nonce'             => wp_create_nonce( 'filepond_uploader_nonce' ),
 	);
 	
-	$file_type_error = $options['wp_filepond_file_type_error'] ?? '';
+	$file_type_error = $plugin_options['wp_filepond_file_type_error'] ?? '';
 
 	if ( ! empty( $file_type_error ) ) {
-		$configuration['labelFileTypeNotAllowed'] = $file_type_error;
+		$uploader_configurations['labelFileTypeNotAllowed'] = $file_type_error;
 	}
 
-	$file_size_error = $options['wp_filepond_file_size_error'] ?? '';
+	$file_size_error = $plugin_options['wp_filepond_file_size_error'] ?? '';
 
 	if ( ! empty( $file_size_error ) ) {
-		$configuration['labelMaxFileSizeExceeded'] = $file_size_error;
+		$uploader_configurations['labelMaxFileSizeExceeded'] = $file_size_error;
 	}
 
-	return apply_filters( 'wp_filepond_uploader_configurations', $configuration );
+	return apply_filters( 'wp_filepond_uploader_configurations', $uploader_configurations );
 }
 
 /**
