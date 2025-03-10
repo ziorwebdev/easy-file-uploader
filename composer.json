@@ -8,7 +8,6 @@
         }
     ],
     "require": {
-        "league/mime-type-detection": "^1.16",
         "ralouphie/mimey": "^1.0"
     }
 }
