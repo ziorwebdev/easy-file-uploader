@@ -8,6 +8,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Retrieves all plugin options.
+ *
+ * This function fetches the list of option names and retrieves their values
+ * from the WordPress options table.
+ *
+ * @return array An associative array of option names and their corresponding values.
+ */
 function get_plugin_options(): array {
 	$plugin_options = array();
 	$options        = get_options();
@@ -30,7 +38,7 @@ function get_plugin_options(): array {
  */
 function get_uploader_configurations(): array {
 	$plugin_options      = get_plugin_options();
-	$accepted_file_types = $options['wp_filepond_file_types_allowed'];
+	$accepted_file_types = $plugin_options['wp_filepond_file_types_allowed'];
 	$accepted_file_types = convert_extentions_to_mime_types( $accepted_file_types );
 
 	$uploader_configurations = array(
