@@ -30,41 +30,28 @@ module.exports = {
     },
     optimization: {
         usedExports: true, // Enables tree shaking
+        concatenateModules: true, // Scope hoisting
         minimizer: [
             new TerserPlugin({
                 parallel: true,
                 extractComments: false,
                 terserOptions: {
                     compress: {
-                        drop_console: isProduction, // Removes console logs only in production
+                        drop_console: isProduction,
                         drop_debugger: isProduction,
-                        passes: 2,
+                        passes: 3,
+                        ecma: 2015,
                     },
-                    output: {
+                    format: {
                         comments: false,
                     },
                 },
             }),
-            new CssMinimizerPlugin({
-                minimizerOptions: {
-                    preset: [
-                        "default",
-                        {
-                            discardComments: { removeAll: true }, // Removes all comments from CSS
-                        },
-                    ],
-                },
-            }),
+            new CssMinimizerPlugin(),
         ],
         splitChunks: {
             chunks: "all",
             cacheGroups: {
-                filepond: {
-                    test: /[\\/]node_modules[\\/](filepond|filepond-plugin.*)[\\/]/,
-                    name: "filepond",
-                    chunks: "all",
-                    enforce: true,
-                },
                 common: {
                     test: /[\\/]node_modules[\\/]/,
                     name: "vendors",
@@ -83,6 +70,7 @@ module.exports = {
     plugins: [
         new webpack.ProvidePlugin({
             $: "jquery",
+            jQuery: "jquery",
         }),
         new MiniCssExtractPlugin({
             filename: `[name].min.css`,

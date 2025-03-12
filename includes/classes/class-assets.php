@@ -39,8 +39,8 @@ class Assets {
 	public function enqueue_frontend_scripts(): void {
 		$uploader_configurations = get_uploader_configurations();
 
-		wp_enqueue_style( 'wp-filepond', WP_FILEPOND_PLUGIN_URL . 'dist/filepond.min.css', array(), null );
-		wp_enqueue_script( 'wp-filepond', WP_FILEPOND_PLUGIN_URL . 'dist/filepond.min.js', array(), null, true );
+		wp_enqueue_style( 'wp-filepond-vendors', WP_FILEPOND_PLUGIN_URL . 'dist/vendors.min.css', array(), null );
+		wp_enqueue_script( 'wp-filepond-vendors', WP_FILEPOND_PLUGIN_URL . 'dist/vendors.min.js', array(), null, true );
 
 		wp_enqueue_style( 'wp-filepond-uploader', WP_FILEPOND_PLUGIN_URL . 'dist/main.min.css', array(), null );
 		wp_enqueue_script( 'wp-filepond-uploader', WP_FILEPOND_PLUGIN_URL . 'dist/main.min.js', array( 'jquery' ), null, true );
