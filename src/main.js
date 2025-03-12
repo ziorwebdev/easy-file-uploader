@@ -7,9 +7,16 @@ $(document).ready(function () {
 
     filePondIntegration.allowMultiple = FilePondUploader.allowMultiple === "1";
 
+    // Raised event before the FilePond instance is created
+    // To allow developers to set global FilePond options
+    $(document).trigger("wp_filepond_before_instance_created", filePondIntegration);
+
     fileUploaderFields.each(function () {
         const configuration = Object.assign({}, getConfiguration($(this)), filePondIntegration);
         const filePondInstance = createFilePondInstance($(this)[0], configuration);
+
+        // Raised event a FilePond instance is created
+        $(document).trigger("wp_filepond_instance_created", filePondInstance);
 
         filePondInstances.set(this, filePondInstance);
     });
