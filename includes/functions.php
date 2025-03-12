@@ -80,6 +80,7 @@ function decrypt_data( string $data ): bool|array {
 	return json_decode( $data, true );
 }
 
+// TODO: Add HEIC mime type support
 function convert_extentions_to_mime_types( string $extentions ): array {
 	$mime_types = array();
 	$extensions = array_map( 'trim', explode( ',', $extentions ) );

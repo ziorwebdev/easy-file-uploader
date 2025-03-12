@@ -1,7 +1,6 @@
 import { create, registerPlugin } from 'filepond';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import wpFilepond from "./helpers.js";
 
 import 'filepond/dist/filepond.css';
@@ -11,8 +10,7 @@ import "./style.css";
 // Array of FilePond plugins to register
 let filePondPlugins = [
     FilePondPluginFileValidateSize,
-    FilePondPluginFileValidateType,
-    FilePondPluginImagePreview
+    FilePondPluginFileValidateType
 ];
 
 // Allow developers to modify the plugin list via "wp_filepond_plugins" filter
