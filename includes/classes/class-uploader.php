@@ -1,6 +1,8 @@
 <?php
 namespace ZIOR\FilePond;
 
+use ElementorPro\Modules\Forms\Classes;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -17,6 +19,28 @@ class Uploader {
 	 * @var Uploader|null
 	 */
 	private static ?Uploader $instance = null;
+
+	private ?string $temp_file_path = '';
+
+	/**
+	 * Deletes all files inside a folder.
+	 *
+	 * @param string $folder Folder path.
+	 * @return bool True on success, false on failure.
+	 */
+	function delete_files( $folder ) {
+		if ( ! is_dir( $folder ) ) {
+			return false;
+		}
+
+		foreach ( glob( trailingslashit( $folder ) . '*' ) as $file ) {
+			if ( is_file( $file ) ) {
+				unlink( $file );
+			}
+		}
+
+		return true;
+	}
 
 	/**
 	 * Verify the nonce for security validation.
@@ -90,15 +114,44 @@ class Uploader {
 	}
 
 	/**
+	 * Safely rename a file to avoid overwriting an existing file.
+	 *
+	 * @param string $source      The source file path.
+	 * @param string $destination The destination file path.
+	 * @return string|false The new file path if successful, false on failure.
+	 */
+	private function safe_rename( $source, $destination ) {
+		$path      = pathinfo( $destination );
+		$dir       = $path['dirname'];
+		$filename  = $path['filename'];
+		$extension = isset( $path['extension'] ) ? '.' . $path['extension'] : '';
+
+		$counter         = 1;
+		$new_destination = $destination;
+
+		while ( file_exists( $new_destination ) ) {
+			$new_destination = sprintf( '%s/%s-%d%s', $dir, $filename, $counter, $extension );
+			$counter++;
+		}
+
+		return rename( $source, $new_destination ) ? $new_destination : false;
+	}
+
+
+	/**
 	 * Constructor.
 	 *
 	 * Hooks into WordPress to enqueue scripts and styles.
 	 */
 	public function __construct() {
+		$this->temp_file_path = wp_upload_dir()['basedir'] . '/filepond-temp';
+
 		add_action( 'wp_ajax_wp_filepond_upload', array( $this, 'handle_filepond_upload' ), 10 );
 		add_action( 'wp_ajax_nopriv_wp_filepond_upload', array( $this, 'handle_filepond_upload' ), 10 );
 		add_action( 'wp_ajax_wp_filepond_remove', array( $this, 'handle_filepond_remove' ), 10 );
 		add_action( 'wp_ajax_nopriv_wp_filepond_remove', array( $this, 'handle_filepond_remove' ), 10 );
+		add_action( 'wp_ajax_nopriv_wp_filepond_remove', array( $this, 'handle_filepond_remove' ), 10 );
+		add_action( 'wp_filepond_process_field', array( $this, 'process_filepond_field' ), 10, 3 );
 
 		add_filter( 'wp_filepond_validate_file_type', array( $this, 'validate_file_type' ), 10, 3 );
 		add_filter( 'wp_filepond_validate_file_size', array( $this, 'validate_file_size' ), 10, 3 );
@@ -132,25 +185,25 @@ class Uploader {
 		}
 
 		// Retrieve the file URL from the request body.
-		$file_url = file_get_contents( 'php://input' );
+		$unique_id = file_get_contents( 'php://input' );
 
-		if ( ! $file_url ) {
+		if ( ! $unique_id ) {
 			wp_send_json_error(
-				array( 'message' => __( 'Invalid file URL.', 'wp-filepond' ) )
+				array( 'message' => __( 'Missing file ID.', 'wp-filepond' ) )
 			);
 		}
 
-		// Convert the file URL to a file path.
-		$upload_dir = wp_upload_dir();
-		$file_path  = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $file_url );
+		$temp_file_path = $this->temp_file_path . '/' . $unique_id;
 
-		if ( wp_delete_file( $file_path ) ) {
+		if ( $this->delete_files( $temp_file_path ) ) {
+			@rmdir( $temp_file_path );
+
 			wp_send_json_success(
-				array( 'message' => __( 'File deleted successfully.', 'wp-filepond' ) )
+				array( 'message' => __( 'Files deleted successfully.', 'wp-filepond' ) )
 			);
 		} else {
 			wp_send_json_error(
-				array( 'message' => __( 'Failed to delete file.', 'wp-filepond' ) )
+				array( 'message' => __( 'Failed to delete files.', 'wp-filepond' ) )
 			);
 		}
 	}
@@ -197,26 +250,49 @@ class Uploader {
 			return;
 		}
 
-		// Ensure WordPress file functions are available.
-		if ( ! function_exists( 'wp_handle_upload' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-		}
+		$unique_id      = wp_generate_uuid4();
+		$temp_file_path = $this->temp_file_path . '/' . $unique_id;
 
-		// Trigger a custom action before the file upload process starts.
-		do_action( 'wp_filepond_before_upload', $file, $args );
+		wp_mkdir_p( $temp_file_path );
 
-		// Upload the file using WordPress' built-in file upload handler.
-		$uploaded = wp_handle_upload( $file, array( 'test_form' => false ) );
-
-		// Trigger a custom action after the file upload process is complete.
-		do_action( 'wp_filepond_after_upload', $uploaded, $file, $args );
-
-		// Respond with the upload result.
-		if ( $uploaded && ! isset( $uploaded['error'] ) ) {
-			wp_send_json_success( $uploaded );
+		if ( move_uploaded_file( $file['tmp_name'], $temp_file_path . '/' . $file['name'] ) ) {
+			wp_send_json_success(
+				array(
+					'unique_id' => $unique_id . '/' . $file['name']
+				)
+			);
 		} else {
-			wp_send_json_error( $uploaded, 400 );
+			wp_send_json_error(
+				array(
+					'error' => 'Failed to move uploaded file.'
+				)
+			);
 		}
+	}
+
+	public function process_filepond_field( array $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ): void {
+		$raw_values = $field['raw_value'];
+
+		if ( ! is_array( $raw_values ) ) {
+			$raw_values = [ $raw_values ];
+		}
+
+		$upload_dir  = wp_upload_dir();
+		$upload_path = apply_filters( 'wp_filepond_upload_path', $upload_dir['path'] );
+		$value_urls  = array();
+		$value_paths = array();
+
+		foreach( $raw_values as $unique_id ) {
+			$file_path = $this->safe_rename( $this->temp_file_path . '/' . $unique_id, $upload_path . '/' . basename( $unique_id ) );
+
+			if ( $file_path ) {
+				$value_paths[] = $file_path;
+				$value_urls[] = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file_path );
+			}
+		}
+
+		$record->update_field( $field['id'], 'value', implode( ' , ', $value_urls ) );
+		$record->update_field( $field['id'], 'raw_value', implode( ' , ', $value_paths ) );
 	}
 
 	/**

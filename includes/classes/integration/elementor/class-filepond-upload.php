@@ -240,6 +240,6 @@ class FilePondUpload extends Field_Base {
 	 */
 	public function process_field( $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
 		// Allow other developers to process the field values.
-		do_action( 'wp_filepond_process_field', $field );
+		do_action( 'wp_filepond_process_field', $field, $record, $ajax_handler );
 	}
 }

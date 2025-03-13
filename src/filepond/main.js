@@ -50,21 +50,20 @@ function getFilePondConfiguration(configuration) {
         server: {
             process: {
                 method: "POST",
-                onerror: (response) => console.error("Upload error:", response),
+                onerror: (response) => {
+                    const responseItem = JSON.parse(response);
+
+                    $(document).trigger("wp_filepond_upload_error", responseItem);
+                    
+                    return responseItem?.data?.error ?? "";
+                },  
                 onload: (response) => {
-                    try {
-                        const json = JSON.parse(response);
+                    const responseItem = JSON.parse(response);
 
-                        // Trigger wp_filepond_upload_success event
-                        $(document).trigger("wp_filepond_upload_success", json);
+                    // Trigger wp_filepond_upload_success event
+                    $(document).trigger("wp_filepond_upload_success", responseItem);
 
-                        return json.success ? json?.data?.url ?? "" : "";
-                    } catch {
-                        // Trigger wp_filepond_upload_error event
-                        $(document).trigger("wp_filepond_upload_error", {});
-
-                        return "";
-                    }
+                    return responseItem.success ? responseItem?.data?.unique_id ?? "" : "";
                 },
                 ondata: (formData) => {
                     formData.append("secret_key", secret_key);
@@ -93,6 +92,10 @@ function createFilePondInstance(fileInput, configuration = {}) {
     const FilePondConfiguration = getFilePondConfiguration(configuration);
 
     return create(fileInput, FilePondConfiguration);
+}
+
+function revertFile() {
+
 }
 
 export default createFilePondInstance;
