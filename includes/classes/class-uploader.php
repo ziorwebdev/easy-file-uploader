@@ -38,6 +38,8 @@ class Uploader {
 				unlink( $file );
 			}
 		}
+	
+		@rmdir( $folder );
 
 		return true;
 	}
@@ -193,11 +195,9 @@ class Uploader {
 			);
 		}
 
-		$temp_file_path = $this->temp_file_path . '/' . $unique_id;
+		$temp_file_path = $this->temp_file_path . '/' . dirname( $unique_id );
 
 		if ( $this->delete_files( $temp_file_path ) ) {
-			@rmdir( $temp_file_path );
-
 			wp_send_json_success(
 				array( 'message' => __( 'Files deleted successfully.', 'wp-filepond' ) )
 			);
@@ -270,29 +270,45 @@ class Uploader {
 		}
 	}
 
+	/**
+	 * Processes the FilePond field by moving files from the temporary directory to the upload directory.
+	 *
+	 * @param array               $field         The field data.
+	 * @param Classes\Form_Record $record        The form record instance.
+	 * @param Classes\Ajax_Handler $ajax_handler The AJAX handler instance.
+	 */
 	public function process_filepond_field( array $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ): void {
-		$raw_values = $field['raw_value'];
+		$raw_values = (array) $field['raw_value']; // Ensure $raw_values is always an array.
 
-		if ( ! is_array( $raw_values ) ) {
-			$raw_values = [ $raw_values ];
+		if ( empty( $raw_values ) ) {
+			return;
 		}
 
 		$upload_dir  = wp_upload_dir();
 		$upload_path = apply_filters( 'wp_filepond_upload_path', $upload_dir['path'] );
-		$value_urls  = array();
-		$value_paths = array();
+		$value_paths = $value_urls = [];
 
-		foreach( $raw_values as $unique_id ) {
-			$file_path = $this->safe_rename( $this->temp_file_path . '/' . $unique_id, $upload_path . '/' . basename( $unique_id ) );
-
-			if ( $file_path ) {
-				$value_paths[] = $file_path;
-				$value_urls[] = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file_path );
+		foreach ( $raw_values as $unique_id ) {
+			if ( empty( $unique_id ) ) {
+				continue;
 			}
+
+			$source      = $this->temp_file_path . '/' . $unique_id;
+			$destination = $upload_path . '/' . basename( $unique_id );
+
+			// Move file to upload directory
+			if ( $file_path = $this->safe_rename( $source, $destination ) ) {
+				$value_paths[] = $file_path;
+				$value_urls[]  = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file_path );
+			}
+
+			// Delete temporary folder containing the file
+			$this->delete_files( dirname( $source ) );
 		}
 
-		$record->update_field( $field['id'], 'value', implode( ' , ', $value_urls ) );
-		$record->update_field( $field['id'], 'raw_value', implode( ' , ', $value_paths ) );
+		// Store updated values in the record
+		$record->update_field( $field['id'], 'value', implode( ', ', $value_urls ) );
+		$record->update_field( $field['id'], 'raw_value', implode( ', ', $value_paths ) );
 	}
 
 	/**
