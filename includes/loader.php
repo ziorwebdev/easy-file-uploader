@@ -62,6 +62,5 @@ class Loader {
 		Assets::get_instance();	
 		Uploader::get_instance();
 		Register::get_instance();
-		
 	}
 }

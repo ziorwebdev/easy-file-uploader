@@ -2,8 +2,6 @@
 namespace ZIOR\FilePond;
 
 use function ZIOR\FilePond\get_options;
-use function ZIOR\FilePond\get_additional_mime_types;
-use Mimey\MimeMappingBuilder;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

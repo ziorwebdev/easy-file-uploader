@@ -1,17 +1,30 @@
 <?php
 /**
  * Plugin Name:  FilePond WP Integration
- * Plugin URI:   
- * Description:  Adds a FilePond drag and drop uploader field to Elementor Pro Forms for seamless file uploads.
+ * Plugin URI:   https://github.com/ZIORWebDev/filepond-wp-integration
+ * Description:  Enhances Elementor Pro Forms with a FilePond-powered drag-and-drop uploader for seamless file uploads.
  * Author:       ZiorWeb.Dev
  * Author URI:   https://ziorweb.dev
  * Version:      1.0.0
  * Requires PHP: 8.0
  * Requires WP:  6.0
  * License:      GPL-2.0-or-later
- * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
+ * License URI:  https://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:  filepond-wp-integration
  * Domain Path:  /languages
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/gpl-2.0.txt>.
  */
 
 namespace ZIOR\FilePond;

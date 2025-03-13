@@ -1,7 +1,6 @@
 <?php
 namespace ZIOR\FilePond;
 
-use Mimey\MimeMappingBuilder;
 use Mimey\MimeTypes;
 
 // Exit if accessed directly.
@@ -80,16 +79,38 @@ function decrypt_data( string $data ): bool|array {
 	return json_decode( $data, true );
 }
 
-// TODO: Add HEIC mime type support
+/**
+ * Converts a comma-separated list of file extensions into an array of MIME types.
+ *
+ * This function takes a string of file extensions, splits them into an array, 
+ * and converts them to their corresponding MIME types using the MimeTypes class.
+ * Developers can modify the list of extensions and the MimeTypes instance 
+ * via filters.
+ *
+ * @param string $extentions Comma-separated list of file extensions.
+ * @return array List of corresponding MIME types.
+ */
 function convert_extentions_to_mime_types( string $extentions ): array {
 	$mime_types = array();
 	$extensions = array_map( 'trim', explode( ',', $extentions ) );
 	$mimes      = new MimeTypes();
 
-	// Allow developers to modify the MimeTypes instance
+	/**
+	 * Filters the MimeTypes instance used for retrieving MIME types.
+	 *
+	 * @since x.x.x
+	 *
+	 * @param MimeTypes $mimes The MimeTypes instance.
+	 */
 	$mimes = apply_filters( 'wp_filepond_mimes_instance', $mimes );
 
-	// Allow developers to modify the file extensions
+	/**
+	 * Filters the list of file extensions before converting to MIME types.
+	 *
+	 * @since x.x.x
+	 *
+	 * @param array $extensions The list of file extensions.
+	 */
 	$extensions = apply_filters( 'wp_filepond_file_extensions', $extensions );
 	
 	foreach ( $extensions as $extension ) {
@@ -103,7 +124,7 @@ function convert_extentions_to_mime_types( string $extentions ): array {
 	}
 
 	return $mime_types;
-}	
+}
 
 /**
  * Returns the settings options for the plugin.
@@ -151,10 +172,3 @@ function get_options(): array {
 
 	return apply_filters( 'wp_filepond_options', $options );
 }
-
-
-function get_additional_mime_types(): array {
-	return apply_filters( 'wp_filepond_additional_mime_types', [] );
-}
-
-
