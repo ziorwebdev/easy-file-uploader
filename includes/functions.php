@@ -91,7 +91,7 @@ function convert_extentions_to_mime_types( string $extentions ): array {
 
 	// Allow developers to modify the file extensions
 	$extensions = apply_filters( 'wp_filepond_file_extensions', $extensions );
-
+	
 	foreach ( $extensions as $extension ) {
 		$mime_type = $mimes->getMimeType( $extension );
 

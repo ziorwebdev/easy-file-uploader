@@ -12,7 +12,15 @@ $(document).ready(function () {
     $(document).trigger("wp_filepond_before_instance_created", filePondIntegration);
 
     fileUploaderFields.each(function () {
-        const configuration = Object.assign({}, getInputConfiguration($(this)), filePondIntegration);
+        const inputConfig = getInputConfiguration($(this)) || {};
+        const configuration = { ...filePondIntegration, ...inputConfig };
+
+        for (const key in configuration) {
+            if (!inputConfig[key] && filePondIntegration[key]) {
+                configuration[key] = filePondIntegration[key];
+            }
+        }
+
         const filePondInstance = createFilePondInstance($(this)[0], configuration);
 
         // Raised event a FilePond instance is created
