@@ -186,10 +186,10 @@ class Uploader {
 			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'filepond-wp-integration' ) ), 403 );
 		}
 
-		// Retrieve the file URL from the request body.
-		$unique_id = file_get_contents( 'php://input' );
+		// Retrieve the file id from the request body.
+		$file_id = file_get_contents( 'php://input' );
 
-		if ( ! $unique_id ) {
+		if ( ! $file_id ) {
 			wp_send_json_error(
 				array( 'message' => __( 'Missing file ID.', 'filepond-wp-integration' ) )
 			);
