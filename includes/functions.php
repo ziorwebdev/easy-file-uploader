@@ -98,7 +98,7 @@ function convert_extentions_to_mime_types( string $extentions ): array {
 	/**
 	 * Filters the MimeTypes instance used for retrieving MIME types.
 	 *
-	 * @since x.x.x
+	 * @since 1.0.0
 	 *
 	 * @param MimeTypes $mimes The MimeTypes instance.
 	 */
@@ -107,7 +107,7 @@ function convert_extentions_to_mime_types( string $extentions ): array {
 	/**
 	 * Filters the list of file extensions before converting to MIME types.
 	 *
-	 * @since x.x.x
+	 * @since 1.0.0
 	 *
 	 * @param array $extensions The list of file extensions.
 	 */
