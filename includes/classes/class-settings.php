@@ -136,7 +136,7 @@ class Settings {
 			__( 'WP FilePond', 'filepond-wp-integration' ), // Page title
 			__( 'WP FilePond', 'filepond-wp-integration' ), // Menu title
 			'manage_options',                   // Required capability
-			'wp-filepond',                       // Menu slug
+			'filepond-wp-integration',                       // Menu slug
 			array( $this, 'render_settings_page' ) // Callback function
 		);
 	}
@@ -168,7 +168,7 @@ class Settings {
 				$section_id,
 				$section['title'],
 				$section['callback'],
-				'wp-filepond'
+				'filepond-wp-integration'
 			);
 
 			foreach ( $fields as $field ) {
@@ -180,7 +180,7 @@ class Settings {
 					$field['id'],
 					$field['title'],
 					$field['callback'],
-					'wp-filepond',
+					'filepond-wp-integration',
 					$field['section']
 				);
 			}
@@ -198,7 +198,7 @@ class Settings {
 		// Data to pass to the template
 		$data = array(
 			'options_group' => 'wp_filepond_options_group',
-			'page_slug'     => 'wp-filepond',
+			'page_slug'     => 'filepond-wp-integration',
 		);
 
 		$this->load_template( 'settings', $data );
