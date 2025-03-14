@@ -88,7 +88,7 @@ class FilePondUpload extends Field_Base {
 	 * @return string The translatable name of the field ('FilePond Upload').
 	 */
 	public function get_name() {
-		return esc_html__( 'FilePond Upload', 'wp-filepond' );
+		return esc_html__( 'FilePond Upload', 'filepond-wp-integration' );
 	}
 
 	/**
@@ -109,21 +109,21 @@ class FilePondUpload extends Field_Base {
 		$field_controls = array(
 			'wp_filepond_max_file_size' => array(
 				'name'         => 'wp_filepond_max_file_size',
-				'label'        => esc_html__( 'Max. File Size', 'wp-filepond' ),
+				'label'        => esc_html__( 'Max. File Size', 'filepond-wp-integration' ),
 				'type'         => Controls_Manager::SELECT,
 				'condition'    => array(
 					'field_type' => $this->get_type(),
 				),
 				'default'      => get_option( 'wp_filepond_max_file_size', 100 ),
 				'options'      => $this->get_upload_file_size_options(),
-				'description'  => esc_html__( 'If you need to increase max upload size please contact your hosting.', 'wp-filepond' ),
+				'description'  => esc_html__( 'If you need to increase max upload size please contact your hosting.', 'filepond-wp-integration' ),
 				'tab'          => 'content',
 				'inner_tab'    => 'form_fields_content_tab',
 				'tabs_wrapper' => 'form_fields_tabs',
 			),
 			'wp_filepond_file_types' => array(
 				'name'         => 'wp_filepond_file_types',
-				'label'        => esc_html__( 'Allowed File Types', 'wp-filepond' ),
+				'label'        => esc_html__( 'Allowed File Types', 'filepond-wp-integration' ),
 				'label_block'  => true,
 				'type'         => Controls_Manager::TEXT,
 				'default'      => get_option( 'wp_filepond_file_types_allowed', '' ), 
@@ -133,14 +133,14 @@ class FilePondUpload extends Field_Base {
 				'condition'    => array(
 					'field_type' => $this->get_type(),
 				),
-				'description'  => esc_html__( 'Enter the allowed file types, separated by a comma (jpg, gif, pdf, etc).', 'wp-filepond' ),
+				'description'  => esc_html__( 'Enter the allowed file types, separated by a comma (jpg, gif, pdf, etc).', 'filepond-wp-integration' ),
 				'tab'          => 'content',
 				'inner_tab'    => 'form_fields_content_tab',
 				'tabs_wrapper' => 'form_fields_tabs',
 			),
 			'wp_filepond_allow_multiple_upload' => array(
 				'name'         => 'wp_filepond_allow_multiple_upload',
-				'label'        => esc_html__( 'Multiple Files', 'wp-filepond' ),
+				'label'        => esc_html__( 'Multiple Files', 'filepond-wp-integration' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'condition'    => array(
 					'field_type' => $this->get_type(),
@@ -151,7 +151,7 @@ class FilePondUpload extends Field_Base {
 			),
 			'wp_filepond_max_files' => array(
 				'name'         => 'wp_filepond_max_files',
-				'label'        => esc_html__( 'Max. Files', 'wp-filepond' ),
+				'label'        => esc_html__( 'Max. Files', 'filepond-wp-integration' ),
 				'type'         => Controls_Manager::NUMBER,
 				'condition'    => array(
 					'field_type'           => $this->get_type(),
@@ -220,7 +220,7 @@ class FilePondUpload extends Field_Base {
 	public function validation( $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
 		// is the file required and missing?
 		if ( $field['required'] && empty( $field['value'] ) ) {
-			$ajax_handler->add_error( $field['id'], __( 'Upload a valid file', 'wp-filepond' ) );
+			$ajax_handler->add_error( $field['id'], __( 'Upload a valid file', 'filepond-wp-integration' ) );
 
 			return;
 		}

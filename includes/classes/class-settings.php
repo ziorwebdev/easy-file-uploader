@@ -49,31 +49,31 @@ class Settings {
 		$settings_fields = array(
 			array(
 				'id'       => 'wp_filepond_max_file_size',
-				'title'    => __( 'Max. File Size', 'wp-filepond' ),
+				'title'    => __( 'Max. File Size', 'filepond-wp-integration' ),
 				'callback' => array( $this, 'max_file_size_callback' ),
 				'section'  => 'wp_filepond_general_section',
 			),
 			array(
 				'id'       => 'wp_filepond_button_label',
-				'title'    => __( 'Default Button Label', 'wp-filepond' ),
+				'title'    => __( 'Default Button Label', 'filepond-wp-integration' ),
 				'callback' => array( $this, 'button_label_callback' ),
 				'section'  => 'wp_filepond_general_section',
 			),
 			array(
 				'id'       => 'wp_filepond_file_types_allowed',
-				'title'    => __( 'Default File Types Allowed', 'wp-filepond' ),
+				'title'    => __( 'Default File Types Allowed', 'filepond-wp-integration' ),
 				'callback' => array( $this, 'file_types_allowed_callback' ),
 				'section'  => 'wp_filepond_general_section',
 			),
 			array(
 				'id'       => 'wp_filepond_file_type_error',
-				'title'    => __( 'File Type Error Message', 'wp-filepond' ),
+				'title'    => __( 'File Type Error Message', 'filepond-wp-integration' ),
 				'callback' => array( $this, 'file_type_error_message_callback' ),
 				'section'  => 'wp_filepond_general_section',
 			),
 			array(
 				'id'       => 'wp_filepond_file_size_error',
-				'title'    => __( 'File Size Error Message', 'wp-filepond' ),
+				'title'    => __( 'File Size Error Message', 'filepond-wp-integration' ),
 				'callback' => array( $this, 'file_size_error_message_callback' ),
 				'section'  => 'wp_filepond_general_section',
 			),
@@ -90,7 +90,7 @@ class Settings {
 	private function get_settings_sections(): array {
 		$settings_sections = array(
 			'wp_filepond_general_section' => array(
-				'title'    => __( 'General Settings', 'wp-filepond' ),
+				'title'    => __( 'General Settings', 'filepond-wp-integration' ),
 				'callback' => array( $this, 'section_callback' )
 			)
 		);
@@ -133,8 +133,8 @@ class Settings {
 	 */
 	public function add_settings_page(): void {
 		add_options_page(
-			__( 'WP FilePond', 'wp-filepond' ), // Page title
-			__( 'WP FilePond', 'wp-filepond' ), // Menu title
+			__( 'WP FilePond', 'filepond-wp-integration' ), // Page title
+			__( 'WP FilePond', 'filepond-wp-integration' ), // Menu title
 			'manage_options',                   // Required capability
 			'wp-filepond',                       // Menu slug
 			array( $this, 'render_settings_page' ) // Callback function
@@ -214,7 +214,7 @@ class Settings {
 	public function section_callback(): void {
 		printf(
 			'<p>%s</p>',
-			esc_html__( 'Configure the FilePond integration settings.', 'wp-filepond' )
+			esc_html__( 'Configure the FilePond integration settings.', 'filepond-wp-integration' )
 		);
 	}
 
@@ -240,7 +240,7 @@ class Settings {
 		// Output the description with proper escaping.
 		printf(
 			'<p class="help-text">%s</p>',
-			esc_html__( 'Enter an error message to show when an uploaded file type is invalid. Leave blank to use the FilePond default message.', 'wp-filepond' )
+			esc_html__( 'Enter an error message to show when an uploaded file type is invalid. Leave blank to use the FilePond default message.', 'filepond-wp-integration' )
 		);
 	}
 
@@ -266,7 +266,7 @@ class Settings {
 		// Output the description with proper escaping.
 		printf(
 			'<p class="help-text">%s</p>',
-			esc_html__( 'Enter an error message to show when an uploaded file exceeds the file size limit.', 'wp-filepond' )
+			esc_html__( 'Enter an error message to show when an uploaded file exceeds the file size limit.', 'filepond-wp-integration' )
 		);
 	}
 
@@ -313,7 +313,7 @@ class Settings {
 		// Output the description with proper escaping for security.
 		printf(
 			'<p>%s</p>',
-			esc_html__( 'Default allowed file types, separated by a comma (jpg, gif, pdf, etc). Can be overridden in the field settings.', 'wp-filepond' )
+			esc_html__( 'Default allowed file types, separated by a comma (jpg, gif, pdf, etc). Can be overridden in the field settings.', 'filepond-wp-integration' )
 		);
 	}
 
@@ -338,7 +338,7 @@ class Settings {
 		// Display a help text for the input field.
 		printf(
 			'<p class="description">%s</p>',
-			esc_html__( 'Default max. file size in MB. Can be overridden in the field settings.', 'wp-filepond' )
+			esc_html__( 'Default max. file size in MB. Can be overridden in the field settings.', 'filepond-wp-integration' )
 		);
 	}
 }
