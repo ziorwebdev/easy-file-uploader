@@ -108,6 +108,8 @@ class Settings {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
+
+		add_action( 'wp_filepond_settings_after', array( $this, 'render_marketing_card' ) );
 	}
 
 	/**
@@ -340,5 +342,17 @@ class Settings {
 			'<p class="description">%s</p>',
 			esc_html__( 'Default max. file size in MB. Can be overridden in the field settings.', 'filepond-wp-integration' )
 		);
+	}
+
+	/**
+	 * Renders the marketing card template.
+	 *
+	 * This function loads the marketing card template file from the 'pro/views' directory.
+	 * It uses load_template() to ensure proper inclusion within the WordPress ecosystem.
+	 *
+	 * @return void
+	 */
+	public function render_marketing_card(): void {
+		load_template( WP_FILEPOND_PLUGIN_DIR . 'views/marketing.php', false );
 	}
 }
