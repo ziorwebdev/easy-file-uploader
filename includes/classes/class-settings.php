@@ -109,7 +109,7 @@ class Settings {
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 
-		add_action( 'wp_filepond_settings_after', array( $this, 'render_marketing_card' ) );
+		add_action( 'wp_filepond_settings_after', array( $this, 'render_marketing_card' ), 10 );
 	}
 
 	/**
