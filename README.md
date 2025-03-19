@@ -4,11 +4,11 @@
 
 ## Features
 
-**Drag & Drop Uploads** – Simplifies file uploads with an intuitive UI.
-**Asynchronous Uploads** – Ensures faster performance without reloading the page.
-**Secure Upload Handling** – Adheres to WordPress security best practices.
-**Customizable Settings** – Configure file size limits, allowed file types, and more.
-**Styled for Elementor** – Seamlessly integrates with Elementor Pro Forms.
+1. **Drag & Drop Uploads** – Simplifies file uploads with an intuitive UI.
+2. **Asynchronous Uploads** – Ensures faster performance without reloading the page.
+3. **Secure Upload Handling** – Adheres to WordPress security best practices.
+4. **Customizable Settings** – Configure file size limits, allowed file types, and more.
+5. **Styled for Elementor** – Seamlessly integrates with Elementor Pro Forms.
 
 ## Installation
 
