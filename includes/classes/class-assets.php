@@ -1,5 +1,5 @@
 <?php
-namespace ZIOR\FilePond;
+namespace ZIOR\DragDrop;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,19 +18,19 @@ class Assets {
 	 */
 	private static ?Assets $instance = null;
 
-	private function enqueue_wp_filepond_scripts(): void {
+	private function enqueue_dragdrop_scripts(): void {
 		$uploader_configurations = get_uploader_configurations();
 
-		wp_enqueue_style( 'wp-filepond-vendors', WP_FILEPOND_PLUGIN_URL . 'dist/vendors.min.css', array(), null );
-		wp_enqueue_script( 'wp-filepond-vendors', WP_FILEPOND_PLUGIN_URL . 'dist/vendors.min.js', array(), null, true );
+		wp_enqueue_style( 'dragdrop-vendors', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/vendors.min.css', array(), null );
+		wp_enqueue_script( 'dragdrop-vendors', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/vendors.min.js', array(), null, true );
 
 		// Allow other addon plugins to enqueue their own scripts and styles.
-		do_action( 'enqueue_wp_filepond_scripts' );
+		do_action( 'enqueue_dragdrop_scripts' );
 
-		wp_enqueue_style( 'wp-filepond-uploader', WP_FILEPOND_PLUGIN_URL . 'dist/main.min.css', array(), null );
-		wp_enqueue_script( 'wp-filepond-uploader', WP_FILEPOND_PLUGIN_URL . 'dist/main.min.js', array( 'jquery' ), null, true );
+		wp_enqueue_style( 'dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.css', array(), null );
+		wp_enqueue_script( 'dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.js', array( 'jquery' ), null, true );
 
-		wp_localize_script( 'wp-filepond-uploader', 'FilePondUploader', $uploader_configurations );
+		wp_localize_script( 'dragdrop-uploader', 'DragDropUploader', $uploader_configurations );
 	}
 
 	/**
@@ -47,20 +47,20 @@ class Assets {
 	 * Enqueues scripts and styles for the admin area.
 	 */
 	public function enqueue_admin_scripts(): void {
-		$this->enqueue_wp_filepond_scripts();
+		$this->enqueue_dragdrop_scripts();
 
 		// Allow other addon plugins to enqueue their own scripts and styles.
-		do_action( 'enqueue_wp_filepond_admin_scripts' );
+		do_action( 'enqueue_dragdrop_admin_scripts' );
 	}
 
 	/**
 	 * Enqueues scripts and styles for the front-end.
 	 */
 	public function enqueue_frontend_scripts(): void {
-		$this->enqueue_wp_filepond_scripts();
+		$this->enqueue_dragdrop_scripts();
 
 		// Allow other addon plugins to enqueue their own scripts and styles.
-		do_action( 'enqueue_wp_filepond_frontend_scripts' );
+		do_action( 'enqueue_dragdrop_frontend_scripts' );
 	}
 
 	/**

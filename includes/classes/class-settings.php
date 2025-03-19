@@ -1,7 +1,7 @@
 <?php
-namespace ZIOR\FilePond;
+namespace ZIOR\DragDrop;
 
-use function ZIOR\FilePond\get_options;
+use function ZIOR\DragDrop\get_options;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -30,7 +30,7 @@ class Settings {
 	 * @return void
 	 */
 	private function load_template( string $template_name, array $data = [] ): void {
-		$template_file = WP_FILEPOND_PLUGIN_DIR . sprintf( 'views/%s.php', $template_name );
+		$template_file = ZIOR_DRAGDROP_PLUGIN_DIR . sprintf( 'views/%s.php', $template_name );
 
 		if ( ! file_exists( $template_file ) ) {
 			return;
@@ -48,38 +48,38 @@ class Settings {
 	private function get_settings_fields(): array {
 		$settings_fields = array(
 			array(
-				'id'       => 'wp_filepond_max_file_size',
-				'title'    => __( 'Max. File Size', 'filepond-wp-integration' ),
+				'id'       => 'dragdrop_max_file_size',
+				'title'    => __( 'Max. File Size', 'easy-dragdrop-file-uploader' ),
 				'callback' => array( $this, 'max_file_size_callback' ),
-				'section'  => 'wp_filepond_general_section',
+				'section'  => 'dragdrop_general_section',
 			),
 			array(
-				'id'       => 'wp_filepond_button_label',
-				'title'    => __( 'Default Button Label', 'filepond-wp-integration' ),
+				'id'       => 'dragdrop_button_label',
+				'title'    => __( 'Default Button Label', 'easy-dragdrop-file-uploader' ),
 				'callback' => array( $this, 'button_label_callback' ),
-				'section'  => 'wp_filepond_general_section',
+				'section'  => 'dragdrop_general_section',
 			),
 			array(
-				'id'       => 'wp_filepond_file_types_allowed',
-				'title'    => __( 'Default File Types Allowed', 'filepond-wp-integration' ),
+				'id'       => 'dragdrop_file_types_allowed',
+				'title'    => __( 'Default File Types Allowed', 'easy-dragdrop-file-uploader' ),
 				'callback' => array( $this, 'file_types_allowed_callback' ),
-				'section'  => 'wp_filepond_general_section',
+				'section'  => 'dragdrop_general_section',
 			),
 			array(
-				'id'       => 'wp_filepond_file_type_error',
-				'title'    => __( 'File Type Error Message', 'filepond-wp-integration' ),
+				'id'       => 'dragdrop_file_type_error',
+				'title'    => __( 'File Type Error Message', 'easy-dragdrop-file-uploader' ),
 				'callback' => array( $this, 'file_type_error_message_callback' ),
-				'section'  => 'wp_filepond_general_section',
+				'section'  => 'dragdrop_general_section',
 			),
 			array(
-				'id'       => 'wp_filepond_file_size_error',
-				'title'    => __( 'File Size Error Message', 'filepond-wp-integration' ),
+				'id'       => 'dragdrop_file_size_error',
+				'title'    => __( 'File Size Error Message', 'easy-dragdrop-file-uploader' ),
 				'callback' => array( $this, 'file_size_error_message_callback' ),
-				'section'  => 'wp_filepond_general_section',
+				'section'  => 'dragdrop_general_section',
 			),
 		);
 
-		return apply_filters( 'wp_filepond_settings_fields', $settings_fields );
+		return apply_filters( 'dragdrop_settings_fields', $settings_fields );
 	}
 
 	/**
@@ -89,13 +89,13 @@ class Settings {
 	 */
 	private function get_settings_sections(): array {
 		$settings_sections = array(
-			'wp_filepond_general_section' => array(
-				'title'    => __( 'General Settings', 'filepond-wp-integration' ),
+			'dragdrop_general_section' => array(
+				'title'    => __( 'General Settings', 'easy-dragdrop-file-uploader' ),
 				'callback' => array( $this, 'section_callback' )
 			)
 		);
 
-		return apply_filters( 'wp_filepond_settings_sections', $settings_sections );
+		return apply_filters( 'dragdrop_settings_sections', $settings_sections );
 	}
 
 	/**
@@ -109,7 +109,7 @@ class Settings {
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 
-		add_action( 'wp_filepond_settings_after', array( $this, 'render_marketing_card' ), 10 );
+		add_action( 'dragdrop_settings_after', array( $this, 'render_marketing_card' ), 10 );
 	}
 
 	/**
@@ -135,10 +135,10 @@ class Settings {
 	 */
 	public function add_settings_page(): void {
 		add_options_page(
-			__( 'WP FilePond', 'filepond-wp-integration' ), // Page title
-			__( 'WP FilePond', 'filepond-wp-integration' ), // Menu title
+			__( 'DragDrop Uploader', 'easy-dragdrop-file-uploader' ), // Page title
+			__( 'DragDrop Uploader', 'easy-dragdrop-file-uploader' ), // Menu title
 			'manage_options',                   // Required capability
-			'filepond-wp-integration',                       // Menu slug
+			'easy-dragdrop-file-uploader', // Menu slug
 			array( $this, 'render_settings_page' ) // Callback function
 		);
 	}
@@ -156,8 +156,8 @@ class Settings {
 		$options = get_options();
 
 		foreach ( $options as $option ) {
-			register_setting( $option['option_group'], $option['option_name'], array(
-				'sanitize_callback' => $option['sanitize']
+			register_setting( sanitize_text_field( $option['option_group'] ), sanitize_text_field( $option['option_name'] ), array(
+				'sanitize_callback' => sanitize_text_field( $option['sanitize'] )
 			) );
 		}
 
@@ -170,7 +170,7 @@ class Settings {
 				$section_id,
 				$section['title'],
 				$section['callback'],
-				'filepond-wp-integration'
+				'easy-dragdrop-file-uploader'
 			);
 
 			foreach ( $fields as $field ) {
@@ -182,7 +182,7 @@ class Settings {
 					$field['id'],
 					$field['title'],
 					$field['callback'],
-					'filepond-wp-integration',
+					'easy-dragdrop-file-uploader',
 					$field['section']
 				);
 			}
@@ -199,8 +199,8 @@ class Settings {
 	public function render_settings_page(): void {
 		// Data to pass to the template
 		$data = array(
-			'options_group' => 'wp_filepond_options_group',
-			'page_slug'     => 'filepond-wp-integration',
+			'options_group' => 'dragdrop_options_group',
+			'page_slug'     => 'easy-dragdrop-file-uploader',
 		);
 
 		$this->load_template( 'settings', $data );
@@ -216,7 +216,7 @@ class Settings {
 	public function section_callback(): void {
 		printf(
 			'<p>%s</p>',
-			esc_html__( 'Configure the FilePond integration settings.', 'filepond-wp-integration' )
+			esc_html__( 'Configure the FilePond integration settings.', 'easy-dragdrop-file-uploader' )
 		);
 	}
 
@@ -230,19 +230,19 @@ class Settings {
 	 */
 	public function file_type_error_message_callback(): void {
 		// Retrieve the file type error message, defaulting to an empty string.
-		$message = get_option( 'wp_filepond_file_type_error', '' );
+		$message = get_option( 'dragdrop_file_type_error', '' );
 		$message = sanitize_textarea_field( $message ); // Ensure safe text output
 
 		// Output the textarea field with proper escaping.
 		printf(
-			'<textarea name="wp_filepond_file_type_error" rows="3" cols="50" maxlength="120">%s</textarea>',
+			'<textarea name="dragdrop_file_type_error" rows="3" cols="50" maxlength="120">%s</textarea>',
 			esc_textarea( $message ) // Escape output to prevent XSS
 		);
 
 		// Output the description with proper escaping.
 		printf(
 			'<p class="help-text">%s</p>',
-			esc_html__( 'Enter an error message to show when an uploaded file type is invalid. Leave blank to use the FilePond default message.', 'filepond-wp-integration' )
+			esc_html__( 'Enter an error message to show when an uploaded file type is invalid. Leave blank to use the FilePond default message.', 'easy-dragdrop-file-uploader' )
 		);
 	}
 
@@ -256,19 +256,19 @@ class Settings {
 	 */
 	public function file_size_error_message_callback(): void {
 		// Retrieve the file size error message, defaulting to an empty string.
-		$message = get_option( 'wp_filepond_file_size_error', '' );
+		$message = get_option( 'dragdrop_file_size_error', '' );
 		$message = sanitize_textarea_field( $message ); // Ensure safe text output
 
 		// Output the textarea field with proper escaping.
 		printf(
-			'<textarea name="wp_filepond_file_size_error" rows="3" cols="50" maxlength="120">%s</textarea>',
+			'<textarea name="dragdrop_file_size_error" rows="3" cols="50" maxlength="120">%s</textarea>',
 			esc_textarea( $message ) // Escape output to prevent XSS
 		);
 
 		// Output the description with proper escaping.
 		printf(
 			'<p class="help-text">%s</p>',
-			esc_html__( 'Enter an error message to show when an uploaded file exceeds the file size limit.', 'filepond-wp-integration' )
+			esc_html__( 'Enter an error message to show when an uploaded file exceeds the file size limit.', 'easy-dragdrop-file-uploader' )
 		);
 	}
 
@@ -282,12 +282,12 @@ class Settings {
 	 */
 	public function button_label_callback(): void {
 		// Retrieve the button label option from the database, defaulting to an empty string.
-		$button_label = get_option( 'wp_filepond_button_label', '' );
+		$button_label = get_option( 'dragdrop_button_label', '' );
 		$button_label = sanitize_text_field( $button_label ); // Ensure safe text output
 
 		// Output the input field with proper escaping.
 		printf(
-			'<input type="text" name="wp_filepond_button_label" value="%s">',
+			'<input type="text" name="dragdrop_button_label" value="%s">',
 			esc_attr( $button_label ) // Escape output to prevent XSS
 		);
 	}
@@ -303,19 +303,19 @@ class Settings {
 	 */
 	public function file_types_allowed_callback(): void {
 		// Retrieve the allowed file types option from the database, defaulting to an empty string.
-		$file_types = get_option( 'wp_filepond_file_types_allowed', '' );
+		$file_types = get_option( 'dragdrop_file_types_allowed', '' );
 		$file_types = is_string( $file_types ) ? sanitize_text_field( $file_types ) : ''; // Ensure it's a clean string
 
 		// Output the input field with proper escaping to prevent XSS.
 		printf(
-			'<input type="text" name="wp_filepond_file_types_allowed" value="%s">',
+			'<input type="text" name="dragdrop_file_types_allowed" value="%s">',
 			esc_attr( $file_types ) // Escape output to prevent XSS
 		);
 
 		// Output the description with proper escaping for security.
 		printf(
 			'<p>%s</p>',
-			esc_html__( 'Default allowed file types, separated by a comma (jpg, gif, pdf, etc). Can be overridden in the field settings.', 'filepond-wp-integration' )
+			esc_html__( 'Default allowed file types, separated by a comma (jpg, gif, pdf, etc). Can be overridden in the field settings.', 'easy-dragdrop-file-uploader' )
 		);
 	}
 
@@ -328,19 +328,19 @@ class Settings {
 	 */
 	public function max_file_size_callback(): void {
 		// Retrieve the max file size setting from the database, defaulting to 100 MB.
-		$max_file_size = get_option( 'wp_filepond_max_file_size', 100 );
+		$max_file_size = get_option( 'dragdrop_max_file_size', 100 );
 		$max_file_size = (int) $max_file_size; // Ensure it is strictly an integer.
 
 		// Output a number input field with proper escaping and value handling.
 		printf(
-			'<input type="number" name="wp_filepond_max_file_size" value="%d" min="1" step="1">',
+			'<input type="number" name="dragdrop_max_file_size" value="%d" min="1" step="1">',
 			esc_attr( $max_file_size ) // Escape for output safety.
 		);
 
 		// Display a help text for the input field.
 		printf(
 			'<p class="description">%s</p>',
-			esc_html__( 'Default max. file size in MB. Can be overridden in the field settings.', 'filepond-wp-integration' )
+			esc_html__( 'Default max. file size in MB. Can be overridden in the field settings.', 'easy-dragdrop-file-uploader' )
 		);
 	}
 
@@ -353,6 +353,6 @@ class Settings {
 	 * @return void
 	 */
 	public function render_marketing_card(): void {
-		load_template( WP_FILEPOND_PLUGIN_DIR . 'views/marketing.php', false );
+		load_template( ZIOR_DRAGDROP_PLUGIN_DIR . 'views/marketing.php', false );
 	}
 }

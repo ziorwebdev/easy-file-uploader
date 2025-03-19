@@ -1,26 +1,26 @@
 <?php
-namespace ZIOR\FilePond\Elementor;
+namespace ZIOR\DragDrop\Elementor;
 
 use ElementorPro\Modules\Forms\Fields\Field_Base;
 use Elementor\Controls_Manager;
 use ElementorPro\Plugin;
 use ElementorPro\Modules\Forms\Classes;
 
-use function ZIOR\FilePond\get_mime_type;
-use function ZIOR\FilePond\convert_extentions_to_mime_types;
+use function ZIOR\DragDrop\get_mime_type;
+use function ZIOR\DragDrop\convert_extentions_to_mime_types;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-class FilePondUpload extends Field_Base {
+class DragDropUploader extends Field_Base {
 
 	/**
 	 * Retrieves FilePond fields from the given fields array and sets the 'attachment_type'.
 	 *
 	 * This function filters the provided fields array to return only those with
-	 * 'field_type' set to 'filepond-upload'. Additionally, it assigns the value
-	 * of 'wp_filepond_attachment_type' to 'attachment_type' if it exists.
+	 * 'field_type' set to 'dragdrop-upload'. Additionally, it assigns the value
+	 * of 'dragdrop_attachment_type' to 'attachment_type' if it exists.
 	 *
 	 * @param array $fields The array of form fields.
 	 * @return array The filtered array containing only FilePond fields with updated 'attachment_type'.
@@ -30,15 +30,15 @@ class FilePondUpload extends Field_Base {
 
 		foreach ( $fields as $field ) {
 			// Ensure the field is a FilePond upload field
-			if ( ! isset( $field['field_type'] ) || 'filepond-upload' !== $field['field_type'] ) {
+			if ( ! isset( $field['field_type'] ) || 'dragdrop-upload' !== $field['field_type'] ) {
 				$filepond_fields[] = $field;
 
 				continue;
 			}
 
-			// Set 'attachment_type' to 'wp_filepond_attachment_type' if it exists
-			if ( isset( $field['wp_filepond_attachment_type'] ) ) {
-				$field['attachment_type'] = $field['wp_filepond_attachment_type'];
+			// Set 'attachment_type' to 'dragdrop_attachment_type' if it exists
+			if ( isset( $field['dragdrop_attachment_type'] ) ) {
+				$field['attachment_type'] = $field['dragdrop_attachment_type'];
 			}
 
 			$filepond_fields[] = $field;
@@ -67,7 +67,7 @@ class FilePondUpload extends Field_Base {
 	/**
 	 * Constructor.
 	 *
-	 * Initializes the FilePondUpload class and hooks AJAX actions for handling file uploads.
+	 * Initializes the Uploader class and hooks AJAX actions for handling file uploads.
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -76,10 +76,10 @@ class FilePondUpload extends Field_Base {
 	/**
 	 * Gets the field type identifier for Elementor.
 	 *
-	 * @return string The field type slug ('filepond-upload').
+	 * @return string The field type slug ('dragdrop-upload').
 	 */
 	public function get_type() {
-		return 'filepond-upload';
+		return 'dragdrop-upload';
 	}
 
 	/**
@@ -88,7 +88,7 @@ class FilePondUpload extends Field_Base {
 	 * @return string The translatable name of the field ('FilePond Upload').
 	 */
 	public function get_name() {
-		return esc_html__( 'FilePond Upload', 'filepond-wp-integration' );
+		return esc_html__( 'DragDrop Upload', 'easy-dragdrop-file-uploader' );
 	}
 
 	/**
@@ -107,40 +107,40 @@ class FilePondUpload extends Field_Base {
 		}
 
 		$field_controls = array(
-			'wp_filepond_max_file_size' => array(
-				'name'         => 'wp_filepond_max_file_size',
-				'label'        => esc_html__( 'Max. File Size', 'filepond-wp-integration' ),
+			'dragdrop_max_file_size' => array(
+				'name'         => 'dragdrop_max_file_size',
+				'label'        => esc_html__( 'Max. File Size', 'easy-dragdrop-file-uploader' ),
 				'type'         => Controls_Manager::SELECT,
 				'condition'    => array(
 					'field_type' => $this->get_type(),
 				),
-				'default'      => get_option( 'wp_filepond_max_file_size', 100 ),
+				'default'      => get_option( 'dragdrop_max_file_size', 100 ),
 				'options'      => $this->get_upload_file_size_options(),
-				'description'  => esc_html__( 'If you need to increase max upload size please contact your hosting.', 'filepond-wp-integration' ),
+				'description'  => esc_html__( 'If you need to increase max upload size please contact your hosting.', 'easy-dragdrop-file-uploader' ),
 				'tab'          => 'content',
 				'inner_tab'    => 'form_fields_content_tab',
 				'tabs_wrapper' => 'form_fields_tabs',
 			),
-			'wp_filepond_file_types' => array(
-				'name'         => 'wp_filepond_file_types',
-				'label'        => esc_html__( 'Allowed File Types', 'filepond-wp-integration' ),
+			'dragdrop_file_types' => array(
+				'name'         => 'dragdrop_file_types',
+				'label'        => esc_html__( 'Allowed File Types', 'easy-dragdrop-file-uploader' ),
 				'label_block'  => true,
 				'type'         => Controls_Manager::TEXT,
-				'default'      => get_option( 'wp_filepond_file_types_allowed', '' ), 
+				'default'      => get_option( 'dragdrop_file_types_allowed', '' ), 
 				'ai'           => array(
 					'active' => false,
 				),
 				'condition'    => array(
 					'field_type' => $this->get_type(),
 				),
-				'description'  => esc_html__( 'Enter the allowed file types, separated by a comma (jpg, gif, pdf, etc).', 'filepond-wp-integration' ),
+				'description'  => esc_html__( 'Enter the allowed file types, separated by a comma (jpg, gif, pdf, etc).', 'easy-dragdrop-file-uploader' ),
 				'tab'          => 'content',
 				'inner_tab'    => 'form_fields_content_tab',
 				'tabs_wrapper' => 'form_fields_tabs',
 			),
-			'wp_filepond_allow_multiple_upload' => array(
-				'name'         => 'wp_filepond_allow_multiple_upload',
-				'label'        => esc_html__( 'Multiple Files', 'filepond-wp-integration' ),
+			'dragdrop_allow_multiple_upload' => array(
+				'name'         => 'dragdrop_allow_multiple_upload',
+				'label'        => esc_html__( 'Multiple Files', 'easy-dragdrop-file-uploader' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'condition'    => array(
 					'field_type' => $this->get_type(),
@@ -149,13 +149,13 @@ class FilePondUpload extends Field_Base {
 				'inner_tab'    => 'form_fields_content_tab',
 				'tabs_wrapper' => 'form_fields_tabs',
 			),
-			'wp_filepond_max_files' => array(
-				'name'         => 'wp_filepond_max_files',
-				'label'        => esc_html__( 'Max. Files', 'filepond-wp-integration' ),
+			'dragdrop_max_files' => array(
+				'name'         => 'dragdrop_max_files',
+				'label'        => esc_html__( 'Max. Files', 'easy-dragdrop-file-uploader' ),
 				'type'         => Controls_Manager::NUMBER,
 				'condition'    => array(
 					'field_type'           => $this->get_type(),
-					'wp_filepond_allow_multiple_upload' => 'yes',
+					'dragdrop_allow_multiple_upload' => 'yes',
 				),
 				'tab'          => 'content',
 				'inner_tab'    => 'form_fields_content_tab',
@@ -177,11 +177,11 @@ class FilePondUpload extends Field_Base {
 	 */
 	public function render( $item, $item_index, $form ) {
 		// Add base attributes for the file upload field.
-		$form->add_render_attribute( 'input' . $item_index, 'class', 'wp-filepond-upload' );
+		$form->add_render_attribute( 'input' . $item_index, 'class', 'dragdrop-upload' );
 		$form->add_render_attribute( 'input' . $item_index, 'type', 'file', true );
 
 		// Handle multiple file uploads.
-		if ( ! empty( $item['wp_filepond_allow_multiple_upload'] ) ) {
+		if ( ! empty( $item['dragdrop_allow_multiple_upload'] ) ) {
 			$form->add_render_attribute( 'input' . $item_index, 'multiple', 'multiple' );
 			$form->add_render_attribute(
 				'input' . $item_index,
@@ -191,21 +191,23 @@ class FilePondUpload extends Field_Base {
 			);
 		}
 
-		$file_types   = convert_extentions_to_mime_types( $item['wp_filepond_file_types'] );
+		$file_types   = convert_extentions_to_mime_types( $item['dragdrop_file_types'] );
 		$default_size = wp_max_upload_size() / 1024 / 1024;
 		$attributes   = array(
-				'data-filesize'  => esc_attr( $item['wp_filepond_max_file_size'] ?? $default_size ),
+				'data-filesize'  => esc_attr( $item['dragdrop_max_file_size'] ?? $default_size ),
 				'data-filetypes' => esc_attr( ! empty( $file_types ) ? implode( ',', $file_types ) : '' ),
 				'data-label'     => esc_attr( $item['field_label'] ?? '' ),
-				'data-maxfiles'  => esc_attr( $item['wp_filepond_max_files'] ?? '' ),
+				'data-maxfiles'  => esc_attr( $item['dragdrop_max_files'] ?? '' ),
 			);
 
 		$form->add_render_attribute( 'input' . $item_index, $attributes );
 		
-		// Allow developers to modify the input attributes
-		do_action( 'wp_filepond_before_render_input', $form->get_render_attribute_string( 'input' . $item_index ) );
+		$input_attributes = $form->get_render_attribute_string( 'input' . $item_index );
 
-		echo '<input ' . $form->get_render_attribute_string( 'input' . $item_index ) . '>';
+		// Allow developers to modify the input attributes
+		do_action( 'dragdrop_before_render_input', $input_attributes );
+
+		echo '<input ' . $input_attributes . '>';
 	}
 
 	/**
@@ -220,7 +222,7 @@ class FilePondUpload extends Field_Base {
 	public function validation( $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
 		// is the file required and missing?
 		if ( $field['required'] && empty( $field['value'] ) ) {
-			$ajax_handler->add_error( $field['id'], __( 'Upload a valid file', 'filepond-wp-integration' ) );
+			$ajax_handler->add_error( $field['id'], __( 'Upload a valid file', 'easy-dragdrop-file-uploader' ) );
 
 			return;
 		}
@@ -232,7 +234,7 @@ class FilePondUpload extends Field_Base {
 	 * Processes a form field.
 	 *
 	 * This function allows other developers to hook into the field processing
-	 * using the `wp_filepond_process_field` action.
+	 * using the `dragdrop_process_field` action.
 	 *
 	 * @param mixed                 $field        The field data to process.
 	 * @param Classes\Form_Record   $record       The form record instance.
@@ -240,6 +242,6 @@ class FilePondUpload extends Field_Base {
 	 */
 	public function process_field( $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
 		// Allow other developers to process the field values.
-		do_action( 'wp_filepond_process_field', $field, $record, $ajax_handler );
+		do_action( 'dragdrop_process_field', $field, $record, $ajax_handler );
 	}
 }

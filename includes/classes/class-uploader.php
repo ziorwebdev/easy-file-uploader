@@ -1,5 +1,5 @@
 <?php
-namespace ZIOR\FilePond;
+namespace ZIOR\DragDrop;
 
 use ElementorPro\Modules\Forms\Classes;
 
@@ -29,19 +29,14 @@ class Uploader {
 	 * @return bool True on success, false on failure.
 	 */
 	function delete_files( $folder ) {
-		if ( ! is_dir( $folder ) ) {
-			return false;
+		global $wp_filesystem;
+
+		if ( ! isset( $wp_filesystem ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
 		}
 
-		foreach ( glob( trailingslashit( $folder ) . '*' ) as $file ) {
-			if ( is_file( $file ) ) {
-				unlink( $file );
-			}
-		}
-	
-		@rmdir( $folder );
-
-		return true;
+		return $wp_filesystem->rmdir( $folder, true );
 	}
 
 	/**
@@ -59,27 +54,36 @@ class Uploader {
 	}
 
 	/**
-	 * Retrieve the uploaded file data from the form submission.
+	 * Retrieves the uploaded file from the Elementor form fields.
 	 *
-	 * This function extracts the uploaded file details from the `$_FILES` array
-	 * and structures it into a standard file data array.
+	 * This function extracts the uploaded file from the `$_FILES` superglobal.
+	 * Since it deals with file uploads, sanitation is not applied here.
 	 *
-	 * @return array|bool An associative array containing file data or false if no valid file is found.
+	 * @return array|bool The uploaded file array or false if no file is uploaded.
 	 */
 	private function get_uploaded_file(): array|bool {
-		$files = $_FILES['form_fields'] ?? array();
+		// Verify security nonce.
+		if ( ! $this->verify_nonce() ) {
+			return false;
+		}
+
+		$files = $_FILES['form_fields'] ?? array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 
 		if ( empty( $files ) || ! is_array( $files ) ) {
 			return false;
 		}
 
 		$field_name = array_key_first( $files['name'] );
+		$field_name = sanitize_text_field( $field_name );
 		$file_keys  = array( 'name', 'type', 'tmp_name', 'error', 'size' );
 		$file       = array();
 
-		// Extract the first file from the multidimensional $_FILES structure.
+		// Extract the file from the multidimensional $_FILES structure.
 		foreach ( $file_keys as $key ) {
-			$file[ $key ] = is_array( $files[ $key ][ $field_name ] ) ? $files[ $key ][ $field_name ][0] : $files[ $key ][ $field_name ];
+			$sanitize_callback = in_array( $key, array( 'name', 'type', 'tmp_name' ), true ) ? 'sanitize_text_field' : 'intval';
+			$file[ $key ] = is_array( $files[ $key ][ $field_name ] ) 
+				? $sanitize_callback( $files[ $key ][ $field_name ][0] ) 
+				: $sanitize_callback( $files[ $key ][ $field_name ] );
 		}
 
 		return $file;
@@ -88,7 +92,7 @@ class Uploader {
 	/**
 	 * Validate the file type against allowed types.
 	 *
-	 * This function applies the 'wp_filepond_validate_file_type' filter to allow
+	 * This function applies the 'dragdrop_validate_file_type' filter to allow
 	 * external modification of the validation logic.
 	 *
 	 * @param array $file        File data array containing file details.
@@ -97,13 +101,13 @@ class Uploader {
 	 * @return bool True if the file type is valid, false otherwise.
 	 */
 	private function is_valid_file_type( array $file, array $valid_types ): bool {
-		return apply_filters( 'wp_filepond_validate_file_type', false, $file, $valid_types );
+		return apply_filters( 'dragdrop_validate_file_type', false, $file, $valid_types );
 	}
 
 	/**
 	 * Validate the file size against the maximum allowed size.
 	 *
-	 * This function applies the 'wp_filepond_validate_file_size' filter to allow
+	 * This function applies the 'dragdrop_validate_file_size' filter to allow
 	 * external modification of the validation logic.
 	 *
 	 * @param array $file    File data array containing file details.
@@ -112,17 +116,24 @@ class Uploader {
 	 * @return bool True if the file size is valid, false otherwise.
 	 */
 	private function is_valid_file_size( array $file, int $max_size ): bool {
-		return apply_filters( 'wp_filepond_validate_file_size', false, $file, $max_size );
+		return apply_filters( 'dragdrop_validate_file_size', false, $file, $max_size );
 	}
 
 	/**
-	 * Safely rename a file to avoid overwriting an existing file.
+	 * Safely move a file to avoid overwriting an existing file.
 	 *
 	 * @param string $source      The source file path.
 	 * @param string $destination The destination file path.
 	 * @return string|false The new file path if successful, false on failure.
 	 */
-	private function safe_rename( $source, $destination ) {
+	private function move_file( $source, $destination ) {
+		global $wp_filesystem;
+
+		if ( ! $wp_filesystem ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
 		$path      = pathinfo( $destination );
 		$dir       = $path['dirname'];
 		$filename  = $path['filename'];
@@ -131,14 +142,13 @@ class Uploader {
 		$counter         = 1;
 		$new_destination = $destination;
 
-		while ( file_exists( $new_destination ) ) {
+		while ( $wp_filesystem->exists( $new_destination ) ) {
 			$new_destination = sprintf( '%s/%s-%d%s', $dir, $filename, $counter, $extension );
 			$counter++;
 		}
 
-		return rename( $source, $new_destination ) ? $new_destination : false;
+		return $wp_filesystem->move( $source, $new_destination ) ? $new_destination : false;
 	}
-
 
 	/**
 	 * Constructor.
@@ -148,15 +158,15 @@ class Uploader {
 	public function __construct() {
 		$this->temp_file_path = wp_upload_dir()['basedir'] . '/filepond-temp';
 
-		add_action( 'wp_ajax_wp_filepond_upload', array( $this, 'handle_filepond_upload' ), 10 );
-		add_action( 'wp_ajax_nopriv_wp_filepond_upload', array( $this, 'handle_filepond_upload' ), 10 );
-		add_action( 'wp_ajax_wp_filepond_remove', array( $this, 'handle_filepond_remove' ), 10 );
-		add_action( 'wp_ajax_nopriv_wp_filepond_remove', array( $this, 'handle_filepond_remove' ), 10 );
-		add_action( 'wp_ajax_nopriv_wp_filepond_remove', array( $this, 'handle_filepond_remove' ), 10 );
-		add_action( 'wp_filepond_process_field', array( $this, 'process_filepond_field' ), 10, 3 );
+		add_action( 'wp_ajax_dragdrop_upload', array( $this, 'handle_filepond_upload' ), 10 );
+		add_action( 'wp_ajax_nopriv_dragdrop_upload', array( $this, 'handle_filepond_upload' ), 10 );
+		add_action( 'wp_ajax_dragdrop_remove', array( $this, 'handle_filepond_remove' ), 10 );
+		add_action( 'wp_ajax_nopriv_dragdrop_remove', array( $this, 'handle_filepond_remove' ), 10 );
+		add_action( 'wp_ajax_nopriv_dragdrop_remove', array( $this, 'handle_filepond_remove' ), 10 );
+		add_action( 'dragdrop_process_field', array( $this, 'process_filepond_field' ), 10, 3 );
 
-		add_filter( 'wp_filepond_validate_file_type', array( $this, 'validate_file_type' ), 10, 3 );
-		add_filter( 'wp_filepond_validate_file_size', array( $this, 'validate_file_size' ), 10, 3 );
+		add_filter( 'dragdrop_validate_file_type', array( $this, 'validate_file_type' ), 10, 3 );
+		add_filter( 'dragdrop_validate_file_size', array( $this, 'validate_file_size' ), 10, 3 );
 	}
 
 	/**
@@ -183,27 +193,28 @@ class Uploader {
 	public function handle_filepond_remove(): void {
 		// Verify security nonce.
 		if ( ! $this->verify_nonce() ) {
-			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'filepond-wp-integration' ) ), 403 );
+			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'easy-dragdrop-file-uploader' ) ), 403 );
 		}
 
 		// Retrieve the file id from the request body.
 		$file_id = file_get_contents( 'php://input' );
+		$file_id = sanitize_text_field( $file_id );
 
 		if ( ! $file_id ) {
 			wp_send_json_error(
-				array( 'message' => __( 'Missing file ID.', 'filepond-wp-integration' ) )
+				array( 'message' => __( 'Missing file ID.', 'easy-dragdrop-file-uploader' ) )
 			);
 		}
 
-		$temp_file_path = $this->temp_file_path . '/' . dirname( $unique_id );
+		$temp_file_path = $this->temp_file_path . '/' . dirname( $file_id );
 
 		if ( $this->delete_files( $temp_file_path ) ) {
 			wp_send_json_success(
-				array( 'message' => __( 'Files deleted successfully.', 'filepond-wp-integration' ) )
+				array( 'message' => __( 'Files deleted successfully.', 'easy-dragdrop-file-uploader' ) )
 			);
 		} else {
 			wp_send_json_error(
-				array( 'message' => __( 'Failed to delete files.', 'filepond-wp-integration' ) )
+				array( 'message' => __( 'Failed to delete files.', 'easy-dragdrop-file-uploader' ) )
 			);
 		}
 	}
@@ -217,18 +228,18 @@ class Uploader {
 	 * @return void Outputs JSON response indicating success or failure.
 	 */
 	public function handle_filepond_upload(): void {
-		// Verify security nonce.
-		if ( ! $this->verify_nonce() ) {
-			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'filepond-wp-integration' ) ), 403 );
-
-			return;
-		}
-
 		// Retrieve and validate uploaded file.
 		$file = $this->get_uploaded_file();
 
 		if ( empty( $file ) ) {
-			wp_send_json_error( array( 'error' => __( 'No valid file uploaded.', 'filepond-wp-integration' ) ) );
+			wp_send_json_error( array( 'error' => __( 'No valid file uploaded.', 'easy-dragdrop-file-uploader' ) ) );
+
+			return;
+		}
+
+		// Verify security nonce.
+		if ( ! $this->verify_nonce() ) {
+			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'easy-dragdrop-file-uploader' ) ), 403 );
 
 			return;
 		}
@@ -239,13 +250,13 @@ class Uploader {
 		$valid_types = explode( ',', $args['types'] );
 
 		if ( ! $this->is_valid_file_type( $file, $valid_types ) ) {
-			wp_send_json_error( array( 'error' => get_option( 'wp_filepond_file_type_error', '' ) ), 415 );
+			wp_send_json_error( array( 'error' => get_option( 'dragdrop_file_type_error', '' ) ), 415 );
 
 			return;
 		}
 
 		if ( ! $this->is_valid_file_size( $file, $args['size'] ) ) {
-			wp_send_json_error( array( 'error' => get_option( 'wp_filepond_file_size_error', '' ) ), 413 );
+			wp_send_json_error( array( 'error' => get_option( 'dragdrop_file_size_error', '' ) ), 413 );
 
 			return;
 		}
@@ -255,10 +266,10 @@ class Uploader {
 
 		wp_mkdir_p( $temp_file_path );
 
-		if ( move_uploaded_file( $file['tmp_name'], $temp_file_path . '/' . $file['name'] ) ) {
+		if ( $this->move_file( $file['tmp_name'], $temp_file_path . '/' . $file['name'] ) ) {
 			wp_send_json_success(
 				array(
-					'unique_id' => $unique_id . '/' . $file['name']
+					'file_id' => $unique_id . '/' . $file['name']
 				)
 			);
 		} else {
@@ -285,7 +296,7 @@ class Uploader {
 		}
 
 		$upload_dir  = wp_upload_dir();
-		$upload_path = apply_filters( 'wp_filepond_upload_path', $upload_dir['path'] );
+		$upload_path = apply_filters( 'dragdrop_upload_path', $upload_dir['path'] );
 		$value_paths = $value_urls = [];
 
 		foreach ( $raw_values as $unique_id ) {

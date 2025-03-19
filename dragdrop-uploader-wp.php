@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name:  FilePond WP Integration
- * Plugin URI:   https://github.com/ZIORWebDev/filepond-wp-integration
+ * Plugin Name:  Easy DragDrop File Uploader
+ * Plugin URI:   https://github.com/ZIORWebDev/easy-dragdrop-file-uploader
  * Description:  Enhances Elementor Pro Forms with a FilePond-powered drag-and-drop uploader for seamless file uploads.
  * Author:       ZiorWeb.Dev
  * Author URI:   https://ziorweb.dev
@@ -10,7 +10,7 @@
  * Requires WP:  6.0
  * License:      GPL-2.0-or-later
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:  filepond-wp-integration
+ * Text Domain:  easy-dragdrop-file-uploader
  * Domain Path:  /languages
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/gpl-2.0.txt>.
  */
 
-namespace ZIOR\FilePond;
+namespace ZIOR\DragDrop;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -68,16 +68,16 @@ class Plugin {
 	 * Ensures constants are only defined once to prevent conflicts.
 	 */
 	private function setup_constants(): void {
-		if ( ! defined( "WP_FILEPOND_PLUGIN_DIR" ) ) {
-			define( "WP_FILEPOND_PLUGIN_DIR", plugin_dir_path( __FILE__ ) );
+		if ( ! defined( "ZIOR_DRAGDROP_PLUGIN_DIR" ) ) {
+			define( "ZIOR_DRAGDROP_PLUGIN_DIR", plugin_dir_path( __FILE__ ) );
 		}
 
-		if ( ! defined( "WP_FILEPOND_PLUGIN_URL" ) ) {
-			define( "WP_FILEPOND_PLUGIN_URL", plugin_dir_url( __FILE__ ) );
+		if ( ! defined( "ZIOR_DRAGDROP_PLUGIN_URL" ) ) {
+			define( "ZIOR_DRAGDROP_PLUGIN_URL", plugin_dir_url( __FILE__ ) );
 		}
 
-		if ( ! defined( "WP_FILEPOND_PLUGIN_FILE" ) ) {
-			define( "WP_FILEPOND_PLUGIN_FILE", __FILE__ );
+		if ( ! defined( "ZIOR_DRAGDROP_PLUGIN_FILE" ) ) {
+			define( "ZIOR_DRAGDROP_PLUGIN_FILE", __FILE__ );
 		}
 	}
 
@@ -85,9 +85,9 @@ class Plugin {
 	 * Includes necessary plugin files.
 	 */
 	private function includes(): void {
-		require_once WP_FILEPOND_PLUGIN_DIR . 'vendor/autoload.php';
-		require_once WP_FILEPOND_PLUGIN_DIR . 'includes/loader.php';
-		require_once WP_FILEPOND_PLUGIN_DIR . 'includes/functions.php';
+		require_once ZIOR_DRAGDROP_PLUGIN_DIR . 'vendor/autoload.php';
+		require_once ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/loader.php';
+		require_once ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/functions.php';
 	}
 
 	/**
@@ -96,7 +96,6 @@ class Plugin {
 	 * Initializes hooks required for the plugin.
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_settings_link' ) );
 	}
 
@@ -118,7 +117,7 @@ class Plugin {
 	 * Loads plugin text domain for translations.
 	 */
 	public function load_plugin_textdomain(): void {
-		load_plugin_textdomain( 'wp-filepond', false, WP_FILEPOND_PLUGIN_DIR . '/languages' );
+		load_plugin_textdomain( 'easy-dragdrop-file-uploader', false, ZIOR_DRAGDROP_PLUGIN_DIR . '/languages' );
 	}
 
 	/**
@@ -143,8 +142,8 @@ class Plugin {
 	 */
 	public function add_settings_link( array $links ): array {
 		// Define the settings link URL
-		$settings_url  = admin_url( 'options-general.php?page=filepond-wp-integration' );
-		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'wp-filepond' ) . '</a>';
+		$settings_url  = admin_url( 'options-general.php?page=easy-dragdrop-file-uploader' );
+		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'easy-dragdrop-file-uploader' ) . '</a>';
 
 		// Prepend the settings link to the existing links.
 		array_unshift( $links, $settings_link );
@@ -161,5 +160,5 @@ $plugin = Plugin::get_instance();
 /**
  * Registers plugin activation and deactivation hooks.
  */
-register_activation_hook( WP_FILEPOND_PLUGIN_FILE, array( $plugin, 'activate_plugin' ) );
-register_deactivation_hook( WP_FILEPOND_PLUGIN_FILE, array( $plugin, 'deactivate_plugin' ) );
+register_activation_hook( ZIOR_DRAGDROP_PLUGIN_FILE, array( $plugin, 'activate_plugin' ) );
+register_deactivation_hook( ZIOR_DRAGDROP_PLUGIN_FILE, array( $plugin, 'deactivate_plugin' ) );

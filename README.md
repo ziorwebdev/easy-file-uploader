@@ -60,4 +60,4 @@ We welcome contributions! Feel free to fork this repository and submit a pull re
 
 ## License
 
-This plugin is licensed under the **GPL-3.0-or-later** license.
+This plugin is licensed under the **GPL-2.0-or-later** license.

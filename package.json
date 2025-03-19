@@ -1,13 +1,13 @@
 {
-  "name": "filepond-wp-integration",
+  "name": "easy-dragdrop-file-uploader",
   "version": "1.0.0",
-  "repository": "https://github.com/ZIORWebDev/filepond-wp-integration.git",
+  "repository": "https://github.com/ZIORWebDev/easy-dragdrop-file-uploader.git",
   "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
     "build": "cross-env NODE_ENV=production && wp-scripts build",
     "watch": "cross-env NODE_ENV=development && wp-scripts start",
-    "package": "rm -f $npm_package_name.zip && mkdir -p $npm_package_name && rsync -av --exclude='.git*' --exclude='node_modules/' --exclude='/src/' --exclude='/tests/' --exclude='composer.*' --exclude='*.log' --exclude='*.yml' --exclude='*.md' --exclude='/*.json' --exclude='*.Identifier' --exclude='*.lock' --exclude='*.zip' --exclude=$npm_package_name --exclude='/.yarn' --exclude='/*.js' ./ $npm_package_name/ && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name"
+    "package": "rm -f $npm_package_name.zip && mkdir -p $npm_package_name && rsync -av --exclude='.git*' --exclude='node_modules/' --exclude='/src/' --exclude='/tests/' --exclude='*.log' --exclude='*.yml' --exclude='*.md' --exclude='/package.json' --exclude='*.Identifier' --exclude='*.lock' --exclude='*.zip' --exclude=$npm_package_name --exclude='/.yarn' --exclude='/*.js' --exclude='/vendor/**/*.types' --exclude='/vendor/**/tests/' --exclude='/vendor/**/*.yml' --exclude='/vendor/**/*.xml' --exclude='/vendor/**/*.md' --exclude='/vendor/**/*.custom' ./ $npm_package_name/ && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name"
   },
   "dependencies": {
     "filepond": "^4.32.7",

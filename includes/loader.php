@@ -1,5 +1,7 @@
 <?php
-namespace ZIOR\FilePond;
+namespace ZIOR\DragDrop;
+
+use ZIOR\DragDrop\Uploader as DragDropUploader;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -39,16 +41,16 @@ class Loader {
 	public function load() {
 		// Set up SPL autoloader.
 		spl_autoload_register( function ( $class ) {
-			if ( ! preg_match( "/^ZIOR\\\\FilePond.+$/", $class ) ) {
+			if ( ! preg_match( "/^ZIOR\\\\DragDrop.+$/", $class ) ) {
 				return;
 			}
 
 			$classes = array(
-				'Assets'         => WP_FILEPOND_PLUGIN_DIR . 'includes/classes/class-assets.php',
-				'FilePondUpload' => WP_FILEPOND_PLUGIN_DIR . 'includes/classes/integration/elementor/class-filepond-upload.php',
-				'Register'       => WP_FILEPOND_PLUGIN_DIR . 'includes/classes/class-register.php',
-				'Settings'       => WP_FILEPOND_PLUGIN_DIR . 'includes/classes/class-settings.php',
-				'Uploader'       => WP_FILEPOND_PLUGIN_DIR . 'includes/classes/class-uploader.php',
+				'Assets'           => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-assets.php',
+				'DragDropUploader' => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integration/elementor/class-uploader.php',
+				'Register'         => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-register.php',
+				'Settings'         => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-settings.php',
+				'Uploader'         => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-uploader.php',
 			);
 
 			$class_name = explode( "\\", $class );

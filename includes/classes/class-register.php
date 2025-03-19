@@ -1,7 +1,7 @@
 <?php
-namespace ZIOR\FilePond;
+namespace ZIOR\DragDrop;
 
-use ZIOR\FilePond\Elementor\FilePondUpload;
+use ZIOR\DragDrop\Elementor\DragDropUploader;
 use ElementorPro\Modules\Forms\Classes\Fields;
 use ElementorPro\Modules\Forms\Registrars\Form_Fields_Registrar;
 
@@ -49,6 +49,6 @@ class Register {
 	 * @param ElementorPro\Modules\Forms\Registrars\Form_Fields_Registrar $fields Elementor form fields object.
 	 */
 	public function register_elementor_form_fields( Form_Fields_Registrar $form ): void {
-		$form->register( new FilePondUpload() );
+		$form->register( new DragDropUploader() );
 	}
 }
