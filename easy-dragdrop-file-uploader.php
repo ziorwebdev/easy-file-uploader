@@ -48,6 +48,12 @@ class Plugin {
 	 */
 	protected static ?Plugin $instance = null;
 
+	/**
+	 * The plugin version.
+	 *
+	 * @var string
+	 */
+	protected static string $version = '1.0.0';
 
 	/**
 	 * Initializes the plugin.
@@ -78,6 +84,10 @@ class Plugin {
 
 		if ( ! defined( "ZIOR_DRAGDROP_PLUGIN_FILE" ) ) {
 			define( "ZIOR_DRAGDROP_PLUGIN_FILE", __FILE__ );
+		}
+
+		if ( ! defined( "ZIOR_DRAGDROP_PLUGIN_VERSION" ) ) {
+			define( "ZIOR_DRAGDROP_PLUGIN_VERSION", self::$version );
 		}
 	}
 

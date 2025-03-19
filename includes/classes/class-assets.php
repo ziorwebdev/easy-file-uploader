@@ -18,18 +18,32 @@ class Assets {
 	 */
 	private static ?Assets $instance = null;
 
+	/**
+	 * Enqueue scripts and styles for the DragDrop Uploader.
+	 *
+	 * This function loads the necessary CSS and JavaScript files for the uploader,
+	 * ensures dependencies are met, and provides localized script data.
+	 *
+	 * @return void
+	 */
 	private function enqueue_dragdrop_scripts(): void {
+		// Get uploader configurations.
 		$uploader_configurations = get_uploader_configurations();
 
-		wp_enqueue_style( 'dragdrop-vendors', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/vendors.min.css', array(), null );
-		wp_enqueue_script( 'dragdrop-vendors', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/vendors.min.js', array(), null, true );
+		// Enqueue vendor styles and scripts.
+		wp_enqueue_style( 'dragdrop-vendors', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/vendors.min.css', array(), ZIOR_DRAGDROP_PLUGIN_VERSION );
+		wp_enqueue_script( 'dragdrop-vendors', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/vendors.min.js', array(), ZIOR_DRAGDROP_PLUGIN_VERSION, true );
 
-		// Allow other addon plugins to enqueue their own scripts and styles.
+		/**
+		 * Allow other plugins or addons to enqueue additional scripts and styles.
+		 */
 		do_action( 'enqueue_dragdrop_scripts' );
 
-		wp_enqueue_style( 'dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.css', array(), null );
-		wp_enqueue_script( 'dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.js', array( 'jquery' ), null, true );
+		// Enqueue main uploader styles and scripts.
+		wp_enqueue_style( 'dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.css', array(), ZIOR_DRAGDROP_PLUGIN_VERSION );
+		wp_enqueue_script( 'dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.js', array( 'jquery' ), $plugin_version, true );
 
+		// Localize script to pass PHP variables to JavaScript.
 		wp_localize_script( 'dragdrop-uploader', 'DragDropUploader', $uploader_configurations );
 	}
 
