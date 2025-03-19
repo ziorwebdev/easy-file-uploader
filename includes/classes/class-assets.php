@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Handles FilePond integration for WordPress.
+ * Handles DragDrop integration for WordPress.
  */
 class Assets {
 
@@ -31,8 +31,8 @@ class Assets {
 		$uploader_configurations = get_uploader_configurations();
 
 		// Enqueue vendor styles and scripts.
-		wp_enqueue_style( 'dragdrop-vendors', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/vendors.min.css', array(), ZIOR_DRAGDROP_PLUGIN_VERSION );
-		wp_enqueue_script( 'dragdrop-vendors', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/vendors.min.js', array(), ZIOR_DRAGDROP_PLUGIN_VERSION, true );
+		wp_enqueue_style( 'easy-dragdrop-vendors', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/vendors.min.css', array(), ZIOR_DRAGDROP_PLUGIN_VERSION );
+		wp_enqueue_script( 'easy-dragdrop-vendors', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/vendors.min.js', array(), ZIOR_DRAGDROP_PLUGIN_VERSION, true );
 
 		/**
 		 * Allow other plugins or addons to enqueue additional scripts and styles.
@@ -40,11 +40,11 @@ class Assets {
 		do_action( 'enqueue_easy_dragdrop_scripts' );
 
 		// Enqueue main uploader styles and scripts.
-		wp_enqueue_style( 'dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.css', array(), ZIOR_DRAGDROP_PLUGIN_VERSION );
-		wp_enqueue_script( 'dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.js', array( 'jquery' ), ZIOR_DRAGDROP_PLUGIN_VERSION, true );
+		wp_enqueue_style( 'easy-dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.css', array(), ZIOR_DRAGDROP_PLUGIN_VERSION );
+		wp_enqueue_script( 'easy-dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.js', array( 'jquery' ), ZIOR_DRAGDROP_PLUGIN_VERSION, true );
 
 		// Localize script to pass PHP variables to JavaScript.
-		wp_localize_script( 'dragdrop-uploader', 'DragDropUploader', $uploader_configurations );
+		wp_localize_script( 'easy-dragdrop-uploader', 'EasyDragDropUploader', $uploader_configurations );
 	}
 
 	/**

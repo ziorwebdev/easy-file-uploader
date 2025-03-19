@@ -279,7 +279,7 @@ class Uploader {
 			$destination = $upload_path . '/' . basename( $unique_id );
 
 			// Move file to upload directory
-			if ( $file_path = $this->safe_rename( $source, $destination ) ) {
+			if ( $file_path = $this->move_file( $source, $destination ) ) {
 				$value_paths[] = $file_path;
 				$value_urls[]  = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file_path );
 			}

@@ -30,16 +30,16 @@
 ### Plugin Settings Page  
 <img src="assets/screenshot-1.png" width="300">
 
-### FilePond Upload Field in Elementor Form  
+### Easy DragDrop Upload Field in Elementor Form  
 <img src="assets/screenshot-2.png" width="300">
 
-### Elementor Form Builder with FilePond Upload Field  
+### Elementor Form Builder with Easy DragDrop Upload Field  
 <img src="assets/screenshot-3.png" width="300">
 
 ## Frequently Asked Questions
 
 ### Q: Does this work without Elementor Pro?  
-**A:** No, Elementor Pro is required since the FilePond field is integrated into its form module.
+**A:** No, Elementor Pro is required since the Easy DragDrop field is integrated into its form module.
 
 ### Q: Where are the uploaded files stored?  
 **A:** Files are stored in the WordPress Media Library or a custom directory, based on your settings.

@@ -1,7 +1,7 @@
 import { create, registerPlugin } from 'filepond';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-import wpFilepond from "./helpers.js";
+import easyDragDropFileUploader from "./helpers.js";
 
 import 'filepond/dist/filepond.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
@@ -14,7 +14,7 @@ let filePondPlugins = [
 ];
 
 // Allow developers to modify the plugin list via "easy_dragdrop_plugins" filter
-filePondPlugins = wpFilepond.applyFilters("easy_dragdrop_plugins", filePondPlugins);
+filePondPlugins = easyDragDropFileUploader.applyFilters("easy_dragdrop_plugins", filePondPlugins);
 
 // Register FilePond plugins
 registerPlugin(...filePondPlugins);

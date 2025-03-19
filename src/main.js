@@ -2,14 +2,15 @@ import createFilePondInstance from "./dragdrop/main.js";
 
 $(document).ready(function () {
     const filePondInstances = new Map();
-    const fileUploaderFields = $(".dragdrop-upload");
-    let filePondIntegration = DragDropUploader || {};
+    const fileUploaderFields = $(".easy-dragdrop-upload");
+    console.log(fileUploaderFields);
+    let filePondIntegration = EasyDragDropUploader || {};
 
-    filePondIntegration.allowMultiple = DragDropUploader.allowMultiple === "1";
+    filePondIntegration.allowMultiple = EasyDragDropUploader.allowMultiple === "1";
 
     // Raised event before the FilePond instance is created
     // To allow developers to set global FilePond options
-    $(document).trigger("dragdrop_before_instance_created", filePondIntegration);
+    $(document).trigger("easy_dragdrop_before_instance_created", filePondIntegration);
 
     fileUploaderFields.each(function () {
         const inputConfig = getInputConfiguration($(this)) || {};
@@ -24,7 +25,7 @@ $(document).ready(function () {
         const filePondInstance = createFilePondInstance($(this)[0], configuration);
 
         // Raised event a FilePond instance is created
-        $(document).trigger("dragdrop_instance_created", filePondInstance);
+        $(document).trigger("easy_dragdrop_instance_created", filePondInstance);
 
         filePondInstances.set(this, filePondInstance);
     });

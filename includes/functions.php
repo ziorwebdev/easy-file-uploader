@@ -60,7 +60,7 @@ function get_plugin_options(): array {
 }
 
 /**
- * Retrieves the FilePond uploader configuration settings.
+ * Retrieves the DragDrop uploader configuration settings.
  *
  * This function fetches stored options related to file handling and
  * applies the 'easy_dragdrop_uploader_configurations' filter for customization.

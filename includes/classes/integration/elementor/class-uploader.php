@@ -16,22 +16,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 class DragDropUploader extends Field_Base {
 
 	/**
-	 * Retrieves FilePond fields from the given fields array and sets the 'attachment_type'.
+	 * Retrieves easy dragdrop fields from the given field array and sets the 'attachment_type'.
 	 *
 	 * This function filters the provided fields array to return only those with
-	 * 'field_type' set to 'dragdrop-upload'. Additionally, it assigns the value
+	 * 'field_type' set to 'easy-dragdrop-upload'. Additionally, it assigns the value
 	 * of 'easy_dragdrop_attachment_type' to 'attachment_type' if it exists.
 	 *
 	 * @param array $fields The array of form fields.
 	 * @return array The filtered array containing only FilePond fields with updated 'attachment_type'.
 	 */
-	private function get_filepond_fields( array $fields ): array {
-		$filepond_fields = [];
+	private function get_option_setting_fields( array $fields ): array {
+		$setting_fields = [];
 
 		foreach ( $fields as $field ) {
-			// Ensure the field is a FilePond upload field
-			if ( ! isset( $field['field_type'] ) || 'dragdrop-upload' !== $field['field_type'] ) {
-				$filepond_fields[] = $field;
+			// Ensure the field is a dragdrop upload field
+			if ( ! isset( $field['field_type'] ) || 'easy-dragdrop-upload' !== $field['field_type'] ) {
+				$setting_fields[] = $field;
 
 				continue;
 			}
@@ -41,10 +41,10 @@ class DragDropUploader extends Field_Base {
 				$field['attachment_type'] = $field['easy_dragdrop_attachment_type'];
 			}
 
-			$filepond_fields[] = $field;
+			$dragdrop_fields[] = $field;
 		}
 
-		return $filepond_fields;
+		return $setting_fields;
 	}
 
 	/**
@@ -76,10 +76,10 @@ class DragDropUploader extends Field_Base {
 	/**
 	 * Gets the field type identifier for Elementor.
 	 *
-	 * @return string The field type slug ('dragdrop-upload').
+	 * @return string The field type slug ('easy-dragdrop-upload').
 	 */
 	public function get_type() {
-		return 'dragdrop-upload';
+		return 'easy-dragdrop-upload';
 	}
 
 	/**
