@@ -24,8 +24,8 @@ Adds a drag and drop uploader field to Elementor Pro Forms for seamless file upl
 == Installation ==
 
 1. Install and activate the plugin via **Plugins → Add New Plugin** in WordPress.
-3. Go to **Settings → DragDrop Uploader** to configure the plugin.
-4. Edit an Elementor Pro Form and add the **DragDrop Upload** field.
+2. Go to **Settings → DragDrop Uploader** to configure the plugin.
+3. Edit an Elementor Pro Form and add the **DragDrop Upload** field.
 
 == Frequently Asked Questions ==
 
