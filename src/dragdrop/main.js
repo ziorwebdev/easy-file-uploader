@@ -78,7 +78,7 @@ function getFilePondConfiguration(configuration) {
         }
     };
 
-    return wpFilepond.applyFilters("easy_dragdrop_configuration", Object.assign({}, configuration, defaultConfiguration));
+    return easyDragDropFileUploader.applyFilters("easy_dragdrop_configuration", Object.assign({}, configuration, defaultConfiguration));
 }
 
 function createFilePondInstance(fileInput, configuration = {}) {

@@ -177,7 +177,7 @@ class DragDropUploader extends Field_Base {
 	 */
 	public function render( $item, $item_index, $form ) {
 		// Add base attributes for the file upload field.
-		$form->add_render_attribute( 'input' . $item_index, 'class', 'dragdrop-upload' );
+		$form->add_render_attribute( 'input' . $item_index, 'class', 'easy-dragdrop-upload' );
 		$form->add_render_attribute( 'input' . $item_index, 'type', 'file', true );
 
 		// Handle multiple file uploads.
