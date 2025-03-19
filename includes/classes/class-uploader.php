@@ -40,20 +40,6 @@ class Uploader {
 	}
 
 	/**
-	 * Verify the nonce for security validation.
-	 *
-	 * This function retrieves the nonce from the request headers, sanitizes it,
-	 * and verifies its validity using `wp_verify_nonce()`.
-	 *
-	 * @return bool True if the nonce is valid, false otherwise.
-	 */
-	private function verify_nonce(): bool {
-		$nonce = isset( $_SERVER['HTTP_X_WP_NONCE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_WP_NONCE'] ) ) : '';
-
-		return ! empty( $nonce ) && wp_verify_nonce( $nonce, 'filepond_uploader_nonce' );
-	}
-
-	/**
 	 * Retrieves the uploaded file from the Elementor form fields.
 	 *
 	 * This function extracts the uploaded file from the `$_FILES` superglobal.
@@ -61,14 +47,7 @@ class Uploader {
 	 *
 	 * @return array|bool The uploaded file array or false if no file is uploaded.
 	 */
-	private function get_uploaded_file(): array|bool {
-		// Verify security nonce.
-		if ( ! $this->verify_nonce() ) {
-			return false;
-		}
-
-		$files = $_FILES['form_fields'] ?? array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-
+	private function get_uploaded_file( array $files ): array|bool {
 		if ( empty( $files ) || ! is_array( $files ) ) {
 			return false;
 		}
@@ -92,7 +71,7 @@ class Uploader {
 	/**
 	 * Validate the file type against allowed types.
 	 *
-	 * This function applies the 'dragdrop_validate_file_type' filter to allow
+	 * This function applies the 'easy_dragdrop_validate_file_type' filter to allow
 	 * external modification of the validation logic.
 	 *
 	 * @param array $file        File data array containing file details.
@@ -101,13 +80,13 @@ class Uploader {
 	 * @return bool True if the file type is valid, false otherwise.
 	 */
 	private function is_valid_file_type( array $file, array $valid_types ): bool {
-		return apply_filters( 'dragdrop_validate_file_type', false, $file, $valid_types );
+		return apply_filters( 'easy_dragdrop_validate_file_type', false, $file, $valid_types );
 	}
 
 	/**
 	 * Validate the file size against the maximum allowed size.
 	 *
-	 * This function applies the 'dragdrop_validate_file_size' filter to allow
+	 * This function applies the 'easy_dragdrop_validate_file_size' filter to allow
 	 * external modification of the validation logic.
 	 *
 	 * @param array $file    File data array containing file details.
@@ -116,7 +95,7 @@ class Uploader {
 	 * @return bool True if the file size is valid, false otherwise.
 	 */
 	private function is_valid_file_size( array $file, int $max_size ): bool {
-		return apply_filters( 'dragdrop_validate_file_size', false, $file, $max_size );
+		return apply_filters( 'easy_dragdrop_validate_file_size', false, $file, $max_size );
 	}
 
 	/**
@@ -156,17 +135,16 @@ class Uploader {
 	 * Hooks into WordPress to enqueue scripts and styles.
 	 */
 	public function __construct() {
-		$this->temp_file_path = wp_upload_dir()['basedir'] . '/filepond-temp';
+		$this->temp_file_path = wp_upload_dir()['basedir'] . '/easy-dragdrop-uploader-temp';
 
-		add_action( 'wp_ajax_dragdrop_upload', array( $this, 'handle_filepond_upload' ), 10 );
-		add_action( 'wp_ajax_nopriv_dragdrop_upload', array( $this, 'handle_filepond_upload' ), 10 );
-		add_action( 'wp_ajax_dragdrop_remove', array( $this, 'handle_filepond_remove' ), 10 );
-		add_action( 'wp_ajax_nopriv_dragdrop_remove', array( $this, 'handle_filepond_remove' ), 10 );
-		add_action( 'wp_ajax_nopriv_dragdrop_remove', array( $this, 'handle_filepond_remove' ), 10 );
-		add_action( 'dragdrop_process_field', array( $this, 'process_filepond_field' ), 10, 3 );
+		add_action( 'wp_ajax_easy_dragdrop_upload', array( $this, 'handle_easy_dragdrop_upload' ), 10 );
+		add_action( 'wp_ajax_nopriv_easy_dragdrop_upload', array( $this, 'handle_easy_dragdrop_upload' ), 10 );
+		add_action( 'wp_ajax_easy_dragdrop_remove', array( $this, 'handle_easy_dragdrop_remove' ), 10 );
+		add_action( 'wp_ajax_nopriv_easy_dragdrop_remove', array( $this, 'handle_easy_dragdrop_remove' ), 10 );
+		add_action( 'easy_dragdrop_process_field', array( $this, 'process_easy_dragdrop_field' ), 10, 3 );
 
-		add_filter( 'dragdrop_validate_file_type', array( $this, 'validate_file_type' ), 10, 3 );
-		add_filter( 'dragdrop_validate_file_size', array( $this, 'validate_file_size' ), 10, 3 );
+		add_filter( 'easy_dragdrop_validate_file_type', array( $this, 'validate_file_type' ), 10, 3 );
+		add_filter( 'easy_dragdrop_validate_file_size', array( $this, 'validate_file_size' ), 10, 3 );
 	}
 
 	/**
@@ -190,11 +168,8 @@ class Uploader {
 	 *
 	 * @return void Outputs JSON response indicating success or failure.
 	 */
-	public function handle_filepond_remove(): void {
-		// Verify security nonce.
-		if ( ! $this->verify_nonce() ) {
-			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'easy-dragdrop-file-uploader' ) ), 403 );
-		}
+	public function handle_easy_dragdrop_remove(): void {
+		check_ajax_referer( 'easy_dragdrop_uploader_nonce', 'security' );
 
 		// Retrieve the file id from the request body.
 		$file_id = file_get_contents( 'php://input' );
@@ -227,19 +202,15 @@ class Uploader {
 	 *
 	 * @return void Outputs JSON response indicating success or failure.
 	 */
-	public function handle_filepond_upload(): void {
+	public function handle_easy_dragdrop_upload(): void {
+		check_ajax_referer( 'easy_dragdrop_uploader_nonce', 'security' );
+
 		// Retrieve and validate uploaded file.
-		$file = $this->get_uploaded_file();
+		$files         = $_FILES['form_fields'] ?? array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$uploaded_file = $this->get_uploaded_file( $files );
 
-		if ( empty( $file ) ) {
+		if ( empty( $uploaded_file ) ) {
 			wp_send_json_error( array( 'error' => __( 'No valid file uploaded.', 'easy-dragdrop-file-uploader' ) ) );
-
-			return;
-		}
-
-		// Verify security nonce.
-		if ( ! $this->verify_nonce() ) {
-			wp_send_json_error( array( 'error' => __( 'Security check failed.', 'easy-dragdrop-file-uploader' ) ), 403 );
 
 			return;
 		}
@@ -249,14 +220,14 @@ class Uploader {
 		$args        = decrypt_data( $secret_key );
 		$valid_types = explode( ',', $args['types'] );
 
-		if ( ! $this->is_valid_file_type( $file, $valid_types ) ) {
-			wp_send_json_error( array( 'error' => get_option( 'dragdrop_file_type_error', '' ) ), 415 );
+		if ( ! $this->is_valid_file_type( $uploaded_file, $valid_types ) ) {
+			wp_send_json_error( array( 'error' => get_option( 'easy_dragdrop_file_type_error', '' ) ), 415 );
 
 			return;
 		}
 
-		if ( ! $this->is_valid_file_size( $file, $args['size'] ) ) {
-			wp_send_json_error( array( 'error' => get_option( 'dragdrop_file_size_error', '' ) ), 413 );
+		if ( ! $this->is_valid_file_size( $uploaded_file, $args['size'] ) ) {
+			wp_send_json_error( array( 'error' => get_option( 'easy_dragdrop_file_size_error', '' ) ), 413 );
 
 			return;
 		}
@@ -266,10 +237,10 @@ class Uploader {
 
 		wp_mkdir_p( $temp_file_path );
 
-		if ( $this->move_file( $file['tmp_name'], $temp_file_path . '/' . $file['name'] ) ) {
+		if ( $this->move_file( $uploaded_file['tmp_name'], $temp_file_path . '/' . $uploaded_file['name'] ) ) {
 			wp_send_json_success(
 				array(
-					'file_id' => $unique_id . '/' . $file['name']
+					'file_id' => $unique_id . '/' . $uploaded_file['name']
 				)
 			);
 		} else {
@@ -288,7 +259,7 @@ class Uploader {
 	 * @param Classes\Form_Record $record        The form record instance.
 	 * @param Classes\Ajax_Handler $ajax_handler The AJAX handler instance.
 	 */
-	public function process_filepond_field( array $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ): void {
+	public function process_easy_dragdrop_field( array $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ): void {
 		$raw_values = (array) $field['raw_value']; // Ensure $raw_values is always an array.
 
 		if ( empty( $raw_values ) ) {
@@ -296,7 +267,7 @@ class Uploader {
 		}
 
 		$upload_dir  = wp_upload_dir();
-		$upload_path = apply_filters( 'dragdrop_upload_path', $upload_dir['path'] );
+		$upload_path = apply_filters( 'easy_dragdrop_upload_path', $upload_dir['path'] );
 		$value_paths = $value_urls = [];
 
 		foreach ( $raw_values as $unique_id ) {

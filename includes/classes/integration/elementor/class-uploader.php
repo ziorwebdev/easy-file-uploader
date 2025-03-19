@@ -6,8 +6,8 @@ use Elementor\Controls_Manager;
 use ElementorPro\Plugin;
 use ElementorPro\Modules\Forms\Classes;
 
-use function ZIOR\DragDrop\get_mime_type;
 use function ZIOR\DragDrop\convert_extentions_to_mime_types;
+use function ZIOR\DragDrop\get_allowed_html;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -20,7 +20,7 @@ class DragDropUploader extends Field_Base {
 	 *
 	 * This function filters the provided fields array to return only those with
 	 * 'field_type' set to 'dragdrop-upload'. Additionally, it assigns the value
-	 * of 'dragdrop_attachment_type' to 'attachment_type' if it exists.
+	 * of 'easy_dragdrop_attachment_type' to 'attachment_type' if it exists.
 	 *
 	 * @param array $fields The array of form fields.
 	 * @return array The filtered array containing only FilePond fields with updated 'attachment_type'.
@@ -36,9 +36,9 @@ class DragDropUploader extends Field_Base {
 				continue;
 			}
 
-			// Set 'attachment_type' to 'dragdrop_attachment_type' if it exists
-			if ( isset( $field['dragdrop_attachment_type'] ) ) {
-				$field['attachment_type'] = $field['dragdrop_attachment_type'];
+			// Set 'attachment_type' to 'easy_dragdrop_attachment_type' if it exists
+			if ( isset( $field['easy_dragdrop_attachment_type'] ) ) {
+				$field['attachment_type'] = $field['easy_dragdrop_attachment_type'];
 			}
 
 			$filepond_fields[] = $field;
@@ -107,26 +107,26 @@ class DragDropUploader extends Field_Base {
 		}
 
 		$field_controls = array(
-			'dragdrop_max_file_size' => array(
-				'name'         => 'dragdrop_max_file_size',
+			'easy_dragdrop_max_file_size' => array(
+				'name'         => 'easy_dragdrop_max_file_size',
 				'label'        => esc_html__( 'Max. File Size', 'easy-dragdrop-file-uploader' ),
 				'type'         => Controls_Manager::SELECT,
 				'condition'    => array(
 					'field_type' => $this->get_type(),
 				),
-				'default'      => get_option( 'dragdrop_max_file_size', 100 ),
+				'default'      => get_option( 'easy_dragdrop_max_file_size', 100 ),
 				'options'      => $this->get_upload_file_size_options(),
 				'description'  => esc_html__( 'If you need to increase max upload size please contact your hosting.', 'easy-dragdrop-file-uploader' ),
 				'tab'          => 'content',
 				'inner_tab'    => 'form_fields_content_tab',
 				'tabs_wrapper' => 'form_fields_tabs',
 			),
-			'dragdrop_file_types' => array(
-				'name'         => 'dragdrop_file_types',
+			'easy_dragdrop_file_types' => array(
+				'name'         => 'easy_dragdrop_file_types',
 				'label'        => esc_html__( 'Allowed File Types', 'easy-dragdrop-file-uploader' ),
 				'label_block'  => true,
 				'type'         => Controls_Manager::TEXT,
-				'default'      => get_option( 'dragdrop_file_types_allowed', '' ), 
+				'default'      => get_option( 'easy_dragdrop_file_types_allowed', '' ), 
 				'ai'           => array(
 					'active' => false,
 				),
@@ -138,8 +138,8 @@ class DragDropUploader extends Field_Base {
 				'inner_tab'    => 'form_fields_content_tab',
 				'tabs_wrapper' => 'form_fields_tabs',
 			),
-			'dragdrop_allow_multiple_upload' => array(
-				'name'         => 'dragdrop_allow_multiple_upload',
+			'easy_dragdrop_allow_multiple_upload' => array(
+				'name'         => 'easy_dragdrop_allow_multiple_upload',
 				'label'        => esc_html__( 'Multiple Files', 'easy-dragdrop-file-uploader' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'condition'    => array(
@@ -149,13 +149,13 @@ class DragDropUploader extends Field_Base {
 				'inner_tab'    => 'form_fields_content_tab',
 				'tabs_wrapper' => 'form_fields_tabs',
 			),
-			'dragdrop_max_files' => array(
-				'name'         => 'dragdrop_max_files',
+			'easy_dragdrop_max_files' => array(
+				'name'         => 'easy_dragdrop_max_files',
 				'label'        => esc_html__( 'Max. Files', 'easy-dragdrop-file-uploader' ),
 				'type'         => Controls_Manager::NUMBER,
 				'condition'    => array(
 					'field_type'           => $this->get_type(),
-					'dragdrop_allow_multiple_upload' => 'yes',
+					'easy_dragdrop_allow_multiple_upload' => 'yes',
 				),
 				'tab'          => 'content',
 				'inner_tab'    => 'form_fields_content_tab',
@@ -181,7 +181,7 @@ class DragDropUploader extends Field_Base {
 		$form->add_render_attribute( 'input' . $item_index, 'type', 'file', true );
 
 		// Handle multiple file uploads.
-		if ( ! empty( $item['dragdrop_allow_multiple_upload'] ) ) {
+		if ( ! empty( $item['easy_dragdrop_allow_multiple_upload'] ) ) {
 			$form->add_render_attribute( 'input' . $item_index, 'multiple', 'multiple' );
 			$form->add_render_attribute(
 				'input' . $item_index,
@@ -191,13 +191,13 @@ class DragDropUploader extends Field_Base {
 			);
 		}
 
-		$file_types   = convert_extentions_to_mime_types( $item['dragdrop_file_types'] );
+		$file_types   = convert_extentions_to_mime_types( $item['easy_dragdrop_file_types'] );
 		$default_size = wp_max_upload_size() / 1024 / 1024;
 		$attributes   = array(
-				'data-filesize'  => esc_attr( $item['dragdrop_max_file_size'] ?? $default_size ),
+				'data-filesize'  => esc_attr( $item['easy_dragdrop_max_file_size'] ?? $default_size ),
 				'data-filetypes' => esc_attr( ! empty( $file_types ) ? implode( ',', $file_types ) : '' ),
 				'data-label'     => esc_attr( $item['field_label'] ?? '' ),
-				'data-maxfiles'  => esc_attr( $item['dragdrop_max_files'] ?? '' ),
+				'data-maxfiles'  => esc_attr( $item['easy_dragdrop_max_files'] ?? '' ),
 			);
 
 		$form->add_render_attribute( 'input' . $item_index, $attributes );
@@ -205,9 +205,11 @@ class DragDropUploader extends Field_Base {
 		$input_attributes = $form->get_render_attribute_string( 'input' . $item_index );
 
 		// Allow developers to modify the input attributes
-		do_action( 'dragdrop_before_render_input', $input_attributes );
+		do_action( 'easy_dragdrop_before_render_input', $input_attributes );
 
-		echo '<input ' . $input_attributes . '>';
+		$allowed_html = get_allowed_html();
+
+		echo wp_kses( '<input ' . $input_attributes . '>', $allowed_html );
 	}
 
 	/**
@@ -234,7 +236,7 @@ class DragDropUploader extends Field_Base {
 	 * Processes a form field.
 	 *
 	 * This function allows other developers to hook into the field processing
-	 * using the `dragdrop_process_field` action.
+	 * using the `easy_dragdrop_process_field` action.
 	 *
 	 * @param mixed                 $field        The field data to process.
 	 * @param Classes\Form_Record   $record       The form record instance.
@@ -242,6 +244,6 @@ class DragDropUploader extends Field_Base {
 	 */
 	public function process_field( $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
 		// Allow other developers to process the field values.
-		do_action( 'dragdrop_process_field', $field, $record, $ajax_handler );
+		do_action( 'easy_dragdrop_process_field', $field, $record, $ajax_handler );
 	}
 }

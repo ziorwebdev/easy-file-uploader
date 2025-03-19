@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             submit_button();
             ?>
         </form>
-        <?php do_action( 'dragdrop_settings_after' ); ?>
+        <?php do_action( 'easy_dragdrop_settings_after' ); ?>
     </div>
 </div>
 <style>

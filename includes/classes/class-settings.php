@@ -48,38 +48,38 @@ class Settings {
 	private function get_settings_fields(): array {
 		$settings_fields = array(
 			array(
-				'id'       => 'dragdrop_max_file_size',
+				'id'       => 'easy_dragdrop_max_file_size',
 				'title'    => __( 'Max. File Size', 'easy-dragdrop-file-uploader' ),
 				'callback' => array( $this, 'max_file_size_callback' ),
-				'section'  => 'dragdrop_general_section',
+				'section'  => 'easy_dragdrop_general_section',
 			),
 			array(
-				'id'       => 'dragdrop_button_label',
+				'id'       => 'easy_dragdrop_button_label',
 				'title'    => __( 'Default Button Label', 'easy-dragdrop-file-uploader' ),
 				'callback' => array( $this, 'button_label_callback' ),
-				'section'  => 'dragdrop_general_section',
+				'section'  => 'easy_dragdrop_general_section',
 			),
 			array(
-				'id'       => 'dragdrop_file_types_allowed',
+				'id'       => 'easy_dragdrop_file_types_allowed',
 				'title'    => __( 'Default File Types Allowed', 'easy-dragdrop-file-uploader' ),
 				'callback' => array( $this, 'file_types_allowed_callback' ),
-				'section'  => 'dragdrop_general_section',
+				'section'  => 'easy_dragdrop_general_section',
 			),
 			array(
-				'id'       => 'dragdrop_file_type_error',
+				'id'       => 'easy_dragdrop_file_type_error',
 				'title'    => __( 'File Type Error Message', 'easy-dragdrop-file-uploader' ),
 				'callback' => array( $this, 'file_type_error_message_callback' ),
-				'section'  => 'dragdrop_general_section',
+				'section'  => 'easy_dragdrop_general_section',
 			),
 			array(
-				'id'       => 'dragdrop_file_size_error',
+				'id'       => 'easy_dragdrop_file_size_error',
 				'title'    => __( 'File Size Error Message', 'easy-dragdrop-file-uploader' ),
 				'callback' => array( $this, 'file_size_error_message_callback' ),
-				'section'  => 'dragdrop_general_section',
+				'section'  => 'easy_dragdrop_general_section',
 			),
 		);
 
-		return apply_filters( 'dragdrop_settings_fields', $settings_fields );
+		return apply_filters( 'easy_dragdrop_settings_fields', $settings_fields );
 	}
 
 	/**
@@ -89,13 +89,13 @@ class Settings {
 	 */
 	private function get_settings_sections(): array {
 		$settings_sections = array(
-			'dragdrop_general_section' => array(
+			'easy_dragdrop_general_section' => array(
 				'title'    => __( 'General Settings', 'easy-dragdrop-file-uploader' ),
 				'callback' => array( $this, 'section_callback' )
 			)
 		);
 
-		return apply_filters( 'dragdrop_settings_sections', $settings_sections );
+		return apply_filters( 'easy_dragdrop_settings_sections', $settings_sections );
 	}
 
 	/**
@@ -109,7 +109,7 @@ class Settings {
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 
-		add_action( 'dragdrop_settings_after', array( $this, 'render_marketing_card' ), 10 );
+		add_action( 'easy_dragdrop_settings_after', array( $this, 'render_marketing_card' ), 10 );
 	}
 
 	/**
@@ -135,8 +135,8 @@ class Settings {
 	 */
 	public function add_settings_page(): void {
 		add_options_page(
-			__( 'DragDrop Uploader', 'easy-dragdrop-file-uploader' ), // Page title
-			__( 'DragDrop Uploader', 'easy-dragdrop-file-uploader' ), // Menu title
+			__( 'Easy DragDrop Uploader', 'easy-dragdrop-file-uploader' ), // Page title
+			__( 'Easy DragDrop Uploader', 'easy-dragdrop-file-uploader' ), // Menu title
 			'manage_options',                   // Required capability
 			'easy-dragdrop-file-uploader', // Menu slug
 			array( $this, 'render_settings_page' ) // Callback function
@@ -156,9 +156,14 @@ class Settings {
 		$options = get_options();
 
 		foreach ( $options as $option ) {
-			register_setting( sanitize_text_field( $option['option_group'] ), sanitize_text_field( $option['option_name'] ), array(
-				'sanitize_callback' => sanitize_text_field( $option['sanitize'] )
-			) );
+			register_setting(
+				sanitize_text_field( $option['option_group'] ),
+				sanitize_text_field( $option['option_name'] ),
+				array(
+					'sanitize_callback' => 'sanitize_text_field',
+					'type'              => sanitize_text_field( $option['type'] )
+				)
+			);
 		}
 
 		// Add each settings section
@@ -199,7 +204,7 @@ class Settings {
 	public function render_settings_page(): void {
 		// Data to pass to the template
 		$data = array(
-			'options_group' => 'dragdrop_options_group',
+			'options_group' => 'easy_dragdrop_options_group',
 			'page_slug'     => 'easy-dragdrop-file-uploader',
 		);
 
@@ -230,12 +235,12 @@ class Settings {
 	 */
 	public function file_type_error_message_callback(): void {
 		// Retrieve the file type error message, defaulting to an empty string.
-		$message = get_option( 'dragdrop_file_type_error', '' );
+		$message = get_option( 'easy_dragdrop_file_type_error', '' );
 		$message = sanitize_textarea_field( $message ); // Ensure safe text output
 
 		// Output the textarea field with proper escaping.
 		printf(
-			'<textarea name="dragdrop_file_type_error" rows="3" cols="50" maxlength="120">%s</textarea>',
+			'<textarea name="easy_dragdrop_file_type_error" rows="3" cols="50" maxlength="120">%s</textarea>',
 			esc_textarea( $message ) // Escape output to prevent XSS
 		);
 
@@ -256,12 +261,12 @@ class Settings {
 	 */
 	public function file_size_error_message_callback(): void {
 		// Retrieve the file size error message, defaulting to an empty string.
-		$message = get_option( 'dragdrop_file_size_error', '' );
+		$message = get_option( 'easy_dragdrop_file_size_error', '' );
 		$message = sanitize_textarea_field( $message ); // Ensure safe text output
 
 		// Output the textarea field with proper escaping.
 		printf(
-			'<textarea name="dragdrop_file_size_error" rows="3" cols="50" maxlength="120">%s</textarea>',
+			'<textarea name="easy_dragdrop_file_size_error" rows="3" cols="50" maxlength="120">%s</textarea>',
 			esc_textarea( $message ) // Escape output to prevent XSS
 		);
 
@@ -282,12 +287,12 @@ class Settings {
 	 */
 	public function button_label_callback(): void {
 		// Retrieve the button label option from the database, defaulting to an empty string.
-		$button_label = get_option( 'dragdrop_button_label', '' );
+		$button_label = get_option( 'easy_dragdrop_button_label', '' );
 		$button_label = sanitize_text_field( $button_label ); // Ensure safe text output
 
 		// Output the input field with proper escaping.
 		printf(
-			'<input type="text" name="dragdrop_button_label" value="%s">',
+			'<input type="text" name="easy_dragdrop_button_label" value="%s">',
 			esc_attr( $button_label ) // Escape output to prevent XSS
 		);
 	}
@@ -303,12 +308,12 @@ class Settings {
 	 */
 	public function file_types_allowed_callback(): void {
 		// Retrieve the allowed file types option from the database, defaulting to an empty string.
-		$file_types = get_option( 'dragdrop_file_types_allowed', '' );
+		$file_types = get_option( 'easy_dragdrop_file_types_allowed', '' );
 		$file_types = is_string( $file_types ) ? sanitize_text_field( $file_types ) : ''; // Ensure it's a clean string
 
 		// Output the input field with proper escaping to prevent XSS.
 		printf(
-			'<input type="text" name="dragdrop_file_types_allowed" value="%s">',
+			'<input type="text" name="easy_dragdrop_file_types_allowed" value="%s">',
 			esc_attr( $file_types ) // Escape output to prevent XSS
 		);
 
@@ -328,12 +333,12 @@ class Settings {
 	 */
 	public function max_file_size_callback(): void {
 		// Retrieve the max file size setting from the database, defaulting to 100 MB.
-		$max_file_size = get_option( 'dragdrop_max_file_size', 100 );
+		$max_file_size = get_option( 'easy_dragdrop_max_file_size', 100 );
 		$max_file_size = (int) $max_file_size; // Ensure it is strictly an integer.
 
 		// Output a number input field with proper escaping and value handling.
 		printf(
-			'<input type="number" name="dragdrop_max_file_size" value="%d" min="1" step="1">',
+			'<input type="number" name="easy_dragdrop_max_file_size" value="%d" min="1" step="1">',
 			esc_attr( $max_file_size ) // Escape for output safety.
 		);
 

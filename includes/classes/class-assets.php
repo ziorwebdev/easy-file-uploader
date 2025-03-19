@@ -26,7 +26,7 @@ class Assets {
 	 *
 	 * @return void
 	 */
-	private function enqueue_dragdrop_scripts(): void {
+	private function enqueue_easy_dragdrop_scripts(): void {
 		// Get uploader configurations.
 		$uploader_configurations = get_uploader_configurations();
 
@@ -37,11 +37,11 @@ class Assets {
 		/**
 		 * Allow other plugins or addons to enqueue additional scripts and styles.
 		 */
-		do_action( 'enqueue_dragdrop_scripts' );
+		do_action( 'enqueue_easy_dragdrop_scripts' );
 
 		// Enqueue main uploader styles and scripts.
 		wp_enqueue_style( 'dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.css', array(), ZIOR_DRAGDROP_PLUGIN_VERSION );
-		wp_enqueue_script( 'dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.js', array( 'jquery' ), $plugin_version, true );
+		wp_enqueue_script( 'dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.js', array( 'jquery' ), ZIOR_DRAGDROP_PLUGIN_VERSION, true );
 
 		// Localize script to pass PHP variables to JavaScript.
 		wp_localize_script( 'dragdrop-uploader', 'DragDropUploader', $uploader_configurations );
@@ -61,20 +61,20 @@ class Assets {
 	 * Enqueues scripts and styles for the admin area.
 	 */
 	public function enqueue_admin_scripts(): void {
-		$this->enqueue_dragdrop_scripts();
+		$this->enqueue_easy_dragdrop_scripts();
 
 		// Allow other addon plugins to enqueue their own scripts and styles.
-		do_action( 'enqueue_dragdrop_admin_scripts' );
+		do_action( 'enqueue_easy_dragdrop_admin_scripts' );
 	}
 
 	/**
 	 * Enqueues scripts and styles for the front-end.
 	 */
 	public function enqueue_frontend_scripts(): void {
-		$this->enqueue_dragdrop_scripts();
+		$this->enqueue_easy_dragdrop_scripts();
 
 		// Allow other addon plugins to enqueue their own scripts and styles.
-		do_action( 'enqueue_dragdrop_frontend_scripts' );
+		do_action( 'enqueue_easy_dragdrop_frontend_scripts' );
 	}
 
 	/**

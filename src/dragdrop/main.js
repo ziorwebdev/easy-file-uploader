@@ -13,8 +13,8 @@ let filePondPlugins = [
     FilePondPluginFileValidateType
 ];
 
-// Allow developers to modify the plugin list via "dragdrop_plugins" filter
-filePondPlugins = wpFilepond.applyFilters("dragdrop_plugins", filePondPlugins);
+// Allow developers to modify the plugin list via "easy_dragdrop_plugins" filter
+filePondPlugins = wpFilepond.applyFilters("easy_dragdrop_plugins", filePondPlugins);
 
 // Register FilePond plugins
 registerPlugin(...filePondPlugins);
@@ -53,40 +53,32 @@ function getFilePondConfiguration(configuration) {
                 onerror: (response) => {
                     const responseItem = JSON.parse(response);
 
-                    $(document).trigger("dragdrop_upload_error", responseItem);
+                    $(document).trigger("easy_dragdrop_upload_error", responseItem);
                     
                     return responseItem?.data?.error ?? "";
                 },  
                 onload: (response) => {
                     const responseItem = JSON.parse(response);
 
-                    // Trigger dragdrop_upload_success event
-                    $(document).trigger("dragdrop_upload_success", responseItem);
+                    // Trigger easy_dragdrop_upload_success event
+                    $(document).trigger("easy_dragdrop_upload_success", responseItem);
 
                     return responseItem.success ? responseItem?.data?.file_id ?? "" : "";
                 },
                 ondata: (formData) => {
                     formData.append("secret_key", secret_key);
-
+                    formData.append("security", configuration.nonce);
                     return formData;
                 },
-                headers: {
-                    'X-WP-Nonce': configuration.nonce
-                },
-                url: `${configuration.ajaxUrl}?action=dragdrop_upload` 
+                url: `${configuration.ajaxUrl}?action=easy_dragdrop_upload` 
             },
             revert: {
-                headers: {
-                    'X-WP-Nonce': configuration.nonce
-                },
-                // Use POST method rather than DELETE to add nonce in the header
-                method: "POST",
-                url: `${configuration.ajaxUrl}?action=dragdrop_remove`
+                url: `${configuration.ajaxUrl}?action=easy_dragdrop_remove&security=${configuration.nonce}`
             }
         }
     };
 
-    return wpFilepond.applyFilters("dragdrop_configuration", Object.assign({}, configuration, defaultConfiguration));
+    return wpFilepond.applyFilters("easy_dragdrop_configuration", Object.assign({}, configuration, defaultConfiguration));
 }
 
 function createFilePondInstance(fileInput, configuration = {}) {

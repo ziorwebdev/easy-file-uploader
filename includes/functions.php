@@ -9,6 +9,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Retrieves the list of allowed HTML attributes for input elements.
+ *
+ * This function defines a whitelist of safe attributes for input elements,
+ * ensuring security by preventing unwanted HTML injection.
+ *
+ * @return array Allowed HTML attributes for input elements.
+ */
+function get_allowed_html(): array {
+	$allowed_html = array(
+		'input' => array(
+			'type'        => array(),
+			'name'        => array(),
+			'value'       => array(),
+			'placeholder' => array(),
+			'class'       => array(),
+			'id'          => array(),
+			'checked'     => array(),
+			'readonly'    => array(),
+			'disabled'    => array(),
+			'required'    => array(),
+			'data-filesize'  => array(),
+			'data-filetypes' => array(),
+			'data-label'     => array(),
+			'data-maxfiles'  => array(),
+		),
+	);
+
+	return $allowed_html;
+}
+
+/**
  * Retrieves all plugin options.
  *
  * This function fetches the list of option names and retrieves their values
@@ -32,36 +63,36 @@ function get_plugin_options(): array {
  * Retrieves the FilePond uploader configuration settings.
  *
  * This function fetches stored options related to file handling and
- * applies the 'dragdrop_uploader_configurations' filter for customization.
+ * applies the 'easy_dragdrop_uploader_configurations' filter for customization.
  *
  * @return array An associative array of configuration settings.
  */
 function get_uploader_configurations(): array {
 	$plugin_options      = get_plugin_options();
-	$accepted_file_types = $plugin_options['dragdrop_file_types_allowed'];
+	$accepted_file_types = $plugin_options['easy_dragdrop_file_types_allowed'];
 	$accepted_file_types = convert_extentions_to_mime_types( $accepted_file_types );
 
 	$uploader_configurations = array(
 		'acceptedFileTypes' => $accepted_file_types,
 		'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
-		'labelIdle'         => $plugin_options['dragdrop_button_label'] ?? 'Browse Image',
-		'labelMaxFileSize'  => apply_filters( 'dragdrop_label_max_file_size', '' ),	
-		'nonce'             => wp_create_nonce( 'filepond_uploader_nonce' ),
+		'labelIdle'         => $plugin_options['easy_dragdrop_button_label'] ?? 'Browse Image',
+		'labelMaxFileSize'  => apply_filters( 'easy_dragdrop_label_max_file_size', '' ),	
+		'nonce'             => wp_create_nonce( 'easy_dragdrop_uploader_nonce' ),
 	);
 	
-	$file_type_error = $plugin_options['dragdrop_file_type_error'] ?? '';
+	$file_type_error = $plugin_options['easy_dragdrop_file_type_error'] ?? '';
 
 	if ( ! empty( $file_type_error ) ) {
 		$uploader_configurations['labelFileTypeNotAllowed'] = $file_type_error;
 	}
 
-	$file_size_error = $plugin_options['dragdrop_file_size_error'] ?? '';
+	$file_size_error = $plugin_options['easy_dragdrop_file_size_error'] ?? '';
 
 	if ( ! empty( $file_size_error ) ) {
 		$uploader_configurations['labelMaxFileSizeExceeded'] = $file_size_error;
 	}
 
-	return apply_filters( 'dragdrop_uploader_configurations', $uploader_configurations );
+	return apply_filters( 'easy_dragdrop_uploader_configurations', $uploader_configurations );
 }
 
 /**
@@ -102,7 +133,7 @@ function convert_extentions_to_mime_types( string $extentions ): array {
 	 *
 	 * @param MimeTypes $mimes The MimeTypes instance.
 	 */
-	$mimes = apply_filters( 'dragdrop_mimes_instance', $mimes );
+	$mimes = apply_filters( 'easy_dragdrop_mimes_instance', $mimes );
 
 	/**
 	 * Filters the list of file extensions before converting to MIME types.
@@ -111,7 +142,7 @@ function convert_extentions_to_mime_types( string $extentions ): array {
 	 *
 	 * @param array $extensions The list of file extensions.
 	 */
-	$extensions = apply_filters( 'dragdrop_file_extensions', $extensions );
+	$extensions = apply_filters( 'easy_dragdrop_file_extensions', $extensions );
 	
 	foreach ( $extensions as $extension ) {
 		$mime_type = $mimes->getMimeType( $extension );
@@ -134,41 +165,41 @@ function convert_extentions_to_mime_types( string $extentions ): array {
 function get_options(): array {
 	$options = array(
 		array(
-			'option_group' => 'dragdrop_options_group',
-			'option_name'  => 'dragdrop_button_label',
-			'sanitize'     => 'sanitize_text_field',
+			'option_group' => 'easy_dragdrop_options_group',
+			'option_name'  => 'easy_dragdrop_button_label',
+			'type'         => 'string',
 		),
 		array(
-			'option_group' => 'dragdrop_options_group',
-			'option_name'  => 'dragdrop_file_types_allowed',
-			'sanitize'     => 'sanitize_text_field',
+			'option_group' => 'easy_dragdrop_options_group',
+			'option_name'  => 'easy_dragdrop_file_types_allowed',
+			'type'         => 'string',
 		),
 		array(
-			'option_group' => 'dragdrop_options_group',
-			'option_name'  => 'dragdrop_enable_preview',
-			'sanitize'     => 'absint',
+			'option_group' => 'easy_dragdrop_options_group',
+			'option_name'  => 'easy_dragdrop_enable_preview',
+			'type'         => 'integer',
 		),
 		array(
-			'option_group' => 'dragdrop_options_group',
-			'option_name'  => 'dragdrop_preview_height',
-			'sanitize'     => 'absint',
+			'option_group' => 'easy_dragdrop_options_group',
+			'option_name'  => 'easy_dragdrop_preview_height',
+			'type'         => 'integer',
 		),
 		array(
-			'option_group' => 'dragdrop_options_group',
-			'option_name'  => 'dragdrop_file_type_error',
-			'sanitize'     => 'sanitize_text_field',
+			'option_group' => 'easy_dragdrop_options_group',
+			'option_name'  => 'easy_dragdrop_file_type_error',
+			'type'         => 'string',
 		),
 		array(
-			'option_group' => 'dragdrop_options_group',
-			'option_name'  => 'dragdrop_file_size_error',
-			'sanitize'     => 'sanitize_text_field',
+			'option_group' => 'easy_dragdrop_options_group',
+			'option_name'  => 'easy_dragdrop_file_size_error',
+			'type'         => 'string',
 		),
 		array(
-			'option_group' => 'dragdrop_options_group',
-			'option_name'  => 'dragdrop_max_file_size',
-			'sanitize'     => 'absint',
+			'option_group' => 'easy_dragdrop_options_group',
+			'option_name'  => 'easy_dragdrop_max_file_size',
+			'type'         => 'integer',
 		),
 	);
 
-	return apply_filters( 'dragdrop_options', $options );
+	return apply_filters( 'easy_dragdrop_options', $options );
 }
