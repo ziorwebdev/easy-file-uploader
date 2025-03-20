@@ -39,6 +39,15 @@ function get_allowed_html(): array {
 	return $allowed_html;
 }
 
+function get_default_max_file_size(): int {
+	$max_size = wp_max_upload_size();
+
+	// Convert the max size to MB.
+	$max_size = (int) $max_size / 1024 / 1024;
+
+	return $max_size;
+}
+
 /**
  * Retrieves all plugin options.
  *

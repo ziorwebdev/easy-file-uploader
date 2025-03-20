@@ -106,6 +106,7 @@ class DragDropUploader extends Field_Base {
 			return;
 		}
 
+		$default_max_file_size = get_default_max_file_size();
 		$field_controls = array(
 			'easy_dragdrop_max_file_size' => array(
 				'name'         => 'easy_dragdrop_max_file_size',
@@ -114,7 +115,7 @@ class DragDropUploader extends Field_Base {
 				'condition'    => array(
 					'field_type' => $this->get_type(),
 				),
-				'default'      => get_option( 'easy_dragdrop_max_file_size', 100 ),
+				'default'      => get_option( 'easy_dragdrop_max_file_size', $default_max_file_size ),
 				'options'      => $this->get_upload_file_size_options(),
 				'description'  => esc_html__( 'If you need to increase max upload size please contact your hosting.', 'easy-dragdrop-file-uploader' ),
 				'tab'          => 'content',
