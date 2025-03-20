@@ -128,7 +128,7 @@ class Uploader {
 
 		if ( $wp_filesystem->move( $source, $new_destination ) ) {
 			// Set the file to be publicly readable
-			@chmod( $new_destination, 0644 );
+			$wp_filesystem->chmod( $new_destination, 0644 );
 
 			return $new_destination;
 		}
