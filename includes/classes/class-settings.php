@@ -2,6 +2,7 @@
 namespace ZIOR\DragDrop;
 
 use function ZIOR\DragDrop\get_options;
+use function ZIOR\DragDrop\get_default_max_file_size;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

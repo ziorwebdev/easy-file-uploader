@@ -8,6 +8,7 @@ use ElementorPro\Modules\Forms\Classes;
 
 use function ZIOR\DragDrop\convert_extentions_to_mime_types;
 use function ZIOR\DragDrop\get_allowed_html;
+use function ZIOR\DragDrop\get_default_max_file_size;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
