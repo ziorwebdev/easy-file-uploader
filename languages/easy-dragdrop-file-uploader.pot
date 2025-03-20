@@ -1,0 +1,82 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2025-03-20 13:06+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Easy DragDrop File Uploader Settings"
+msgstr ""
+
+msgid "Max. Files"
+msgstr ""
+
+msgid "Multiple Files"
+msgstr ""
+
+msgid "Enter the allowed file types, separated by a comma (jpg, gif, pdf, etc)."
+msgstr ""
+
+msgid "Allowed File Types"
+msgstr ""
+
+msgid "If you need to increase max upload size please contact your hosting."
+msgstr ""
+
+msgid "DragDrop Upload"
+msgstr ""
+
+msgid "Upload a valid file"
+msgstr ""
+
+msgid "No valid file uploaded."
+msgstr ""
+
+msgid "Failed to delete files."
+msgstr ""
+
+msgid "Files deleted successfully."
+msgstr ""
+
+msgid "Missing file ID."
+msgstr ""
+
+msgid "Default max. file size in MB. Can be overridden in the field settings."
+msgstr ""
+
+msgid "Default allowed file types, separated by a comma (jpg, gif, pdf, etc). Can be overridden in the field settings."
+msgstr ""
+
+msgid "Enter an error message to show when an uploaded file exceeds the file size limit."
+msgstr ""
+
+msgid "Enter an error message to show when an uploaded file type is invalid. Leave blank to use the DragDrop uploader default message."
+msgstr ""
+
+msgid "Configure the DragDrop uploader settings."
+msgstr ""
+
+msgid "Easy DragDrop Uploader"
+msgstr ""
+
+msgid "General Settings"
+msgstr ""
+
+msgid "File Size Error Message"
+msgstr ""
+
+msgid "File Type Error Message"
+msgstr ""
+
+msgid "Default File Types Allowed"
+msgstr ""
+
+msgid "Default Button Label"
+msgstr ""
+
+msgid "Max. File Size"
+msgstr ""
+
+msgid "Settings"
+msgstr ""

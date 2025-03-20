@@ -23,7 +23,7 @@ class DragDropUploader extends Field_Base {
 	 * of 'easy_dragdrop_attachment_type' to 'attachment_type' if it exists.
 	 *
 	 * @param array $fields The array of form fields.
-	 * @return array The filtered array containing only FilePond fields with updated 'attachment_type'.
+	 * @return array The filtered array containing only DragDrop fields with updated 'attachment_type'.
 	 */
 	private function get_option_setting_fields( array $fields ): array {
 		$setting_fields = [];
@@ -85,14 +85,14 @@ class DragDropUploader extends Field_Base {
 	/**
 	 * Retrieves the display name of the field.
 	 *
-	 * @return string The translatable name of the field ('FilePond Upload').
+	 * @return string The translatable name of the field ('DragDrop Upload').
 	 */
 	public function get_name() {
 		return esc_html__( 'DragDrop Upload', 'easy-dragdrop-file-uploader' );
 	}
 
 	/**
-	 * Updates Elementor form controls to include FilePond-specific settings.
+	 * Updates Elementor form controls to include DragDrop-specific settings.
 	 *
 	 * Adds custom settings such as max file size, allowed file types, multiple uploads, and max files.
 	 *

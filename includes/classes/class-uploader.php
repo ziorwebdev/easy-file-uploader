@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Handles FilePond integration for WordPress.
+ * Handles DragDrop uploader for WordPress.
  */
 class Uploader {
 
@@ -161,7 +161,7 @@ class Uploader {
 	}
 
 	/**
-	 * Handles the removal of an uploaded file via FilePond.
+	 * Handles the removal of an uploaded file.
 	 *
 	 * This function verifies the nonce for security, retrieves the file URL from the request,
 	 * converts it to the file path, and attempts to delete the file from the server.
@@ -195,7 +195,7 @@ class Uploader {
 	}
 
 	/**
-	 * Handles file uploads via FilePond.
+	 * Handles file uploads.
 	 *
 	 * This function verifies security checks, validates the uploaded file, 
 	 * processes the file upload, and saves it to a custom directory.
@@ -253,7 +253,7 @@ class Uploader {
 	}
 
 	/**
-	 * Processes the FilePond field by moving files from the temporary directory to the upload directory.
+	 * Processes the DragDrop field by moving files from the temporary directory to the upload directory.
 	 *
 	 * @param array               $field         The field data.
 	 * @param Classes\Form_Record $record        The form record instance.

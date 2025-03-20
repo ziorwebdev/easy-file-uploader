@@ -53,18 +53,7 @@ class Assets {
 	 * Hooks into WordPress to enqueue scripts and styles.
 	 */
 	public function __construct() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ), 10 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_scripts' ), 10 );
-	}
-
-	/**
-	 * Enqueues scripts and styles for the admin area.
-	 */
-	public function enqueue_admin_scripts(): void {
-		$this->enqueue_easy_dragdrop_scripts();
-
-		// Allow other addon plugins to enqueue their own scripts and styles.
-		do_action( 'enqueue_easy_dragdrop_admin_scripts' );
 	}
 
 	/**

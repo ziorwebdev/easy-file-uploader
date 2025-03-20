@@ -214,14 +214,14 @@ class Settings {
 	/**
 	 * Callback function to render the section description in the settings page.
 	 *
-	 * This function outputs a brief description for the FilePond integration settings.
+	 * This function outputs a brief description for the DragDrop uploader settings.
 	 *
 	 * @return void
 	 */
 	public function section_callback(): void {
 		printf(
 			'<p>%s</p>',
-			esc_html__( 'Configure the FilePond integration settings.', 'easy-dragdrop-file-uploader' )
+			esc_html__( 'Configure the DragDrop uploader settings.', 'easy-dragdrop-file-uploader' )
 		);
 	}
 
@@ -247,7 +247,7 @@ class Settings {
 		// Output the description with proper escaping.
 		printf(
 			'<p class="help-text">%s</p>',
-			esc_html__( 'Enter an error message to show when an uploaded file type is invalid. Leave blank to use the FilePond default message.', 'easy-dragdrop-file-uploader' )
+			esc_html__( 'Enter an error message to show when an uploaded file type is invalid. Leave blank to use the DragDrop uploader default message.', 'easy-dragdrop-file-uploader' )
 		);
 	}
 

@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Handles the registration of FilePond uploader form fields.
+ * Handles the registration of DragDrop uploader form fields.
  */
 class Register {
 
@@ -44,7 +44,7 @@ class Register {
 	}
 
 	/**
-	 * Registers the FilePond uploader field with Elementor's form field registry.
+	 * Registers the DragDrop uploader field with Elementor's form field registry.
 	 *
 	 * @param ElementorPro\Modules\Forms\Registrars\Form_Fields_Registrar $fields Elementor form fields object.
 	 */
