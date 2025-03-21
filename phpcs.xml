@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ruleset name="EasyDragDropFileUploader">
+    <description>PHP CodeSniffer rules for my project.</description>
+
+    <!-- Use a predefined standard (PSR-12, WordPress, etc.) -->
+    <rule ref="PSR12"/>
+
+    <!-- Ignore certain directories -->
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>node_modules/*</exclude-pattern>
+
+    <!-- Customize rules -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="140"/>
+        </properties>
+    </rule>
+</ruleset>

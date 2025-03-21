@@ -9,5 +9,9 @@
     ],
     "require": {
         "ascteam/mimey": "^3.0"
+    },
+    "require-dev": {
+        "php-stubs/wordpress-stubs": "^6.7",
+        "arifpavel/elementor-stubs": "^3.1"
     }
 }

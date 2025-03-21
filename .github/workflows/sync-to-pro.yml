@@ -10,51 +10,52 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Free Version (Public)
+      - name: Checkout PRO Version (Private)
         uses: actions/checkout@v4
         with:
           repository: ZIORWebDev/easy-dragdrop-file-uploader-pro
           fetch-depth: 0  # Fetch full history
 
-      - name: Clone the PRO Repository
+      - name: Pull Latest Updates from PRO Repository
         env:
           GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}
         run: |
-          # Clone the PRO repository
-          git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/easy-dragdrop-file-uploader-pro.git pro-repo
-          cd pro-repo
-
-          # Fetch all branches to ensure develop exists
+          # Configure authentication for pushing later
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/easy-dragdrop-file-uploader-pro.git
+          
+          # Fetch all branches and checkout develop
           git fetch origin
           if git show-ref --verify --quiet refs/remotes/origin/develop; then
             git checkout develop
+            git pull origin develop
           else
             git checkout -b develop
             git push origin develop
           fi
 
-          # Add Free repo as remote and fetch its main branch
+      - name: Add Free Version as Remote
+        run: |
           git remote add free https://github.com/ZIORWebDev/easy-dragdrop-file-uploader.git || echo "Remote already exists"
           git fetch free main
 
-          # Set Git user identity to avoid commit errors
+      - name: Merge Free Version into PRO
+        run: |
+          # Set Git user identity
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Merge Free repo into PRO repo while always preferring Free's changes
-          git merge free/main --allow-unrelated-histories --strategy-option=theirs || (
-            git checkout --theirs .
-            git add .
-            git commit -m "Merged updates from easy-dragdrop-file-uploader/main into develop"
+          # Merge Free repo into PRO repo, keeping PRO's custom changes
+          git merge free/main --allow-unrelated-histories -X theirs || (
+            git reset --hard free/main
+            git commit -m "Merged updates from Free Version"
           )
 
-          # Remove or reset unwanted files before pushing
-          rm -rf .github
-          git checkout HEAD~1 -- .gitignore README.md composer.json easy-dragdrop-file-uploader.php package.json readme.txt webpack.config.js || true
+          # Restore PRO-specific files
+          git checkout develop -- .gitignore README.md composer.json easy-dragdrop-file-uploader.php package.json readme.txt webpack.config.js || true
 
           # Ensure changes are staged and committed
-          git add .
-          git commit --amend --no-edit
+          git diff --quiet || git commit -m "Synced Free Version updates into PRO"
 
-          # Push the merged changes
+      - name: Push Merged Changes
+        run: |
           git push origin develop
