@@ -13,7 +13,7 @@ jobs:
       - name: Checkout Free Version (Public)
         uses: actions/checkout@v4
         with:
-          repository: ZIORWebDev/easy-dragdrop-file-uploader-pro
+          repository: ZIORWebDev/easy-dragdrop-file-uploader
           fetch-depth: 0  # Fetch full history
 
       - name: Clone the PRO Repository
@@ -42,15 +42,17 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           # Merge Free repo into PRO repo while always preferring Free's changes
-          git merge free/main --allow-unrelated-histories --strategy-option=theirs || (
-            git checkout --theirs .
+          git merge free/main --allow-unrelated-histories -X theirs || (
+            git checkout --theirs .  # Use Free's version for all conflicts
             git add .
             git commit -m "Merged updates from easy-dragdrop-file-uploader/main into develop"
           )
 
-          # Remove or reset unwanted files before pushing
-          rm -rf .github
-          git checkout HEAD~1 -- .gitignore README.md composer.json easy-dragdrop-file-uploader.php package.json readme.txt webpack.config.js || true
+          # Restore PRO-specific files to avoid overwrites
+          git checkout develop -- filepond-wp-integration-pro.php
+          git checkout develop -- .github/workflows/sync-to-pro.yml
+          git checkout develop -- languages/wp-filepond.pot
+          git checkout develop -- pro-specific-config.json || true  # Example if there's any Pro-only config
 
           # Ensure changes are staged and committed
           git add .
