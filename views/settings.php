@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="wrap">
-    <h2><?php esc_html_e( 'Easy DragDrop File Uploader Settings', 'easy-dragdrop-file-uploader' ); ?></h2>
+    <h2><?php esc_html_e( 'Easy DragDrop File Uploader Settings', 'easy-file-uploader' ); ?></h2>
     <div class="dragdrop-settings-container">
         <form method="post" action="options.php">
             <?php

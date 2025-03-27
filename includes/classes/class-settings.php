@@ -50,31 +50,31 @@ class Settings {
 		$settings_fields = array(
 			array(
 				'id'       => 'easy_dragdrop_max_file_size',
-				'title'    => __( 'Max. File Size', 'easy-dragdrop-file-uploader' ),
+				'title'    => __( 'Max. File Size', 'easy-file-uploader' ),
 				'callback' => array( $this, 'max_file_size_callback' ),
 				'section'  => 'easy_dragdrop_general_section',
 			),
 			array(
 				'id'       => 'easy_dragdrop_button_label',
-				'title'    => __( 'Default Button Label', 'easy-dragdrop-file-uploader' ),
+				'title'    => __( 'Default Button Label', 'easy-file-uploader' ),
 				'callback' => array( $this, 'button_label_callback' ),
 				'section'  => 'easy_dragdrop_general_section',
 			),
 			array(
 				'id'       => 'easy_dragdrop_file_types_allowed',
-				'title'    => __( 'Default File Types Allowed', 'easy-dragdrop-file-uploader' ),
+				'title'    => __( 'Default File Types Allowed', 'easy-file-uploader' ),
 				'callback' => array( $this, 'file_types_allowed_callback' ),
 				'section'  => 'easy_dragdrop_general_section',
 			),
 			array(
 				'id'       => 'easy_dragdrop_file_type_error',
-				'title'    => __( 'File Type Error Message', 'easy-dragdrop-file-uploader' ),
+				'title'    => __( 'File Type Error Message', 'easy-file-uploader' ),
 				'callback' => array( $this, 'file_type_error_message_callback' ),
 				'section'  => 'easy_dragdrop_general_section',
 			),
 			array(
 				'id'       => 'easy_dragdrop_file_size_error',
-				'title'    => __( 'File Size Error Message', 'easy-dragdrop-file-uploader' ),
+				'title'    => __( 'File Size Error Message', 'easy-file-uploader' ),
 				'callback' => array( $this, 'file_size_error_message_callback' ),
 				'section'  => 'easy_dragdrop_general_section',
 			),
@@ -91,7 +91,7 @@ class Settings {
 	private function get_settings_sections(): array {
 		$settings_sections = array(
 			'easy_dragdrop_general_section' => array(
-				'title'    => __( 'General Settings', 'easy-dragdrop-file-uploader' ),
+				'title'    => __( 'General Settings', 'easy-file-uploader' ),
 				'callback' => array( $this, 'section_callback' )
 			)
 		);
@@ -134,10 +134,10 @@ class Settings {
 	 */
 	public function add_settings_page(): void {
 		add_options_page(
-			__( 'Easy DragDrop Uploader', 'easy-dragdrop-file-uploader' ), // Page title
-			__( 'Easy DragDrop Uploader', 'easy-dragdrop-file-uploader' ), // Menu title
+			__( 'Easy DragDrop Uploader', 'easy-file-uploader' ), // Page title
+			__( 'Easy DragDrop Uploader', 'easy-file-uploader' ), // Menu title
 			'manage_options',                   // Required capability
-			'easy-dragdrop-file-uploader', // Menu slug
+			'easy-file-uploader', // Menu slug
 			array( $this, 'render_settings_page' ) // Callback function
 		);
 	}
@@ -174,7 +174,7 @@ class Settings {
 				$section_id,
 				$section['title'],
 				$section['callback'],
-				'easy-dragdrop-file-uploader'
+				'easy-file-uploader'
 			);
 
 			foreach ( $fields as $field ) {
@@ -186,7 +186,7 @@ class Settings {
 					$field['id'],
 					$field['title'],
 					$field['callback'],
-					'easy-dragdrop-file-uploader',
+					'easy-file-uploader',
 					$field['section']
 				);
 			}
@@ -204,7 +204,7 @@ class Settings {
 		// Data to pass to the template
 		$data = array(
 			'options_group' => 'easy_dragdrop_options_group',
-			'page_slug'     => 'easy-dragdrop-file-uploader',
+			'page_slug'     => 'easy-file-uploader',
 		);
 
 		$this->load_template( 'settings', $data );
@@ -220,7 +220,7 @@ class Settings {
 	public function section_callback(): void {
 		printf(
 			'<p>%s</p>',
-			esc_html__( 'Configure the DragDrop uploader settings.', 'easy-dragdrop-file-uploader' )
+			esc_html__( 'Configure the DragDrop uploader settings.', 'easy-file-uploader' )
 		);
 	}
 
@@ -246,7 +246,7 @@ class Settings {
 		// Output the description with proper escaping.
 		printf(
 			'<p class="help-text">%s</p>',
-			esc_html__( 'Enter an error message to show when an uploaded file type is invalid. Leave blank to use the DragDrop uploader default message.', 'easy-dragdrop-file-uploader' )
+			esc_html__( 'Enter an error message to show when an uploaded file type is invalid. Leave blank to use the DragDrop uploader default message.', 'easy-file-uploader' )
 		);
 	}
 
@@ -272,7 +272,7 @@ class Settings {
 		// Output the description with proper escaping.
 		printf(
 			'<p class="help-text">%s</p>',
-			esc_html__( 'Enter an error message to show when an uploaded file exceeds the file size limit.', 'easy-dragdrop-file-uploader' )
+			esc_html__( 'Enter an error message to show when an uploaded file exceeds the file size limit.', 'easy-file-uploader' )
 		);
 	}
 
@@ -319,7 +319,7 @@ class Settings {
 		// Output the description with proper escaping for security.
 		printf(
 			'<p>%s</p>',
-			esc_html__( 'Default allowed file types, separated by a comma (jpg, gif, pdf, etc). Can be overridden in the field settings.', 'easy-dragdrop-file-uploader' )
+			esc_html__( 'Default allowed file types, separated by a comma (jpg, gif, pdf, etc). Can be overridden in the field settings.', 'easy-file-uploader' )
 		);
 	}
 
@@ -346,7 +346,7 @@ class Settings {
 		// Display a help text for the input field.
 		printf(
 			'<p class="description">%s</p>',
-			esc_html__( 'Default max. file size in MB. Can be overridden in the field settings.', 'easy-dragdrop-file-uploader' )
+			esc_html__( 'Default max. file size in MB. Can be overridden in the field settings.', 'easy-file-uploader' )
 		);
 	}
 }

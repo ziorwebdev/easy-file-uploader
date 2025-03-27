@@ -127,7 +127,7 @@ class Plugin {
 	 * Loads plugin text domain for translations.
 	 */
 	public function load_plugin_textdomain(): void {
-		load_plugin_textdomain( 'easy-dragdrop-file-uploader', false, ZIOR_DRAGDROP_PLUGIN_DIR . '/languages' );
+		load_plugin_textdomain( 'easy-file-uploader', false, ZIOR_DRAGDROP_PLUGIN_DIR . '/languages' );
 	}
 
 	/**
@@ -153,7 +153,7 @@ class Plugin {
 	public function add_settings_link( array $links ): array {
 		// Define the settings link URL
 		$settings_url  = admin_url( 'options-general.php?page=easy-dragdrop-file-uploader' );
-		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'easy-dragdrop-file-uploader' ) . '</a>';
+		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'easy-file-uploader' ) . '</a>';
 
 		// Prepend the settings link to the existing links.
 		array_unshift( $links, $settings_link );

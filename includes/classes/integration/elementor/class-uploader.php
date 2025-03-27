@@ -89,7 +89,7 @@ class DragDropUploader extends Field_Base {
 	 * @return string The translatable name of the field ('DragDrop Upload').
 	 */
 	public function get_name() {
-		return esc_html__( 'DragDrop Upload', 'easy-dragdrop-file-uploader' );
+		return esc_html__( 'DragDrop Upload', 'easy-file-uploader' );
 	}
 
 	/**
@@ -111,21 +111,21 @@ class DragDropUploader extends Field_Base {
 		$field_controls = array(
 			'easy_dragdrop_max_file_size' => array(
 				'name'         => 'easy_dragdrop_max_file_size',
-				'label'        => esc_html__( 'Max. File Size', 'easy-dragdrop-file-uploader' ),
+				'label'        => esc_html__( 'Max. File Size', 'easy-file-uploader' ),
 				'type'         => Controls_Manager::SELECT,
 				'condition'    => array(
 					'field_type' => $this->get_type(),
 				),
 				'default'      => get_option( 'easy_dragdrop_max_file_size', $default_max_file_size ),
 				'options'      => $this->get_upload_file_size_options(),
-				'description'  => esc_html__( 'If you need to increase max upload size please contact your hosting.', 'easy-dragdrop-file-uploader' ),
+				'description'  => esc_html__( 'If you need to increase max upload size please contact your hosting.', 'easy-file-uploader' ),
 				'tab'          => 'content',
 				'inner_tab'    => 'form_fields_content_tab',
 				'tabs_wrapper' => 'form_fields_tabs',
 			),
 			'easy_dragdrop_file_types' => array(
 				'name'         => 'easy_dragdrop_file_types',
-				'label'        => esc_html__( 'Allowed File Types', 'easy-dragdrop-file-uploader' ),
+				'label'        => esc_html__( 'Allowed File Types', 'easy-file-uploader' ),
 				'label_block'  => true,
 				'type'         => Controls_Manager::TEXT,
 				'default'      => get_option( 'easy_dragdrop_file_types_allowed', '' ), 
@@ -135,14 +135,14 @@ class DragDropUploader extends Field_Base {
 				'condition'    => array(
 					'field_type' => $this->get_type(),
 				),
-				'description'  => esc_html__( 'Enter the allowed file types, separated by a comma (jpg, gif, pdf, etc).', 'easy-dragdrop-file-uploader' ),
+				'description'  => esc_html__( 'Enter the allowed file types, separated by a comma (jpg, gif, pdf, etc).', 'easy-file-uploader' ),
 				'tab'          => 'content',
 				'inner_tab'    => 'form_fields_content_tab',
 				'tabs_wrapper' => 'form_fields_tabs',
 			),
 			'easy_dragdrop_allow_multiple_upload' => array(
 				'name'         => 'easy_dragdrop_allow_multiple_upload',
-				'label'        => esc_html__( 'Multiple Files', 'easy-dragdrop-file-uploader' ),
+				'label'        => esc_html__( 'Multiple Files', 'easy-file-uploader' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'condition'    => array(
 					'field_type' => $this->get_type(),
@@ -153,7 +153,7 @@ class DragDropUploader extends Field_Base {
 			),
 			'easy_dragdrop_max_files' => array(
 				'name'         => 'easy_dragdrop_max_files',
-				'label'        => esc_html__( 'Max. Files', 'easy-dragdrop-file-uploader' ),
+				'label'        => esc_html__( 'Max. Files', 'easy-file-uploader' ),
 				'type'         => Controls_Manager::NUMBER,
 				'condition'    => array(
 					'field_type'           => $this->get_type(),
@@ -226,7 +226,7 @@ class DragDropUploader extends Field_Base {
 	public function validation( $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
 		// is the file required and missing?
 		if ( $field['required'] && empty( $field['value'] ) ) {
-			$ajax_handler->add_error( $field['id'], __( 'Upload a valid file', 'easy-dragdrop-file-uploader' ) );
+			$ajax_handler->add_error( $field['id'], __( 'Upload a valid file', 'easy-file-uploader' ) );
 
 			return;
 		}

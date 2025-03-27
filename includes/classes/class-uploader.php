@@ -182,7 +182,7 @@ class Uploader {
 
 		if ( ! $file_id ) {
 			wp_send_json_error(
-				array( 'message' => __( 'Missing file ID.', 'easy-dragdrop-file-uploader' ) )
+				array( 'message' => __( 'Missing file ID.', 'easy-file-uploader' ) )
 			);
 		}
 
@@ -190,11 +190,11 @@ class Uploader {
 
 		if ( $this->delete_files( $temp_file_path ) ) {
 			wp_send_json_success(
-				array( 'message' => __( 'Files deleted successfully.', 'easy-dragdrop-file-uploader' ) )
+				array( 'message' => __( 'Files deleted successfully.', 'easy-file-uploader' ) )
 			);
 		} else {
 			wp_send_json_error(
-				array( 'message' => __( 'Failed to delete files.', 'easy-dragdrop-file-uploader' ) )
+				array( 'message' => __( 'Failed to delete files.', 'easy-file-uploader' ) )
 			);
 		}
 	}
@@ -211,7 +211,7 @@ class Uploader {
 		check_ajax_referer( 'easy_dragdrop_uploader_nonce', 'security' );
 
 		if ( ! isset( $_FILES['form_fields'] ) ) {
-			wp_send_json_error( array( 'error' => __( 'No valid file uploaded.', 'easy-dragdrop-file-uploader' ) ) );
+			wp_send_json_error( array( 'error' => __( 'No valid file uploaded.', 'easy-file-uploader' ) ) );
 
 			return;
 		}
