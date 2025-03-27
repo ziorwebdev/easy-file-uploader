@@ -10,7 +10,7 @@
  * Requires WP:  6.0
  * License:      GPL-2.0-or-later
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:  easy-dragdrop-file-uploader
+ * Text Domain:  easy-file-uploader
  * Domain Path:  /languages
  *
  * This program is free software: you can redistribute it and/or modify
@@ -121,13 +121,6 @@ class Plugin {
 		}
 
 		return self::$instance;
-	}
-
-	/**
-	 * Loads plugin text domain for translations.
-	 */
-	public function load_plugin_textdomain(): void {
-		load_plugin_textdomain( 'easy-file-uploader', false, ZIOR_DRAGDROP_PLUGIN_DIR . '/languages' );
 	}
 
 	/**
