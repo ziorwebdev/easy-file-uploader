@@ -11,6 +11,7 @@ module.exports = {
     devtool: isProduction ? false : "source-map",
     entry: {
         "main": "./src/main.js",
+        "admin/main": "./src/admin/main.js",
     },
     externals: {
         jquery: "jQuery",
@@ -70,10 +71,14 @@ module.exports = {
     plugins: [
         new webpack.ProvidePlugin({
             $: "jquery",
-            jQuery: "jquery",
         }),
         new MiniCssExtractPlugin({
-            filename: `[name].min.css`,
+            filename: (pathData) => {
+                // Ensure admin CSS is placed in `/dist/admin/`
+                return pathData.chunk.name.includes("admin/")
+                    ? `[name].min.css`
+                    : `[name].min.css`;
+            },
         }),
     ],
 };

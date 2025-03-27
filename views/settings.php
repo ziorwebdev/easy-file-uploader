@@ -17,28 +17,3 @@ if ( ! defined( 'ABSPATH' ) ) {
         <?php do_action( 'easy_dragdrop_settings_after' ); ?>
     </div>
 </div>
-<style>
-.dragdrop-settings-container {
-    display: flex;
-    justify-content: space-between; /* Pushes form left & card right */
-    align-items: flex-start; /* Aligns items at the top */
-    gap: 20px; /* Adds space between elements */
-}
-
-.dragdrop-settings-container form {
-    width: auto; /* Auto width based on content */
-    flex-grow: 1; /* Allows it to take available space */
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) { /* Tablet (portrait & smaller) */
-    .dragdrop-settings-container {
-        flex-direction: column; /* Stack items vertically */
-    }
-
-    .dragdrop-settings-container form,
-    .dragdrop-pro-card {
-        width: 100%; /* Full width */
-    }
-}
-</style>

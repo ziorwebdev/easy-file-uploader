@@ -52,8 +52,7 @@ class Uploader {
 			return false;
 		}
 
-		$field_name = array_key_first( $files['name'] );
-		$field_name = sanitize_text_field( $field_name );
+		$field_name = sanitize_text_field( array_key_first( $files['name'] ) );
 		$file_keys  = array( 'name', 'type', 'tmp_name', 'error', 'size' );
 		$file       = array();
 
@@ -179,8 +178,7 @@ class Uploader {
 		check_ajax_referer( 'easy_dragdrop_uploader_nonce', 'security' );
 
 		// Retrieve the file id from the request body.
-		$file_id = file_get_contents( 'php://input' );
-		$file_id = sanitize_text_field( $file_id );
+		$file_id = sanitize_text_field( file_get_contents( 'php://input' ) );
 
 		if ( ! $file_id ) {
 			wp_send_json_error(
@@ -212,20 +210,20 @@ class Uploader {
 	public function handle_easy_dragdrop_upload(): void {
 		check_ajax_referer( 'easy_dragdrop_uploader_nonce', 'security' );
 
-		// Retrieve and validate uploaded file.
-		$files         = $_FILES['form_fields'] ?? array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$uploaded_file = $this->get_uploaded_file( $files );
-
-		if ( empty( $uploaded_file ) ) {
+		if ( ! isset( $_FILES['form_fields'] ) ) {
 			wp_send_json_error( array( 'error' => __( 'No valid file uploaded.', 'easy-dragdrop-file-uploader' ) ) );
 
 			return;
 		}
 
+		$files         = map_deep( $_FILES['form_fields'], 'sanitize_text_field' );
+		$uploaded_file = $this->get_uploaded_file( $files );
+
 		// Retrieve and validate file properties.
 		$secret_key  = sanitize_text_field( wp_unslash( $_POST['secret_key'] ?? '' ) );
 		$args        = decrypt_data( $secret_key );
-		$valid_types = explode( ',', $args['types'] );
+
+		$valid_types = explode( ',', $args['types'] ?? '' );
 
 		if ( ! $this->is_valid_file_type( $uploaded_file, $valid_types ) ) {
 			wp_send_json_error( array( 'error' => get_option( 'easy_dragdrop_file_type_error', '' ) ), 415 );
@@ -233,8 +231,15 @@ class Uploader {
 			return;
 		}
 
-		if ( ! $this->is_valid_file_size( $uploaded_file, $args['size'] ) ) {
-			wp_send_json_error( array( 'error' => get_option( 'easy_dragdrop_file_size_error', '' ) ), 413 );
+		$file_max_size = absint( $args['size'] ) * 1024 * 1024 ?? get_default_max_file_size();
+
+		if ( ! $this->is_valid_file_size( $uploaded_file, $file_max_size ) ) {
+			wp_send_json_error(
+				array(
+					'error' => get_option( 'easy_dragdrop_file_size_error', '' )
+				),
+				413
+			);
 
 			return;
 		}

@@ -4,7 +4,6 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import easyDragDropFileUploader from "./helpers.js";
 
 import "filepond/dist/filepond.css";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import "./style.css";
 
 // Array of FilePond plugins to register
@@ -26,7 +25,7 @@ registerPlugin(...filePondPlugins);
  */
 function convertToBytes(sizeString) {
     const units = {B: 1, GB: 1024 * 3, KB: 1024, MB: 1024 * 2};
-    const match = sizeString.match(/^\(\d+\)(B|KB|MB|GB)$/i);
+    const match = sizeString.match(/^(\d+)(B|KB|MB|GB)$/i);
 
     if (! match) {
         return null;

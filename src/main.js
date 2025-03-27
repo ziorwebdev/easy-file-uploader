@@ -62,7 +62,3 @@ function getInputConfiguration(fileInput) {
         maxFileSize: data.filesize ? `${data.filesize}MB` : null
     };
 }
-
-function thiss() {
-    console.log("Hello World");
-}

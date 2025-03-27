@@ -54,6 +54,19 @@ class Assets {
 	 */
 	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_scripts' ), 10 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ), 10 );
+	}
+
+	/**
+	 * Enqueues admin scripts and styles for the plugin.
+	 *
+	 * This function registers and enqueues the admin CSS file used for styling
+	 * the plugin's admin interface.
+	 *
+	 * @return void
+	 */
+	public function enqueue_admin_scripts(): void {
+		wp_enqueue_style( 'easy-dragdrop-admin', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/admin/main.min.css', array(), ZIOR_DRAGDROP_PLUGIN_VERSION );
 	}
 
 	/**
