@@ -152,7 +152,7 @@ class Plugin {
 	 */
 	public function add_settings_link( array $links ): array {
 		// Define the settings link URL
-		$settings_url  = admin_url( 'options-general.php?page=easy-dragdrop-file-uploader' );
+		$settings_url  = admin_url( 'options-general.php?page=easy-file-uploader' );
 		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'easy-file-uploader' ) . '</a>';
 
 		// Prepend the settings link to the existing links.
