@@ -13,7 +13,7 @@ jobs:
       - name: Checkout Free Version (Public)
         uses: actions/checkout@v4
         with:
-          repository: ZIORWebDev/easy-dragdrop-file-uploader
+          repository: ZIORWebDev/easy-file-uploader
           fetch-depth: 0  # Fetch full history
 
       - name: Clone the PRO Repository
@@ -21,7 +21,7 @@ jobs:
           GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}
         run: |
           # Clone the PRO repository
-          git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/easy-dragdrop-file-uploader-pro.git pro-repo
+          git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/easy-file-uploader-pro.git pro-repo
           cd pro-repo
 
           # Fetch all branches to ensure develop exists
@@ -34,7 +34,7 @@ jobs:
           fi
 
           # Add Free repo as remote and fetch its main branch
-          git remote add free https://github.com/ZIORWebDev/easy-dragdrop-file-uploader.git || echo "Remote already exists"
+          git remote add free https://github.com/ZIORWebDev/easy-file-uploader.git || echo "Remote already exists"
           git fetch free main
 
           # Set Git user identity to avoid commit errors
@@ -45,7 +45,7 @@ jobs:
           git merge free/main --allow-unrelated-histories -X theirs || (
             git checkout --theirs .  # Use Free's version for all conflicts
             git add .
-            git commit -m "Merged updates from easy-dragdrop-file-uploader/main into develop"
+            git commit -m "Merged updates from easy-file-uploader/main into develop"
           )
 
           # Push the merged changes
