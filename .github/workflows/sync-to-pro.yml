@@ -21,7 +21,7 @@ jobs:
           GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}
         run: |
           # Clone the PRO repository
-          git clone https://${{ secrets.PRO_REPO_PAT }}@github.com/ZIORWebDev/easy-file-uploader-pro.git pro-repo
+          git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/easy-file-uploader-pro.git pro-repo
           cd pro-repo
 
           # Fetch all branches to ensure develop exists
