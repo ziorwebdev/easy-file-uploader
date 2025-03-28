@@ -16,19 +16,13 @@ jobs:
           repository: ZIORWebDev/easy-file-uploader
           fetch-depth: 0  # Fetch full history
 
-      - name: Debug Authentication
-        run: |
-          echo "GH_TOKEN length: ${#GH_TOKEN}"
-          curl -H "Authorization: token ${{ secrets.PRO_REPO_PAT }}" https://api.github.com/user/repos
-
       - name: Clone the PRO Repository
         env:
           GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}
         run: |
           # Clone the PRO repository
-          git clone https://github.com/ZIORWebDev/easy-file-uploader-pro.git pro-repo
+          git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/easy-file-uploader-pro.git pro-repo
           cd pro-repo
-          git remote set-url origin https://x-access-token:${{ secrets.PRO_REPO_PAT }}@github.com/ZIORWebDev/easy-file-uploader-pro.git
 
           # Fetch all branches to ensure develop exists
           git fetch origin
