@@ -1,0 +1,62 @@
+name: Package Plugin
+
+on:
+  workflow_call:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache dist and node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            dist
+          key: ${{ runner.os }}-package-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-package-
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Package Plugin
+        run: |
+          PACKAGE_NAME=$(jq -r .name package.json)
+          PACKAGE_VERSION=$(jq -r .version package.json)
+          DATETIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          echo "Package Name: $PACKAGE_NAME"
+          echo "Package Version: $PACKAGE_VERSION"
+
+          CHANGELOG=$(git log --merges --pretty=format:"%s" -n 10 | jq -R -s -c 'split("\n") | map(select(length > 0))')
+
+          yarn build
+          yarn run package
+
+          PACKAGE_FILE="${PACKAGE_NAME}.zip"
+
+          echo '{
+            "plugin_name": "'"$PACKAGE_NAME"'",
+            "version": "'"$PACKAGE_VERSION"'",
+            "changelog": '"$CHANGELOG"',
+            "datetime": "'"$DATETIME"'",
+            "package_url": "TO_BE_SET_BY_RELEASE_JOB"
+          }' | jq . > updater.json
+
+      - name: Upload Package Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: package
+          path: |
+            *.zip
+            updater.json

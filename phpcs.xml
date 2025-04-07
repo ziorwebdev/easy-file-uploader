@@ -1,19 +1,26 @@
 <?xml version="1.0"?>
-<ruleset name="EasyDragDropFileUploader">
-    <description>PHP CodeSniffer rules for my project.</description>
+<ruleset name="WordPress Coding Standard Only (Yoda check disabled)">
+  <description>
+    Enforces WordPress Coding Standards, but disables Yoda condition enforcement.
+  </description>
 
-    <!-- Use a predefined standard (PSR-12, WordPress, etc.) -->
-    <rule ref="PSR12"/>
+  <rule ref="WordPress" />
 
-    <!-- Ignore certain directories -->
-    <exclude-pattern>vendor/*</exclude-pattern>
-    <exclude-pattern>node_modules/*</exclude-pattern>
+  <!-- This disables Yoda check definitively -->
+  <rule ref="WordPress.PHP.YodaConditions">
+    <severity>0</severity>
+  </rule>
 
-    <!-- Customize rules -->
-    <rule ref="Generic.Files.LineLength">
-        <properties>
-            <property name="lineLimit" value="120"/>
-            <property name="absoluteLineLimit" value="140"/>
-        </properties>
-    </rule>
+  <arg name="extensions" value="php"/>
+  <arg name="report" value="full"/>
+  <arg name="severity" value="1"/>
+  <arg name="warning-severity" value="1"/>
+  <arg name="error-severity" value="1"/>
+
+  <exclude-pattern>*/vendor/*</exclude-pattern>
+  <exclude-pattern>*/node_modules/*</exclude-pattern>
+  <exclude-pattern>*/build/*</exclude-pattern>
+  <exclude-pattern>*/tools/*</exclude-pattern>
+  <exclude-pattern>*/tests/_output/*</exclude-pattern>
+  <exclude-pattern>*/public/wp-dms-loan-calculator.php</exclude-pattern>
 </ruleset>

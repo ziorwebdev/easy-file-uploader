@@ -1,0 +1,54 @@
+name: Build Package
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache Composer and Node Modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            vendor
+            node_modules
+            dist
+          key: ${{ runner.os }}-build-${{ hashFiles('composer.lock', 'yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+
+      - name: Install PHP Dependencies
+        run: |
+          curl -sS https://getcomposer.org/installer | php
+          sudo mv composer.phar /usr/local/bin/composer
+          composer install --no-dev --optimize-autoloader
+
+      - name: Install Node Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build and Package
+        run: |
+          yarn build
+          yarn run package
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: package
+          path: |
+            *.zip
