@@ -25,15 +25,13 @@ jobs:
         run: |
           mkdir -p tools
           if [ ! -f tools/composer.json ]; then
-            cat <<EOF > tools/composer.json
-            {
+            echo '{
               "require-dev": {
                 "squizlabs/php_codesniffer": "^3.12",
                 "dealerdirect/phpcodesniffer-composer-installer": "*",
                 "wp-coding-standards/wpcs": "^3.1"
               }
-            }
-EOF
+            }' > tools/composer.json
           fi
 
       - name: Install PHPCS and WordPress standards
