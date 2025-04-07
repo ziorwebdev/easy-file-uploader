@@ -4,10 +4,11 @@
   "repository": "https://github.com/ZIORWebDev/easy-file-uploader.git",
   "license": "MIT",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "build": "cross-env NODE_ENV=production && wp-scripts build",
     "watch": "cross-env NODE_ENV=development && wp-scripts start",
-    "package": "rm -f $npm_package_name.zip && mkdir -p $npm_package_name && rsync -av --exclude='.git*' --exclude='node_modules/' --exclude='/src/' --exclude='/tests/' --exclude='*.log' --exclude='*.yml' --exclude='*.md' --exclude='/package.json' --exclude='*.Identifier' --exclude='*.lock' --exclude='*.zip' --exclude=$npm_package_name --exclude='/.yarn' --exclude='/*.js' --exclude='/vendor/**/*.types' --exclude='/vendor/**/tests/' --exclude='/vendor/**/*.yml' --exclude='/vendor/**/*.xml' --exclude='/vendor/**/*.md' --exclude='/vendor/**/*.custom' --exclude='/.cursorrc.json' --exclude='/phpcs.xml' ./ $npm_package_name/ && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name"
+    "package": "rm -f $npm_package_name.zip && mkdir -p $npm_package_name && rsync -av --exclude='.git*' --exclude='node_modules/' --exclude='/src/' --exclude='/tests/' --exclude='/ci/' --exclude='/tools/' --exclude='.stylelintignore' --exclude='.editorconfig' --exclude='eslint.config.js' --exclude='playwright.config.js' --exclude='webpack.config.js' --exclude='composer.*' --exclude='*.log' --exclude='*.yml' --exclude='*.md' --exclude='/*.json' --exclude='*.Identifier' --exclude='*.lock' --exclude='*.zip' --exclude=$npm_package_name --exclude='phpcs.xml' ./ $npm_package_name/ && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name"
   },
   "dependencies": {
     "filepond": "^4.32.7",
@@ -22,6 +23,7 @@
     "eslint": "^8.57.1",
     "eslint-config-wordpress": "^2.0.0",
     "eslint-plugin-jsdoc": "^50.6.8",
+    "eslint-plugin-sort-keys-fix": "^1.1.2",
     "eslint-plugin-perfectionist": "^4.10.1",
     "mini-css-extract-plugin": "^2.9.2",
     "terser-webpack-plugin": "^5.3.11",
