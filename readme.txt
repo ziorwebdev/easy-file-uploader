@@ -1,11 +1,11 @@
 === Easy DragDrop File Uploader ===
 Contributors: reygcalantaol  
 Tags: file upload, elementor, dragdrop, drag and drop, ajax upload  
-Requires at least: 6.0  
-Tested up to: 6.7  
-Requires PHP: 8.0  
-Stable tag: 1.0.0  
-License: GPL-2.0-or-later  
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 8.0
+Stable tag: 1.0.2
+License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html  
 
 Adds a drag and drop uploader field to Elementor Pro Forms for seamless file uploads.
@@ -52,7 +52,7 @@ This plugin uses the [FilePond](https://pqina.nl/filepond/) library to handle fi
 
 == Changelog ==
 
-= 1.0.0 =
+= 1.0.2 =
 - Initial release.
 - Integrated DragDrop with Elementor Pro Forms.
 - Added admin settings for file restrictions.
