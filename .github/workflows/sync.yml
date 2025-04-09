@@ -18,6 +18,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}
         run: |
+          if [ -z "${{ secrets.PRO_REPO_PAT }}" ]; then
+            echo "PRO_REPO_PAT is not set!"
+          else
+            echo "PRO_REPO_PAT is set."
+          fi
           # Debugging step to check the token
           echo "GH_TOKEN is set to: ${{ secrets.PRO_REPO_PAT }}"  # Debugging, remove after testing
 
