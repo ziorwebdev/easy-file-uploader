@@ -22,8 +22,6 @@ jobs:
     if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/sync.yml
     needs: [phpcs, eslint]
-    with:
-      PRO_REPO_PAT: ${{ secrets.PRO_REPO_PAT }}
 
   package:
     if: github.ref == 'refs/heads/main'
