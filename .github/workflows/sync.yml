@@ -1,7 +1,9 @@
 name: Merge Free Version into PRO Repository
 
 on:
-  workflow_call:  # Triggered manually or from another workflow
+  push:
+    branches:
+      - main
 
 jobs:
   sync:
@@ -18,8 +20,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}
         run: |
-          echo "GH_TOKEN is set to: ${GH_TOKEN}"
-
           # Clone the PRO repository
           git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/easy-file-uploader-pro.git pro-repo
           cd pro-repo
