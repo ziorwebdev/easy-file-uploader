@@ -2,11 +2,14 @@ name: Merge Free Version into PRO Repository
 
 on:
   workflow_call:
+    inputs:
+      PRO_REPO_PAT:
+        required: true
+        type: string
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Free Version (Public)
         uses: actions/checkout@v4
@@ -16,9 +19,10 @@ jobs:
 
       - name: Clone the PRO Repository
         env:
-          GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}  # Access secret from the secrets context directly
+          GH_TOKEN: ${{ env.PRO_REPO_PAT }}  # Access the secret passed as an environment variable
         run: |
-          echo "GH_TOKEN is set to: ${{ secrets.PRO_REPO_PAT }}"  # Debugging, remove after testing
+          # Debugging step to check the token
+          echo "GH_TOKEN is set to: ${{ env.PRO_REPO_PAT }}"  # Debugging, remove after testing
 
           # Clone the PRO repository
           git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/easy-file-uploader-pro.git pro-repo
