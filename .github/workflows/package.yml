@@ -26,6 +26,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-package-
 
+      - name: Install PHP Dependencies
+        run: |
+          curl -sS https://getcomposer.org/installer | php
+          sudo mv composer.phar /usr/local/bin/composer
+          composer install --no-dev --optimize-autoloader
+
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
@@ -38,20 +44,10 @@ jobs:
           echo "Package Name: $PACKAGE_NAME"
           echo "Package Version: $PACKAGE_VERSION"
 
-          CHANGELOG=$(git log --merges --pretty=format:"%s" -n 10 | jq -R -s -c 'split("\n") | map(select(length > 0))')
-
           yarn build
           yarn run package
 
           PACKAGE_FILE="${PACKAGE_NAME}.zip"
-
-          echo '{
-            "plugin_name": "'"$PACKAGE_NAME"'",
-            "version": "'"$PACKAGE_VERSION"'",
-            "changelog": '"$CHANGELOG"',
-            "datetime": "'"$DATETIME"'",
-            "package_url": "TO_BE_SET_BY_RELEASE_JOB"
-          }' | jq . > updater.json
 
       - name: Upload Package Artifact
         uses: actions/upload-artifact@v4
@@ -59,4 +55,3 @@ jobs:
           name: package
           path: |
             *.zip
-            updater.json
