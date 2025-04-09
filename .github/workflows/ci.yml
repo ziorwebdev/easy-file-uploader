@@ -26,9 +26,9 @@ jobs:
   package:
     if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/package.yml
-    needs: build
+    # needs: build
 
   release:
     if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/release.yml
-    needs: package
+    # needs: package
