@@ -23,8 +23,6 @@ jobs:
     uses: ./.github/workflows/sync.yml
     # needs: [phpcs, eslint]
     with:
-      # No secrets passed through "with", just make sure to pass via env in the next job
-    env:
       PRO_REPO_PAT: ${{ secrets.PRO_REPO_PAT }}
 
   package:

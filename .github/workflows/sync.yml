@@ -19,10 +19,10 @@ jobs:
 
       - name: Clone the PRO Repository
         env:
-          GH_TOKEN: ${{ env.PRO_REPO_PAT }}  # Access the secret passed as an environment variable
+          GH_TOKEN: ${{ inputs.PRO_REPO_PAT }}  # Access the input value as an environment variable
         run: |
           # Debugging step to check the token
-          echo "GH_TOKEN is set to: ${{ env.PRO_REPO_PAT }}"  # Debugging, remove after testing
+          echo "GH_TOKEN is set to: ${{ inputs.PRO_REPO_PAT }}"  # Debugging, remove after testing
 
           # Clone the PRO repository
           git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/easy-file-uploader-pro.git pro-repo
