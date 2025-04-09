@@ -19,7 +19,7 @@ jobs:
           GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}
         run: |
           if [ -z "${{ secrets.PRO_REPO_PAT }}" ]; then
-            echo "PRO_REPO_PAT is not set!"
+            echo "PRO_REPO_PAT is not set!111"
           else
             echo "PRO_REPO_PAT is set."
           fi
