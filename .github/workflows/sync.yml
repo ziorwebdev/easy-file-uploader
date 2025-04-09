@@ -48,8 +48,17 @@ jobs:
           )
 
           # Exclude specific files and folders from being committed
+          # First, check the status to ensure we know what changes are staged
+          git status
+
+          # Reset the unwanted files and folders from the staging area
           git reset .github languages webpack.config.js package.json easy-file-uploader.php composer.json composer.lock yarn.lock readme.txt README.md
+
+          # Now, remove them from the staged area (i.e., don't include in commit)
           git restore --staged .github languages webpack.config.js package.json easy-file-uploader.php composer.json composer.lock yarn.lock readme.txt README.md
+
+          # After excluding, check the status again to confirm exclusion
+          git status
 
           # Commit the merge excluding specified files
           git commit -m "Merged updates from easy-file-uploader/main into develop, excluding specified files"
