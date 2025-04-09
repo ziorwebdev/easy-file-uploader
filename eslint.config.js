@@ -11,17 +11,12 @@ export default [
 			globals: {
 				...globals.browser,
 				$: "readonly",
-				Chart: "readonly",
-				ChartDataLabels: "readonly",
 				console: "readonly",
 				document: "readonly",
 				elementorFrontend: "readonly",
 				jQuery: "readonly",
-				localStorage: "readonly",
-				navigator: "readonly",
-				sessionStorage: "readonly",
+				EasyDragDropUploader: "readonly",
 				window: "readonly",
-				WpDmsLoanCalculatorConfig: "readonly",
 			},
 		},
 		plugins: {
@@ -29,7 +24,7 @@ export default [
 		},
 		rules: {
 			// Enforce Alphabetical Order of Object Keys
-			"sort-keys": ["error", "asc", { caseSensitive: false, minKeys: 2 }],
+			"sort-keys": "off",
 			"sort-keys-fix/sort-keys-fix": "error",
 
 			// Best Practices (JSLint style)
@@ -56,7 +51,7 @@ export default [
 			// "no-plusplus": "error",
 			"no-template-curly-in-string": "warn",
 			"dot-notation": "error",
-			"yoda": ["error", "never"],
+			// "yoda": ["error", "never"],
 
 			// Code Style
 			"arrow-spacing": ["error", { before: true, after: true }],

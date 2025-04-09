@@ -1,7 +1,7 @@
-import {create, registerPlugin} from "filepond";
+import { create, registerPlugin } from "filepond";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-import easyDragDropFileUploader from "./helpers.js";
+import dragDropUploader from "./helpers.js";
 
 import "filepond/dist/filepond.css";
 import "./style.css";
@@ -13,7 +13,7 @@ let filePondPlugins = [
 ];
 
 // Allow developers to modify the plugin list via "easy_dragdrop_plugins" filter
-filePondPlugins = easyDragDropFileUploader.applyFilters("easy_dragdrop_plugins", filePondPlugins);
+filePondPlugins = dragDropUploader.applyFilters("easy_dragdrop_plugins", filePondPlugins);
 
 // Register FilePond plugins
 registerPlugin(...filePondPlugins);
@@ -24,7 +24,7 @@ registerPlugin(...filePondPlugins);
  * @returns {number|null} The file size in bytes, or null if the format is invalid.
  */
 function convertToBytes(sizeString) {
-    const units = {B: 1, GB: 1024 * 3, KB: 1024, MB: 1024 * 2};
+    const units = { B: 1, GB: 1024 * 3, KB: 1024, MB: 1024 * 2 };
     const match = sizeString.match(/^(\d+)(B|KB|MB|GB)$/i);
 
     if (! match) {
@@ -90,7 +90,7 @@ function getFilePondConfiguration(configuration) {
         }
     };
 
-    return easyDragDropFileUploader.applyFilters("easy_dragdrop_configuration", Object.assign({}, configuration, defaultConfiguration));
+    return dragDropUploader.applyFilters("easy_dragdrop_configuration", Object.assign({}, configuration, defaultConfiguration));
 }
 
 /**

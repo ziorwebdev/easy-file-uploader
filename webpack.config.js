@@ -1,12 +1,12 @@
-const webpack = require("webpack");
-const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
+import webpack from "webpack";
+import path from "path";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+import TerserPlugin from "terser-webpack-plugin";
 
 const isProduction = process.env.NODE_ENV === "production";
 
-module.exports = {
+export default {
     mode: isProduction ? "production" : "development",
     devtool: isProduction ? false : "source-map",
     entry: {
@@ -18,7 +18,7 @@ module.exports = {
     },
     output: {
         filename: `[name].min.js`,
-        path: path.resolve(__dirname, "dist"),
+        path: path.resolve("dist"),
         clean: true,
     },
     module: {

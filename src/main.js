@@ -1,25 +1,25 @@
 import createFilePondInstance from "./dragdrop/main.js";
 
 $(document).ready(function() {
-    const filePondInstances = new Map();
+    const dragDropInstances = new Map();
     const dragDropUploaderFields = $(".easy-dragdrop-upload");
-    let filePondIntegration = EasyDragDropUploader || {};
+    const dragDropUploader = EasyDragDropUploader || {};
 
-    filePondIntegration.allowMultiple = "1" === EasyDragDropUploader.allowMultiple;
+    dragDropUploader.allowMultiple = "1" === EasyDragDropUploader.allowMultiple;
 
     /**
      * Raised event before the FilePond instance is created
      * To allow developers to set global FilePond options
      */
-    $(document).trigger("easy_dragdrop_before_instance_created", filePondIntegration);
+    $(document).trigger("easy_dragdrop_before_instance_created", dragDropUploader);
 
     dragDropUploaderFields.each(function() {
         const inputConfig = getInputConfiguration($(this)) || {};
-        const configuration = {...filePondIntegration, ...inputConfig};
+        const configuration = { ...dragDropUploader, ...inputConfig };
 
         for (const key in configuration) {
-            if (! inputConfig[key] && filePondIntegration[key]) {
-                configuration[key] = filePondIntegration[key];
+            if (! inputConfig[key] && dragDropUploader[key]) {
+                configuration[key] = dragDropUploader[key];
             }
         }
 
@@ -32,7 +32,7 @@ $(document).ready(function() {
          */
         $(document).trigger("easy_dragdrop_instance_created", filePondInstance);
 
-        filePondInstances.set(this, filePondInstance);
+        dragDropInstances.set(this, filePondInstance);
     });
 
     /**
@@ -42,7 +42,7 @@ $(document).ready(function() {
      * @param {object} response - The response object from the form submission
      */
     $(document).on("submit_success", function() {
-        filePondInstances.forEach((instance) => instance.removeFiles());
+        dragDropInstances.forEach((instance) => instance.removeFiles());
     });
 });
 
@@ -58,7 +58,7 @@ function getInputConfiguration(fileInput) {
         acceptedFileTypes: data.filetypes?.split(",") ?? null,
         allowMultiple: fileInput.attr("multiple") !== undefined,
         labelIdle: data.label ?? "",
+        maxFileSize: data.filesize ? `${data.filesize}MB` : null,
         maxFiles: data.maxfiles ?? null,
-        maxFileSize: data.filesize ? `${data.filesize}MB` : null
     };
 }
