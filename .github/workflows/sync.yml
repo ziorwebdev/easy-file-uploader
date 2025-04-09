@@ -48,8 +48,8 @@ jobs:
           )
 
           # Exclude specific files and folders from being committed
-          git reset .github dist vendor node_modules languages webpack.config.js package.json easy-file-uploader.php composer.json composer.lock yarn.lock readme.txt README.md
-          git restore --staged .github dist vendor node_modules languages webpack.config.js package.json easy-file-uploader.php composer.json composer.lock yarn.lock readme.txt README.md
+          git reset .github languages webpack.config.js package.json easy-file-uploader.php composer.json composer.lock yarn.lock readme.txt README.md
+          git restore --staged .github languages webpack.config.js package.json easy-file-uploader.php composer.json composer.lock yarn.lock readme.txt README.md
 
           # Commit the merge excluding specified files
           git commit -m "Merged updates from easy-file-uploader/main into develop, excluding specified files"
