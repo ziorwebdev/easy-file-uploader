@@ -1,7 +1,17 @@
 <?php
-namespace ZIOR\DragDrop;
+/**
+ * Register Class
+ *
+ * This file contains the definition of the Register class, which is responsible
+ * for registering the Easy DragDrop Uploader plugin with Elementor forms.
+ *
+ * @package    ZIOR\DragDrop
+ * @since      1.0.0
+ */
 
-use ZIOR\DragDrop\Elementor\DragDropUploader;
+namespace ZIOR\DragDrop\Classes;
+
+use ZIOR\DragDrop\Classes\Integrations\ElementorUploader;
 use ElementorPro\Modules\Forms\Classes\Fields;
 use ElementorPro\Modules\Forms\Registrars\Form_Fields_Registrar;
 
@@ -12,6 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Handles the registration of DragDrop uploader form fields.
+ *
+ * @since 1.0.0
  */
 class Register {
 
@@ -24,7 +36,11 @@ class Register {
 
 	/**
 	 * Constructor for the class.
+	 *
 	 * Hooks into Elementor Pro to register custom form fields.
+	 *
+	 * @since 1.0.0
+	 * @return void
 	 */
 	public function __construct() {
 		add_action( 'elementor_pro/forms/fields/register', array( $this, 'register_elementor_form_fields' ), 10 );
@@ -33,6 +49,7 @@ class Register {
 	/**
 	 * Retrieves the singleton instance of the class.
 	 *
+	 * @since 1.0.0
 	 * @return Register The singleton instance.
 	 */
 	public static function get_instance(): Register {
@@ -46,9 +63,11 @@ class Register {
 	/**
 	 * Registers the DragDrop uploader field with Elementor's form field registry.
 	 *
-	 * @param ElementorPro\Modules\Forms\Registrars\Form_Fields_Registrar $fields Elementor form fields object.
+	 * @since 1.0.0
+	 * @param ElementorPro\Modules\Forms\Registrars\Form_Fields_Registrar $form Elementor form fields object.
+	 * @return void
 	 */
 	public function register_elementor_form_fields( Form_Fields_Registrar $form ): void {
-		$form->register( new DragDropUploader() );
+		$form->register( new ElementorUploader() );
 	}
 }

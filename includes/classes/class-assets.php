@@ -1,5 +1,17 @@
 <?php
-namespace ZIOR\DragDrop;
+/**
+ * Assets Class
+ *
+ * This file contains the definition of the Assets class, which is responsible
+ * for enqueuing scripts and styles for both frontend and admin areas of the
+ * Easy DragDrop Uploader plugin.
+ *
+ * @package    ZIOR\DragDrop
+ */
+
+namespace ZIOR\DragDrop\Classes;
+
+use function ZIOR\DragDrop\Functions\get_uploader_configurations;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

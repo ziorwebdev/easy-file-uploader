@@ -1,20 +1,37 @@
 <?php
-namespace ZIOR\DragDrop\Elementor;
+/**
+ * Elementor Uploader Class
+ *
+ * This file contains the definition of the Elementor Uploader class, which is responsible
+ * for integrating the Easy DragDrop Uploader plugin with Elementor forms.
+ *
+ * @package    ZIOR\DragDrop
+ * @since      1.0.0
+ */
+
+namespace ZIOR\DragDrop\Classes\Integrations;
 
 use ElementorPro\Modules\Forms\Fields\Field_Base;
 use Elementor\Controls_Manager;
 use ElementorPro\Plugin;
 use ElementorPro\Modules\Forms\Classes;
-
-use function ZIOR\DragDrop\convert_extentions_to_mime_types;
-use function ZIOR\DragDrop\get_allowed_html;
-use function ZIOR\DragDrop\get_default_max_file_size;
+use function ZIOR\DragDrop\Functions\convert_extentions_to_mime_types;
+use function ZIOR\DragDrop\Functions\get_allowed_html;
+use function ZIOR\DragDrop\Functions\get_default_max_file_size;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-class DragDropUploader extends Field_Base {
+/**
+ * Elementor Uploader Class
+ *
+ * This class extends the Elementor Field_Base class and integrates the Easy DragDrop Uploader plugin with Elementor forms.
+ *
+ * @package    ZIOR\DragDrop
+ * @since      1.0.0
+ */
+class ElementorUploader extends Field_Base {
 
 	/**
 	 * Retrieves easy dragdrop fields from the given field array and sets the 'attachment_type'.
@@ -27,17 +44,17 @@ class DragDropUploader extends Field_Base {
 	 * @return array The filtered array containing only DragDrop fields with updated 'attachment_type'.
 	 */
 	private function get_option_setting_fields( array $fields ): array {
-		$setting_fields = [];
+		$setting_fields = array();
 
 		foreach ( $fields as $field ) {
-			// Ensure the field is a dragdrop upload field
+			// Ensure the field is a dragdrop upload field.
 			if ( ! isset( $field['field_type'] ) || 'easy-dragdrop-upload' !== $field['field_type'] ) {
 				$setting_fields[] = $field;
 
 				continue;
 			}
 
-			// Set 'attachment_type' to 'easy_dragdrop_attachment_type' if it exists
+			// Set 'attachment_type' to 'easy_dragdrop_attachment_type' if it exists.
 			if ( isset( $field['easy_dragdrop_attachment_type'] ) ) {
 				$field['attachment_type'] = $field['easy_dragdrop_attachment_type'];
 			}
@@ -49,14 +66,15 @@ class DragDropUploader extends Field_Base {
 	}
 
 	/**
-	 * creates array of upload sizes based on server limits
-	 * to use in the file_sizes control
-	 * @return array
+	 * Creates an array of upload sizes based on server limits to use in the file_sizes control.
+	 *
+	 * @since 1.0.0
+	 * @return array The array of upload sizes.
 	 */
 	private function get_upload_file_size_options() {
-		$max_file_size = wp_max_upload_size() / pow( 1024, 2 ); //MB
+		$max_file_size = wp_max_upload_size() / pow( 1024, 2 );
 
-		$sizes = [];
+		$sizes = array();
 
 		for ( $file_size = 1; $file_size <= $max_file_size; $file_size++ ) {
 			$sizes[ $file_size ] = $file_size . 'MB';
@@ -66,17 +84,9 @@ class DragDropUploader extends Field_Base {
 	}
 
 	/**
-	 * Constructor.
-	 *
-	 * Initializes the Uploader class and hooks AJAX actions for handling file uploads.
-	 */
-	public function __construct() {
-		parent::__construct();
-	}
-
-	/**
 	 * Gets the field type identifier for Elementor.
 	 *
+	 * @since 1.0.0
 	 * @return string The field type slug ('easy-dragdrop-upload').
 	 */
 	public function get_type() {
@@ -86,6 +96,7 @@ class DragDropUploader extends Field_Base {
 	/**
 	 * Retrieves the display name of the field.
 	 *
+	 * @since 1.0.0
 	 * @return string The translatable name of the field ('DragDrop Upload').
 	 */
 	public function get_name() {
@@ -97,6 +108,7 @@ class DragDropUploader extends Field_Base {
 	 *
 	 * Adds custom settings such as max file size, allowed file types, multiple uploads, and max files.
 	 *
+	 * @since 1.0.0
 	 * @param Widget_Base $widget The Elementor widget instance.
 	 */
 	public function update_controls( $widget ) {
@@ -108,8 +120,8 @@ class DragDropUploader extends Field_Base {
 		}
 
 		$default_max_file_size = get_default_max_file_size();
-		$field_controls = array(
-			'easy_dragdrop_max_file_size' => array(
+		$field_controls        = array(
+			'easy_dragdrop_max_file_size'         => array(
 				'name'         => 'easy_dragdrop_max_file_size',
 				'label'        => esc_html__( 'Max. File Size', 'easy-file-uploader' ),
 				'type'         => Controls_Manager::SELECT,
@@ -123,12 +135,12 @@ class DragDropUploader extends Field_Base {
 				'inner_tab'    => 'form_fields_content_tab',
 				'tabs_wrapper' => 'form_fields_tabs',
 			),
-			'easy_dragdrop_file_types' => array(
+			'easy_dragdrop_file_types'            => array(
 				'name'         => 'easy_dragdrop_file_types',
 				'label'        => esc_html__( 'Allowed File Types', 'easy-file-uploader' ),
 				'label_block'  => true,
 				'type'         => Controls_Manager::TEXT,
-				'default'      => get_option( 'easy_dragdrop_file_types_allowed', '' ), 
+				'default'      => get_option( 'easy_dragdrop_file_types_allowed', '' ),
 				'ai'           => array(
 					'active' => false,
 				),
@@ -151,12 +163,12 @@ class DragDropUploader extends Field_Base {
 				'inner_tab'    => 'form_fields_content_tab',
 				'tabs_wrapper' => 'form_fields_tabs',
 			),
-			'easy_dragdrop_max_files' => array(
+			'easy_dragdrop_max_files'             => array(
 				'name'         => 'easy_dragdrop_max_files',
 				'label'        => esc_html__( 'Max. Files', 'easy-file-uploader' ),
 				'type'         => Controls_Manager::NUMBER,
 				'condition'    => array(
-					'field_type'           => $this->get_type(),
+					'field_type'                          => $this->get_type(),
 					'easy_dragdrop_allow_multiple_upload' => 'yes',
 				),
 				'tab'          => 'content',
@@ -173,6 +185,7 @@ class DragDropUploader extends Field_Base {
 	/**
 	 * Render the file upload input field.
 	 *
+	 * @since 1.0.0
 	 * @param array  $item        The field settings array.
 	 * @param int    $item_index  The index of the field in the form.
 	 * @param object $form        The form object responsible for rendering.
@@ -196,17 +209,17 @@ class DragDropUploader extends Field_Base {
 		$file_types   = convert_extentions_to_mime_types( $item['easy_dragdrop_file_types'] );
 		$default_size = wp_max_upload_size() / 1024 / 1024;
 		$attributes   = array(
-				'data-filesize'  => esc_attr( $item['easy_dragdrop_max_file_size'] ?? $default_size ),
-				'data-filetypes' => esc_attr( ! empty( $file_types ) ? implode( ',', $file_types ) : '' ),
-				'data-label'     => esc_attr( $item['field_label'] ?? '' ),
-				'data-maxfiles'  => esc_attr( $item['easy_dragdrop_max_files'] ?? '' ),
-			);
+			'data-filesize'  => esc_attr( $item['easy_dragdrop_max_file_size'] ?? $default_size ),
+			'data-filetypes' => esc_attr( ! empty( $file_types ) ? implode( ',', $file_types ) : '' ),
+			'data-label'     => esc_attr( $item['field_label'] ?? '' ),
+			'data-maxfiles'  => esc_attr( $item['easy_dragdrop_max_files'] ?? '' ),
+		);
 
 		$form->add_render_attribute( 'input' . $item_index, $attributes );
-		
+
 		$input_attributes = $form->get_render_attribute_string( 'input' . $item_index );
 
-		// Allow developers to modify the input attributes
+		// Allow developers to modify the input attributes.
 		do_action( 'easy_dragdrop_before_render_input', $input_attributes );
 
 		$allowed_html = get_allowed_html();
@@ -219,6 +232,7 @@ class DragDropUploader extends Field_Base {
 	 *
 	 * Checks whether the required file has been uploaded and adds an error message if missing.
 	 *
+	 * @since 1.0.0
 	 * @param array                $field The field data.
 	 * @param Classes\Form_Record  $record The form record instance.
 	 * @param Classes\Ajax_Handler $ajax_handler The AJAX handler instance.
@@ -240,9 +254,10 @@ class DragDropUploader extends Field_Base {
 	 * This function allows other developers to hook into the field processing
 	 * using the `easy_dragdrop_process_field` action.
 	 *
-	 * @param mixed                 $field        The field data to process.
-	 * @param Classes\Form_Record   $record       The form record instance.
-	 * @param Classes\Ajax_Handler  $ajax_handler The AJAX handler instance.
+	 * @since 1.0.0
+	 * @param mixed                $field        The field data to process.
+	 * @param Classes\Form_Record  $record       The form record instance.
+	 * @param Classes\Ajax_Handler $ajax_handler The AJAX handler instance.
 	 */
 	public function process_field( $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
 		// Allow other developers to process the field values.

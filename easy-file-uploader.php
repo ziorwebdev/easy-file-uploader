@@ -3,7 +3,7 @@
  * Plugin Name:  Easy DragDrop File Uploader
  * Plugin URI:   https://github.com/ZIORWebDev/easy-dragdrop-file-uploader
  * Description:  Enhances Elementor Pro Forms with a drag and drop uploader for seamless file uploads.
- * Author:       ZiorWeb.Dev
+ * Author:       ZIORWeb.Dev
  * Author URI:   https://ziorweb.dev
  * Version:      1.0.0
  * Requires PHP: 8.0
@@ -12,6 +12,8 @@
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:  easy-file-uploader
  * Domain Path:  /languages
+ *
+ * @package ZIOR\DragDrop
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,141 +29,29 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/gpl-2.0.txt>.
  */
 
-namespace ZIOR\DragDrop;
+use ZIOR\DragDrop\Classes\Plugin;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Main plugin class.
- *
- * Handles plugin initialization, constants, includes, and hooks.
- */
-class Plugin {
-
-	/**
-	 * The single instance of the plugin.
-	 *
-	 * @var Plugin|null
-	 */
-	protected static ?Plugin $instance = null;
-
-	/**
-	 * The plugin version.
-	 *
-	 * @var string
-	 */
-	protected static string $version = '1.0.0';
-
-	/**
-	 * Initializes the plugin.
-	 *
-	 * Sets up constants, includes required files, and loads the plugin.
-	 */
-	private function init(): void {
-		$this->setup_constants();
-		$this->includes();
-
-		$loader = Loader::get_instance();
-		$loader->load();
-	}
-
-	/**
-	 * Defines plugin constants.
-	 *
-	 * Ensures constants are only defined once to prevent conflicts.
-	 */
-	private function setup_constants(): void {
-		if ( ! defined( "ZIOR_DRAGDROP_PLUGIN_DIR" ) ) {
-			define( "ZIOR_DRAGDROP_PLUGIN_DIR", plugin_dir_path( __FILE__ ) );
-		}
-
-		if ( ! defined( "ZIOR_DRAGDROP_PLUGIN_URL" ) ) {
-			define( "ZIOR_DRAGDROP_PLUGIN_URL", plugin_dir_url( __FILE__ ) );
-		}
-
-		if ( ! defined( "ZIOR_DRAGDROP_PLUGIN_FILE" ) ) {
-			define( "ZIOR_DRAGDROP_PLUGIN_FILE", __FILE__ );
-		}
-
-		if ( ! defined( "ZIOR_DRAGDROP_PLUGIN_VERSION" ) ) {
-			define( "ZIOR_DRAGDROP_PLUGIN_VERSION", self::$version );
-		}
-	}
-
-	/**
-	 * Includes necessary plugin files.
-	 */
-	private function includes(): void {
-		require_once ZIOR_DRAGDROP_PLUGIN_DIR . 'vendor/autoload.php';
-		require_once ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/loader.php';
-		require_once ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/functions.php';
-	}
-
-	/**
-	 * Constructor.
-	 *
-	 * Initializes hooks required for the plugin.
-	 */
-	public function __construct() {
-		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_settings_link' ) );
-	}
-
-	/**
-	 * Retrieves the singleton instance of the plugin.
-	 *
-	 * @return Plugin The single instance of the plugin.
-	 */
-	public static function get_instance(): Plugin {
-		if ( is_null( self::$instance ) ) {
-			self::$instance = new self();
-			self::$instance->init();
-		}
-
-		return self::$instance;
-	}
-
-	/**
-	 * Plugin activation callback.
-	 *
-	 * This function is executed when the plugin is activated.
-	 */
-	public function activate_plugin(): void {}
-
-	/**
-	 * Plugin deactivation callback.
-	 *
-	 * This function is executed when the plugin is deactivated.
-	 */
-	public function deactivate_plugin(): void {}
-
-	/**
-	 * Adds a "Settings" link on the plugins page.
-	 *
-	 * @param array $links The existing action links.
-	 * @return array Modified action links with the "Settings" link.
-	 */
-	public function add_settings_link( array $links ): array {
-		// Define the settings link URL
-		$settings_url  = admin_url( 'options-general.php?page=easy-file-uploader' );
-		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'easy-file-uploader' ) . '</a>';
-
-		// Prepend the settings link to the existing links.
-		array_unshift( $links, $settings_link );
-
-		return $links;
-	}
+if ( ! defined( 'ZIOR_DRAGDROP_PLUGIN_DIR' ) ) {
+	define( 'ZIOR_DRAGDROP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 }
 
-/**
- * Initializes and starts the plugin.
- */
-$plugin = Plugin::get_instance();
+if ( ! defined( 'ZIOR_DRAGDROP_PLUGIN_URL' ) ) {
+	define( 'ZIOR_DRAGDROP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+}
 
-/**
- * Registers plugin activation and deactivation hooks.
- */
-register_activation_hook( ZIOR_DRAGDROP_PLUGIN_FILE, array( $plugin, 'activate_plugin' ) );
-register_deactivation_hook( ZIOR_DRAGDROP_PLUGIN_FILE, array( $plugin, 'deactivate_plugin' ) );
+if ( ! defined( 'ZIOR_DRAGDROP_PLUGIN_FILE' ) ) {
+	define( 'ZIOR_DRAGDROP_PLUGIN_FILE', __FILE__ );
+}
+
+require_once ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/functions.php';
+require_once ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-plugin.php';
+
+$plugin_instance = Plugin::get_instance( __FILE__ );
+
+register_activation_hook( __FILE__, array( $plugin_instance, 'activate_plugin' ) );
+register_deactivation_hook( __FILE__, array( $plugin_instance, 'deactivate_plugin' ) );

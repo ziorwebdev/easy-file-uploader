@@ -1,14 +1,32 @@
 <?php
-namespace ZIOR\DragDrop;
+/**
+ * Settings Class
+ *
+ * This file contains the definition of the Settings class, which is responsible
+ * for handling the settings page and functionality for the Easy DragDrop Uploader plugin.
+ *
+ * @package    ZIOR\DragDrop
+ * @since      1.0.0
+ */
 
-use function ZIOR\DragDrop\get_options;
-use function ZIOR\DragDrop\get_default_max_file_size;
+namespace ZIOR\DragDrop\Classes;
+
+use function ZIOR\DragDrop\Functions\get_options;
+use function ZIOR\DragDrop\Functions\get_default_max_file_size;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Settings Class
+ *
+ * This class handles the settings page and functionality for the Easy DragDrop Uploader plugin.
+ *
+ * @package    ZIOR\DragDrop
+ * @since      1.0.0
+ */
 class Settings {
 
 	/**
@@ -25,27 +43,29 @@ class Settings {
 	 * It also extracts the provided data array into separate variables
 	 * to be accessible inside the template.
 	 *
+	 * @since 1.0.0
 	 * @param string $template_name Template file name (without .php extension).
 	 * @param array  $data          Optional. Data to pass to the template. Default empty array.
 	 *
 	 * @return void
 	 */
-	private function load_template( string $template_name, array $data = [] ): void {
+	private function load_template( string $template_name, array $data = array() ): void {
 		$template_file = ZIOR_DRAGDROP_PLUGIN_DIR . sprintf( 'views/%s.php', $template_name );
 
 		if ( ! file_exists( $template_file ) ) {
 			return;
 		}
 
-		// Extract data into variables to be used in the template
-		if ( ! empty( $data ) ) {
-			extract( $data, EXTR_SKIP ); // Prevents overwriting existing variables
-		}
-
-		// Load the template and pass data
+		// Load the template and pass data.
 		load_template( $template_file, false, $data );
 	}
 
+	/**
+	 * Retrieves the settings fields for the plugin.
+	 *
+	 * @since 1.0.0
+	 * @return array The settings fields.
+	 */
 	private function get_settings_fields(): array {
 		$settings_fields = array(
 			array(
@@ -86,14 +106,15 @@ class Settings {
 	/**
 	 * Returns the settings sections for the plugin.
 	 *
+	 * @since 1.0.0
 	 * @return array The settings sections.
 	 */
 	private function get_settings_sections(): array {
 		$settings_sections = array(
 			'easy_dragdrop_general_section' => array(
 				'title'    => __( 'General Settings', 'easy-file-uploader' ),
-				'callback' => array( $this, 'section_callback' )
-			)
+				'callback' => array( $this, 'section_callback' ),
+			),
 		);
 
 		return apply_filters( 'easy_dragdrop_settings_sections', $settings_sections );
@@ -104,16 +125,56 @@ class Settings {
 	 *
 	 * Hooks into WordPress to add the plugin's settings page and register settings.
 	 *
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
+		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_settings_link' ) );
+	}
+
+	/**
+	 * Adds a "Settings" link on the plugins page.
+	 *
+	 * @since 1.0.0
+	 * @param array $links The existing action links.
+	 * @return array Modified action links with the "Settings" link.
+	 */
+	public function add_settings_link( array $links ): array {
+		// Define the settings link URL.
+		$settings_url  = admin_url( 'options-general.php?page=easy-file-uploader' );
+		$settings_link = sprintf( '<a href="%s">', $settings_url ) . esc_html__( 'Settings', 'easy-file-uploader' ) . '</a>';
+
+		// Prepend the settings link to the existing links.
+		array_unshift( $links, $settings_link );
+
+		return $links;
+	}
+
+	/**
+	 * Adds the settings page under the WordPress "Settings" menu.
+	 *
+	 * This function registers a submenu page under "Settings" in the WordPress admin dashboard.
+	 * Only users with the `manage_options` capability can access the settings page.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function add_settings_page(): void {
+		add_options_page(
+			__( 'Easy DragDrop Uploader', 'easy-file-uploader' ),
+			__( 'Easy DragDrop Uploader', 'easy-file-uploader' ),
+			'manage_options',
+			'easy-file-uploader',
+			array( $this, 'render_settings_page' ),
+		);
 	}
 
 	/**
 	 * Returns instance of Settings.
 	 *
+	 * @since 1.0.0
 	 * @return object
 	 */
 	public static function get_instance() {
@@ -125,33 +186,15 @@ class Settings {
 	}
 
 	/**
-	 * Adds the settings page under the WordPress "Settings" menu.
-	 *
-	 * This function registers a submenu page under "Settings" in the WordPress admin dashboard.
-	 * Only users with the `manage_options` capability can access the settings page.
-	 *
-	 * @return void
-	 */
-	public function add_settings_page(): void {
-		add_options_page(
-			__( 'Easy DragDrop Uploader', 'easy-file-uploader' ), // Page title
-			__( 'Easy DragDrop Uploader', 'easy-file-uploader' ), // Menu title
-			'manage_options',                   // Required capability
-			'easy-file-uploader', // Menu slug
-			array( $this, 'render_settings_page' ) // Callback function
-		);
-	}
-
-	/**
 	 * Registers settings, sections, and fields for the plugin.
 	 *
-	 * This function registers settings with WordPress, adds a settings section, 
+	 * This function registers settings with WordPress, adds a settings section,
 	 * and defines various fields for user configuration.
 	 *
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function register_settings(): void {
-		// Register settings
 		$options = get_options();
 
 		foreach ( $options as $option ) {
@@ -160,12 +203,12 @@ class Settings {
 				sanitize_text_field( $option['option_name'] ),
 				array(
 					'sanitize_callback' => 'sanitize_text_field',
-					'type'              => sanitize_text_field( $option['type'] )
-				)
+					'type'              => sanitize_text_field( $option['type'] ),
+				),
 			);
 		}
 
-		// Add each settings section
+		// Add each settings section.
 		$sections = $this->get_settings_sections();
 		$fields   = $this->get_settings_fields();
 
@@ -198,10 +241,11 @@ class Settings {
 	 *
 	 * This function loads the settings template and provides necessary data.
 	 *
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function render_settings_page(): void {
-		// Data to pass to the template
+		// Data to pass to the template.
 		$data = array(
 			'options_group' => 'easy_dragdrop_options_group',
 			'page_slug'     => 'easy-file-uploader',
@@ -215,6 +259,7 @@ class Settings {
 	 *
 	 * This function outputs a brief description for the DragDrop uploader settings.
 	 *
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function section_callback(): void {
@@ -230,17 +275,18 @@ class Settings {
 	 * This function retrieves the stored error message for invalid file types, sanitizes it,
 	 * and outputs a textarea input field for user customization.
 	 *
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function file_type_error_message_callback(): void {
 		// Retrieve the file type error message, defaulting to an empty string.
 		$message = get_option( 'easy_dragdrop_file_type_error', '' );
-		$message = sanitize_textarea_field( $message ); // Ensure safe text output
+		$message = sanitize_textarea_field( $message );
 
 		// Output the textarea field with proper escaping.
 		printf(
 			'<textarea name="easy_dragdrop_file_type_error" rows="3" cols="50" maxlength="120">%s</textarea>',
-			esc_textarea( $message ) // Escape output to prevent XSS
+			esc_textarea( $message )
 		);
 
 		// Output the description with proper escaping.
@@ -256,17 +302,18 @@ class Settings {
 	 * This function retrieves the stored error message for files exceeding the size limit,
 	 * sanitizes it, and outputs a textarea input field for user customization.
 	 *
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function file_size_error_message_callback(): void {
 		// Retrieve the file size error message, defaulting to an empty string.
 		$message = get_option( 'easy_dragdrop_file_size_error', '' );
-		$message = sanitize_textarea_field( $message ); // Ensure safe text output
+		$message = sanitize_textarea_field( $message );
 
 		// Output the textarea field with proper escaping.
 		printf(
 			'<textarea name="easy_dragdrop_file_size_error" rows="3" cols="50" maxlength="120">%s</textarea>',
-			esc_textarea( $message ) // Escape output to prevent XSS
+			esc_textarea( $message )
 		);
 
 		// Output the description with proper escaping.
@@ -282,17 +329,18 @@ class Settings {
 	 * This function retrieves the stored button label, ensures its validity,
 	 * and outputs a text input field for user customization.
 	 *
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function button_label_callback(): void {
 		// Retrieve the button label option from the database, defaulting to an empty string.
 		$button_label = get_option( 'easy_dragdrop_button_label', '' );
-		$button_label = sanitize_text_field( $button_label ); // Ensure safe text output
+		$button_label = sanitize_text_field( $button_label );
 
 		// Output the input field with proper escaping.
 		printf(
 			'<input type="text" name="easy_dragdrop_button_label" value="%s">',
-			esc_attr( $button_label ) // Escape output to prevent XSS
+			esc_attr( $button_label )
 		);
 	}
 
@@ -300,20 +348,21 @@ class Settings {
 	 * Callback function to render the file types allowed input field in the settings page.
 	 *
 	 * This function retrieves the allowed file types from the database, sanitizes the value,
-	 * and outputs an input field for users to modify it. It also includes a description 
+	 * and outputs an input field for users to modify it. It also includes a description
 	 * to guide users on how to format the input.
 	 *
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function file_types_allowed_callback(): void {
 		// Retrieve the allowed file types option from the database, defaulting to an empty string.
 		$file_types = get_option( 'easy_dragdrop_file_types_allowed', '' );
-		$file_types = is_string( $file_types ) ? sanitize_text_field( $file_types ) : ''; // Ensure it's a clean string
+		$file_types = is_string( $file_types ) ? sanitize_text_field( $file_types ) : '';
 
 		// Output the input field with proper escaping to prevent XSS.
 		printf(
 			'<input type="text" name="easy_dragdrop_file_types_allowed" value="%s">',
-			esc_attr( $file_types ) // Escape output to prevent XSS
+			esc_attr( $file_types )
 		);
 
 		// Output the description with proper escaping for security.
@@ -325,10 +374,13 @@ class Settings {
 
 	/**
 	 * Callback function to render the max file size setting field.
-	 * 
-	 * This function retrieves the max file size option from the database and 
+	 *
+	 * This function retrieves the max file size option from the database and
 	 * displays an input field along with a description. The value is sanitized
 	 * and properly escaped for security.
+	 *
+	 * @since 1.0.0
+	 * @return void
 	 */
 	public function max_file_size_callback(): void {
 		// Retrieve the max file size setting from the database, defaulting to the available max upload size.
@@ -340,7 +392,7 @@ class Settings {
 		// Output a number input field with proper escaping and value handling.
 		printf(
 			'<input type="number" name="easy_dragdrop_max_file_size" value="%d" min="1" step="1">',
-			esc_attr( $max_file_size ) // Escape for output safety.
+			esc_attr( $max_file_size )
 		);
 
 		// Display a help text for the input field.

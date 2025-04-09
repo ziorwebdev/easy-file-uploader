@@ -1,7 +1,19 @@
 <?php
-namespace ZIOR\DragDrop;
+/**
+ * Uploader class for the DragDrop File Uploader plugin.
+ *
+ * This class integrates the FilePond uploader with Elementor Pro forms,
+ * providing a seamless drag-and-drop upload experience in WordPress.
+ *
+ * @package    ZIOR\DragDrop
+ * @since      1.0.0
+ */
+
+namespace ZIOR\DragDrop\Classes;
 
 use ElementorPro\Modules\Forms\Classes;
+use function ZIOR\DragDrop\Functions\decrypt_data;
+use function ZIOR\DragDrop\Functions\get_default_max_file_size;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -9,10 +21,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Handles DragDrop uploader for WordPress.
+ * Handles drag-and-drop file uploads within Elementor Pro forms.
+ *
+ * @package    ZIOR\DragDrop
+ * @since      1.0.0
  */
 class Uploader {
-
 	/**
 	 * Singleton instance of the class.
 	 *
@@ -20,6 +34,11 @@ class Uploader {
 	 */
 	private static ?Uploader $instance = null;
 
+	/**
+	 * Path to the temporary file directory.
+	 *
+	 * @var string
+	 */
 	private ?string $temp_file_path = '';
 
 	/**
@@ -28,7 +47,7 @@ class Uploader {
 	 * @param string $folder Folder path.
 	 * @return bool True on success, false on failure.
 	 */
-	function delete_files( $folder ) {
+	private function delete_files( $folder ) {
 		global $wp_filesystem;
 
 		if ( ! isset( $wp_filesystem ) ) {
@@ -45,6 +64,8 @@ class Uploader {
 	 * This function extracts the uploaded file from the `$_FILES` superglobal.
 	 * Since it deals with file uploads, sanitation is not applied here.
 	 *
+	 * @since 1.0.0
+	 * @param array $files The uploaded files from the Elementor form.
 	 * @return array|bool The uploaded file array or false if no file is uploaded.
 	 */
 	private function get_uploaded_file( array $files ): array|bool {
@@ -59,8 +80,8 @@ class Uploader {
 		// Extract the file from the multidimensional $_FILES structure.
 		foreach ( $file_keys as $key ) {
 			$sanitize_callback = in_array( $key, array( 'name', 'type', 'tmp_name' ), true ) ? 'sanitize_text_field' : 'intval';
-			$file[ $key ] = is_array( $files[ $key ][ $field_name ] ) 
-				? $sanitize_callback( $files[ $key ][ $field_name ][0] ) 
+			$file[ $key ]      = is_array( $files[ $key ][ $field_name ] )
+				? $sanitize_callback( $files[ $key ][ $field_name ][0] )
 				: $sanitize_callback( $files[ $key ][ $field_name ] );
 		}
 
@@ -73,9 +94,9 @@ class Uploader {
 	 * This function applies the 'easy_dragdrop_validate_file_type' filter to allow
 	 * external modification of the validation logic.
 	 *
+	 * @since 1.0.0
 	 * @param array $file        File data array containing file details.
 	 * @param array $valid_types Array of allowed file types.
-	 * 
 	 * @return bool True if the file type is valid, false otherwise.
 	 */
 	private function is_valid_file_type( array $file, array $valid_types ): bool {
@@ -88,9 +109,9 @@ class Uploader {
 	 * This function applies the 'easy_dragdrop_validate_file_size' filter to allow
 	 * external modification of the validation logic.
 	 *
+	 * @since 1.0.0
 	 * @param array $file    File data array containing file details.
 	 * @param int   $max_size Maximum allowed file size in bytes.
-	 * 
 	 * @return bool True if the file size is valid, false otherwise.
 	 */
 	private function is_valid_file_size( array $file, int $max_size ): bool {
@@ -100,6 +121,7 @@ class Uploader {
 	/**
 	 * Safely move a file to avoid overwriting an existing file.
 	 *
+	 * @since 1.0.0
 	 * @param string $source      The source file path.
 	 * @param string $destination The destination file path.
 	 * @return string|false The new file path if successful, false on failure.
@@ -122,11 +144,11 @@ class Uploader {
 
 		while ( $wp_filesystem->exists( $new_destination ) ) {
 			$new_destination = sprintf( '%s/%s-%d%s', $dir, $filename, $counter, $extension );
-			$counter++;
+			++$counter; // Use pre-increment as per PHPCS.
 		}
 
 		if ( $wp_filesystem->move( $source, $new_destination ) ) {
-			// Set the file to be publicly readable
+			// Set the file to be publicly readable.
 			$wp_filesystem->chmod( $new_destination, 0644 );
 
 			return $new_destination;
@@ -139,6 +161,8 @@ class Uploader {
 	 * Constructor.
 	 *
 	 * Hooks into WordPress to enqueue scripts and styles.
+	 *
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		$this->temp_file_path = wp_upload_dir()['basedir'] . '/easy-dragdrop-uploader-temp';
@@ -147,7 +171,7 @@ class Uploader {
 		add_action( 'wp_ajax_nopriv_easy_dragdrop_upload', array( $this, 'handle_easy_dragdrop_upload' ), 10 );
 		add_action( 'wp_ajax_easy_dragdrop_remove', array( $this, 'handle_easy_dragdrop_remove' ), 10 );
 		add_action( 'wp_ajax_nopriv_easy_dragdrop_remove', array( $this, 'handle_easy_dragdrop_remove' ), 10 );
-		add_action( 'easy_dragdrop_process_field', array( $this, 'process_easy_dragdrop_field' ), 10, 3 );
+		add_action( 'easy_dragdrop_process_field', array( $this, 'process_easy_dragdrop_field' ), 10, 2 );
 
 		add_filter( 'easy_dragdrop_validate_file_type', array( $this, 'validate_file_type' ), 10, 3 );
 		add_filter( 'easy_dragdrop_validate_file_size', array( $this, 'validate_file_size' ), 10, 3 );
@@ -156,6 +180,7 @@ class Uploader {
 	/**
 	 * Retrieves the singleton instance of the class.
 	 *
+	 * @since 1.0.0
 	 * @return Uploader The single instance of the class.
 	 */
 	public static function get_instance(): Uploader {
@@ -172,6 +197,7 @@ class Uploader {
 	 * This function verifies the nonce for security, retrieves the file URL from the request,
 	 * converts it to the file path, and attempts to delete the file from the server.
 	 *
+	 * @since 1.0.0
 	 * @return void Outputs JSON response indicating success or failure.
 	 */
 	public function handle_easy_dragdrop_remove(): void {
@@ -202,9 +228,10 @@ class Uploader {
 	/**
 	 * Handles file uploads.
 	 *
-	 * This function verifies security checks, validates the uploaded file, 
+	 * This function verifies security checks, validates the uploaded file,
 	 * processes the file upload, and saves it to a custom directory.
 	 *
+	 * @since 1.0.0
 	 * @return void Outputs JSON response indicating success or failure.
 	 */
 	public function handle_easy_dragdrop_upload(): void {
@@ -220,8 +247,8 @@ class Uploader {
 		$uploaded_file = $this->get_uploaded_file( $files );
 
 		// Retrieve and validate file properties.
-		$secret_key  = sanitize_text_field( wp_unslash( $_POST['secret_key'] ?? '' ) );
-		$args        = decrypt_data( $secret_key );
+		$secret_key = sanitize_text_field( wp_unslash( $_POST['secret_key'] ?? '' ) );
+		$args       = decrypt_data( $secret_key );
 
 		$valid_types = explode( ',', $args['types'] ?? '' );
 
@@ -236,7 +263,7 @@ class Uploader {
 		if ( ! $this->is_valid_file_size( $uploaded_file, $file_max_size ) ) {
 			wp_send_json_error(
 				array(
-					'error' => get_option( 'easy_dragdrop_file_size_error', '' )
+					'error' => get_option( 'easy_dragdrop_file_size_error', '' ),
 				),
 				413
 			);
@@ -252,13 +279,13 @@ class Uploader {
 		if ( $this->move_file( $uploaded_file['tmp_name'], $temp_file_path . '/' . $uploaded_file['name'] ) ) {
 			wp_send_json_success(
 				array(
-					'file_id' => $unique_id . '/' . $uploaded_file['name']
+					'file_id' => $unique_id . '/' . $uploaded_file['name'],
 				)
 			);
 		} else {
 			wp_send_json_error(
 				array(
-					'error' => 'Failed to move uploaded file.'
+					'error' => 'Failed to move uploaded file.',
 				)
 			);
 		}
@@ -267,11 +294,11 @@ class Uploader {
 	/**
 	 * Processes the DragDrop field by moving files from the temporary directory to the upload directory.
 	 *
+	 * @since 1.0.0
 	 * @param array               $field         The field data.
 	 * @param Classes\Form_Record $record        The form record instance.
-	 * @param Classes\Ajax_Handler $ajax_handler The AJAX handler instance.
 	 */
-	public function process_easy_dragdrop_field( array $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ): void {
+	public function process_easy_dragdrop_field( array $field, Classes\Form_Record $record ): void {
 		$raw_values = (array) $field['raw_value']; // Ensure $raw_values is always an array.
 
 		if ( empty( $raw_values ) ) {
@@ -280,7 +307,8 @@ class Uploader {
 
 		$upload_dir  = wp_upload_dir();
 		$upload_path = apply_filters( 'easy_dragdrop_upload_path', $upload_dir['path'] );
-		$value_paths = $value_urls = [];
+		$value_urls  = array();
+		$value_paths = array();
 
 		foreach ( $raw_values as $unique_id ) {
 			if ( empty( $unique_id ) ) {
@@ -290,17 +318,19 @@ class Uploader {
 			$source      = $this->temp_file_path . '/' . $unique_id;
 			$destination = $upload_path . '/' . basename( $unique_id );
 
-			// Move file to upload directory
-			if ( $file_path = $this->move_file( $source, $destination ) ) {
+			// Move file to upload directory.
+			$file_path = $this->move_file( $source, $destination );
+
+			if ( $file_path ) {
 				$value_paths[] = $file_path;
 				$value_urls[]  = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file_path );
 			}
 
-			// Delete temporary folder containing the file
+			// Delete temporary folder containing the file.
 			$this->delete_files( dirname( $source ) );
 		}
 
-		// Store updated values in the record
+		// Store updated values in the record.
 		$record->update_field( $field['id'], 'value', implode( ', ', $value_urls ) );
 		$record->update_field( $field['id'], 'raw_value', implode( ', ', $value_paths ) );
 	}
@@ -308,6 +338,7 @@ class Uploader {
 	/**
 	 * Validate if the uploaded file size is within the allowed limit.
 	 *
+	 * @since 1.0.0
 	 * @param bool  $valid    Whether the file is already considered valid.
 	 * @param array $file     Uploaded file data from $_FILES.
 	 * @param int   $max_size Maximum allowed file size in bytes.
@@ -324,9 +355,10 @@ class Uploader {
 	/**
 	 * Validate if the uploaded file type is allowed.
 	 *
-	 * @param bool   $valid         Whether the file is already considered valid.
-	 * @param array  $file          Uploaded file data from $_FILES.
-	 * @param array  $allowed_types List of allowed MIME types (e.g., ['image/png', 'image/jpeg']).
+	 * @since 1.0.0
+	 * @param bool  $valid         Whether the file is already considered valid.
+	 * @param array $file          Uploaded file data from $_FILES.
+	 * @param array $allowed_types List of allowed MIME types (e.g., ['image/png', 'image/jpeg']).
 	 * @return bool True if the file type is valid, false otherwise.
 	 */
 	public function validate_file_type( bool $valid, array $file, array $allowed_types ): bool {
