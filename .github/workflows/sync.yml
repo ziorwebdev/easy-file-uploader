@@ -41,16 +41,26 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
           # Merge Free repo into PRO repo while always preferring Free's changes
-          git merge free/main --allow-unrelated-histories --strategy-option=theirs || (
-            git checkout --theirs .
-            git add .
-            git commit -m "Merged updates from easy-file-uploader/main into develop"
+          git merge free/main --allow-unrelated-histories --strategy=recursive --strategy-option=theirs || (
+            echo "Merge failed, resolving manually..."
+
+            # Use Free's versions for all conflicting files
+            git checkout --theirs . || true
+            git add . || true
+
+            # Handle rename conflict manually
+            rm -f languages/easy-dragdrop-file-uploader.pot languages/easy-file-uploader-pro.pot || true
+            git checkout --theirs languages/easy-file-uploader.pot || true
+            git add languages/easy-file-uploader.pot || true
+
+            # Commit the merge result
+            git commit -m "Merged updates from easy-file-uploader/main with conflict resolution preferring Free version" || true
           )
           
-          # Reset unwanted files before pushing
+          # Reset unwanted files/folders back to PRO version
           git checkout HEAD~1 -- .github languages .gitignore README.md composer.json easy-file-uploader.php package.json readme.txt webpack.config.js || true
 
-          # Ensure changes are staged and committed
+          # Stage and amend
           git add .
           git commit --amend --no-edit || echo "No changes to amend"
           
