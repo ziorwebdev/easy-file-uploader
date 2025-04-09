@@ -18,11 +18,11 @@ jobs:
   #   uses: ./.github/workflows/build.yml
   #   needs: [phpcs, eslint]
 
-  sync:
-    if: github.ref == 'refs/heads/main'
-    uses: ./.github/workflows/sync.yml
-    # needs: [phpcs, eslint]
-    secrets: inherit
+  # sync:
+  #   if: github.ref == 'refs/heads/main'
+  #   uses: ./.github/workflows/sync.yml
+  #   needs: [phpcs, eslint]
+  #   secrets: inherit
 
   package:
     if: github.ref == 'refs/heads/main'
@@ -32,4 +32,4 @@ jobs:
   release:
     if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/release.yml
-    # needs: package
+    needs: package

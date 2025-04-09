@@ -54,7 +54,7 @@ jobs:
           }' | jq . > updater.json
 
       - name: Upload Package Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: package
           path: |
