@@ -5,7 +5,7 @@
  * Description:  Enhances Elementor Pro Forms with a drag and drop uploader for seamless file uploads.
  * Author:       ZIORWeb.Dev
  * Author URI:   https://ziorweb.dev
- * Version:      1.0.0
+ * Version:      1.0.2
  * Requires PHP: 8.0
  * Requires WP:  6.0
  * License:      GPL-2.0-or-later
