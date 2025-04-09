@@ -7,21 +7,21 @@ on:
     branches: [main, develop]
 
 jobs:
-  # phpcs:
-  #   uses: ./.github/workflows/phpcs.yml
+  phpcs:
+    uses: ./.github/workflows/phpcs.yml
 
-  # eslint:
-  #   uses: ./.github/workflows/eslint.yml
+  eslint:
+    uses: ./.github/workflows/eslint.yml
 
   build:
     if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/build.yml
-    # needs: [phpcs, eslint]
+    needs: [phpcs, eslint]
 
   sync:
     if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/sync.yml
-    # needs: [phpcs, eslint]
+    needs: [phpcs, eslint]
     secrets: inherit
 
   package:
