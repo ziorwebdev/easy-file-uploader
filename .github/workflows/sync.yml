@@ -18,6 +18,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}
         run: |
+          # Debugging step to check the token
+          echo "GH_TOKEN is set to: ${{ secrets.PRO_REPO_PAT }}"  # Debugging, remove after testing
+
           # Clone the PRO repository
           git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/easy-file-uploader-pro.git pro-repo
           cd pro-repo
