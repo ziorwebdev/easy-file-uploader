@@ -41,8 +41,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Forcefully replace the PRO repository with the contents of Free repository (easy-file-uploader/main)
-          git reset --hard free/main
+          # Merge Free repo into PRO repo while always preferring Free's changes
+          git merge free/main --allow-unrelated-histories -X theirs || (
+            git checkout --theirs .  # Use Free's version for all conflicts
+            git add .
+            git commit -m "Merged updates from easy-file-uploader/main into develop"
+          )
 
-          # Push the forced update to the develop branch
-          git push origin develop --force
+          # Push the merged changes
+          git push origin develop
