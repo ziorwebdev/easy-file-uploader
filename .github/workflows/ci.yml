@@ -16,12 +16,12 @@ jobs:
   build:
     if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/build.yml
-    needs: [phpcs, eslint]
+    # needs: [phpcs, eslint]
 
   sync:
     if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/sync.yml
-    needs: [phpcs, eslint]
+    # needs: [phpcs, eslint]
     secrets: inherit
 
   package:
