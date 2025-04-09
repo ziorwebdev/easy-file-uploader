@@ -47,10 +47,9 @@ jobs:
             git commit -m "Merged updates from easy-file-uploader/main into develop"
           )
           
-          # Remove or reset unwanted files before pushing
-          rm -rf .github
-          git checkout HEAD~1 -- .gitignore README.md composer.json easy-file-uploader.php package.json readme.txt webpack.config.js || true
-          
+          # Reset unwanted files before pushing
+          git checkout HEAD~1 -- .github languages .gitignore README.md composer.json easy-file-uploader.php package.json readme.txt webpack.config.js || true
+
           # Ensure changes are staged and committed
           git add .
           git commit --amend --no-edit || echo "No changes to amend"
