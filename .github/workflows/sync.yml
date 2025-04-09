@@ -41,14 +41,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Attempt to merge with conflict resolution
+          # Merge Free repo into PRO repo while always preferring Free's changes
           git merge free/main --allow-unrelated-histories -X theirs || (
-            echo "Merge conflict detected. Resolving by forcing Free's version..."
-
-            # Forcefully take Free's version for all files, not just the conflicted ones
-            git checkout --theirs .  # This will checkout all files from free/main
+            git checkout --theirs .  # Use Free's version for all conflicts
             git add .
-            git commit -m "Forcefully resolved conflicts and merged updates from easy-file-uploader/main into develop"
+            git commit -m "Merged updates from easy-file-uploader/main into develop"
           )
 
           # Push the merged changes
