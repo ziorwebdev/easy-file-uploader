@@ -48,27 +48,13 @@ export default [
 			"no-multi-str": "error",
 			"no-empty": "error",
 			"no-continue": "error",
-			// "no-plusplus": "error",
 			"no-template-curly-in-string": "warn",
 			"dot-notation": "error",
-			// "yoda": ["error", "never"],
 
 			// Code Style
 			"arrow-spacing": ["error", { before: true, after: true }],
-			// "comma-dangle": ["error", "always-multiline"],
 			"consistent-return": "error",
 			"indent": ["error", 4], // Enforce 4-space indentation
-			// "max-len": [
-			// "error",
-			// {
-			// code: 80,
-			// tabWidth: 4,
-			// ignoreUrls: false,
-			// ignoreStrings: false,
-			// ignoreTemplateLiterals: false,
-			// ignoreComments: false,
-			// },
-			// ],
 			"object-curly-spacing": ["error", "always"],
 			"quotes": ["error", "double", { allowTemplateLiterals: true }],
 			"semi": ["error", "always"],
@@ -78,4 +64,4 @@ export default [
 			"prefer-template": "error",
 		},
 	},
-	];
+];
