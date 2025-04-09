@@ -1,9 +1,7 @@
 name: Merge Free Version into PRO Repository
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:  # Triggered manually or from another workflow
 
 jobs:
   sync:

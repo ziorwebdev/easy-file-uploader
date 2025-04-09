@@ -13,9 +13,15 @@ jobs:
   eslint:
     uses: ./.github/workflows/eslint.yml
 
-  # build:
-  #   uses: ./.github/workflows/build.yml
-  #   needs: [phpcs, eslint]
+  build:
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/build.yml
+    needs: [phpcs, eslint]
+
+  sync:
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/sync.yml
+    needs: [phpcs, eslint]
 
   # package:
   #   if: github.ref == 'refs/heads/main'
