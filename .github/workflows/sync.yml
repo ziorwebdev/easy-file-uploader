@@ -11,19 +11,18 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ZIORWebDev/easy-file-uploader
-          fetch-depth: 0  # Fetch full history
+          fetch-depth: 0
 
-      - name: Clone the PRO Repository
+      - name: Clone and Merge into PRO Repository
         env:
-          GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}  # Access the input value as an environment variable
+          GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}
         run: |
-          # Debugging step to check the token
-          echo "GH_TOKEN is set to: ${{ secrets.PRO_REPO_PAT }}"  # Debugging, remove after testing
+          echo "GH_TOKEN is set to: ${{ secrets.PRO_REPO_PAT }}"  # Optional debug, remove in production
 
           # Clone the PRO repository
           git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/easy-file-uploader-pro.git pro-repo
           cd pro-repo
-
+          
           # Fetch all branches to ensure develop exists
           git fetch origin
           if git show-ref --verify --quiet refs/remotes/origin/develop; then
@@ -32,36 +31,29 @@ jobs:
             git checkout -b develop
             git push origin develop
           fi
-
+          
           # Add Free repo as remote and fetch its main branch
           git remote add free https://github.com/ZIORWebDev/easy-file-uploader.git || echo "Remote already exists"
           git fetch free main
-
+          
           # Set Git user identity to avoid commit errors
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
+          
           # Merge Free repo into PRO repo while always preferring Free's changes
-          git merge free/main --allow-unrelated-histories -X theirs || (
-            git checkout --theirs .  # Use Free's version for all conflicts
-            git add .  # Stage all changes
+          git merge free/main --allow-unrelated-histories --strategy-option=theirs || (
+            git checkout --theirs .
+            git add .
+            git commit -m "Merged updates from easy-file-uploader/main into develop"
           )
-
-          # Exclude specific files and folders from being committed
-          # First, check the status to ensure we know what changes are staged
-          git status
-
-          # Reset the unwanted files and folders from the staging area
-          git reset .github languages webpack.config.js package.json easy-file-uploader.php composer.json composer.lock yarn.lock readme.txt README.md
-
-          # Now, remove them from the staged area (i.e., don't include in commit)
-          git restore --staged .github languages webpack.config.js package.json easy-file-uploader.php composer.json composer.lock yarn.lock readme.txt README.md
-
-          # After excluding, check the status again to confirm exclusion
-          git status
-
-          # Commit the merge excluding specified files
-          git commit -m "Merged updates from easy-file-uploader/main into develop, excluding specified files"
-
+          
+          # Remove or reset unwanted files before pushing
+          rm -rf .github
+          git checkout HEAD~1 -- .gitignore README.md composer.json easy-file-uploader.php package.json readme.txt webpack.config.js || true
+          
+          # Ensure changes are staged and committed
+          git add .
+          git commit --amend --no-edit || echo "No changes to amend"
+          
           # Push the merged changes
           git push origin develop
