@@ -1,9 +1,11 @@
 name: Merge Free Version into PRO Repository
 
 on:
-  push:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      PRO_REPO_PAT:
+        required: true
+        type: string
 
 jobs:
   sync:
@@ -18,7 +20,7 @@ jobs:
 
       - name: Clone the PRO Repository
         env:
-          GH_TOKEN: ${{ secrets.PRO_REPO_PAT }}
+          GH_TOKEN: ${{ inputs.PRO_REPO_PAT }}  # Use input parameter instead of secrets
         run: |
           # Clone the PRO repository
           git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/easy-file-uploader-pro.git pro-repo
