@@ -25,7 +25,7 @@ $(document).ready(function () {
 
         const submitButtonElement = $(this).closest("form").find("[type=\"submit\"]");
         const submitButtonText = getSubmitButtonText(submitButtonElement);
-        
+
         const dragDropInstance = createdragDropInstance($(this)[0], configuration);
         dragDropInstance.submitButtonElement =submitButtonElement;
         dragDropInstance.submitButtonText =submitButtonText;
@@ -53,10 +53,10 @@ $(document).ready(function () {
      */
     function getSubmitButtonText(submitButtonElement) {
         const submitButtonText = submitButtonElement.is("button")
-        ? (submitButtonElement.find(".elementor-button-text").text().trim() || submitButtonElement.text().trim())
-        : submitButtonElement.is("input")
-            ? submitButtonElement.val().trim()
-            : "";
+            ? (submitButtonElement.find(".elementor-button-text").text().trim() || submitButtonElement.text().trim())
+            : submitButtonElement.is("input")
+                ? submitButtonElement.val().trim()
+                : "";
 
         return submitButtonText;
     }
