@@ -9,7 +9,7 @@
  * @since      1.0.0
  */
 
-namespace ZIOR\DragDrop\Classes\Integrations;
+namespace ZIOR\DragDrop\Classes\Integrations\Fields;
 
 use ElementorPro\Modules\Forms\Fields\Field_Base;
 use Elementor\Controls_Manager;
@@ -63,6 +63,36 @@ class ElementorUploader extends Field_Base {
 		}
 
 		return $setting_fields;
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * Hooks into WordPress to enqueue scripts and styles.
+	 *
+	 * @since 1.0.0
+	 */
+	public function __construct() {
+		parent::__construct();
+
+		add_action( 'easy_dragdrop_processed_files', array( $this, 'process_easy_dragdrop_files' ), 10, 4 );
+	}
+
+	/**
+	 * Process the easy_dragdrop_upload field.
+	 *
+	 * @since 1.0.0
+	 * @param string $field_id The field ID.
+	 * @param array  $value_paths The field data.
+	 * @param array  $value_urls The field data.
+	 * @param mixed  $record The form record instance.
+	 */
+	public function process_easy_dragdrop_files( string $field_id, array $value_paths, array $value_urls, mixed $record ) {
+		// Store updated values in the record.
+		if ( $record ) {
+			$record->update_field( $field_id, 'value', implode( ', ', $value_urls ) );
+			$record->update_field( $field_id, 'raw_value', implode( ', ', $value_paths ) );
+		}
 	}
 
 	/**
@@ -260,7 +290,13 @@ class ElementorUploader extends Field_Base {
 	 * @param Classes\Ajax_Handler $ajax_handler The AJAX handler instance.
 	 */
 	public function process_field( $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
+		$raw_values = ! is_array( $field['raw_value'] ) ? array( $field['raw_value'] ) : $field['raw_value'];
+
+		if ( empty( $raw_values[0] ) ) {
+			return;
+		}
+
 		// Allow other developers to process the field values.
-		do_action( 'easy_dragdrop_process_field', $field, $record, $ajax_handler );
+		do_action( 'easy_dragdrop_process_field', $field['id'], $raw_values, $record );
 	}
 }

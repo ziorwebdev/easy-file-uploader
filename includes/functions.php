@@ -45,6 +45,7 @@ function get_allowed_html(): array {
 			'data-filetypes' => array(),
 			'data-label'     => array(),
 			'data-maxfiles'  => array(),
+			'multiple'       => array(),
 		),
 	);
 
