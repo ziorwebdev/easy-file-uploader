@@ -4,15 +4,15 @@ Tags: file upload, elementor, dragdrop, drag and drop, ajax upload
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.0
-Stable tag: 1.0.2
+Stable tag: 1.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html  
 
-Adds a drag and drop uploader field to Elementor Pro Forms for seamless file uploads.
+Enhances Elementor Pro Forms and Contact Form 7 with a drag and drop uploader for seamless file uploads.
 
 == Description ==
 
-**Easy DragDrop File Uploader** is a WordPress plugin that integrates a drag and drop uploader with Elementor Pro Forms, allowing seamless file uploads with advanced features like image previews, drag-and-drop, and asynchronous uploads.
+**Easy DragDrop File Uploader** is a WordPress plugin that integrates a drag and drop uploader with Elementor Pro Forms and Contact Form 7 (CF7), allowing seamless file uploads with advanced features like image previews, drag-and-drop, and asynchronous uploads.
 
 ### **Key Features**
 - **Drag & Drop Uploads** – Simplifies file uploads with an intuitive UI.
@@ -29,8 +29,8 @@ Adds a drag and drop uploader field to Elementor Pro Forms for seamless file upl
 
 == Frequently Asked Questions ==
 
-= Does this work without Elementor Pro? =  
-No, Elementor Pro is required because this plugin extends its form module.
+= What forms are supported by the Easy DragDrop File Uploader? =  
+Easy DragDrop File Uploader currently supports Elementor Pro Forms and Contact Form 7 (CF7).
 
 = Where are uploaded files stored? =  
 By default, uploaded files are stored in the WordPress uploads directory.
