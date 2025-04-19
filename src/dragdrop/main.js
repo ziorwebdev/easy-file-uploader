@@ -48,11 +48,11 @@ function encryptData(data) {
 }
 
 /**
- * Generates the FilePond configuration with security settings.
+ * Generates the DragDrop configuration with security settings.
  * @param {object} configuration - The configuration object containing settings like maxFileSize and acceptedFileTypes.
- * @returns {object} The modified FilePond configuration.
+ * @returns {object} The modified DragDrop configuration.
  */
-function getFilePondConfiguration(configuration) {
+function getDragDropConfiguration(configuration) {
     const secretKey = encryptData({
         size: convertToBytes(configuration.maxFileSize),
         types: configuration.acceptedFileTypes.join(",")
@@ -94,14 +94,15 @@ function getFilePondConfiguration(configuration) {
 }
 
 /**
- * Creates a FilePond instance for a given file input element.
+ * Creates a DragDrop instance for a given file input element.
  * @param {HTMLElement} fileInput - The file input element.
  * @param {object} [configuration] - Optional configuration settings.
- * @returns {object} The created FilePond instance.
+ * @returns {object} The created DragDrop instance.
  */
-function createFilePondInstance(fileInput, configuration = {}) {
-    const FilePondConfiguration = getFilePondConfiguration(configuration);
-    return create(fileInput, FilePondConfiguration);
+function createDragDropInstance(fileInput, configuration = {}) {
+    const DragDropConfiguration = getDragDropConfiguration(configuration);
+
+    return create(fileInput, DragDropConfiguration);
 }
 
-export default createFilePondInstance;
+export default createDragDropInstance;

@@ -131,6 +131,8 @@ class Settings {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
+		add_action( 'easy_dragdrop_settings_after', array( $this, 'render_marketing_card' ) );
+
 		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_settings_link' ) );
 	}
 
@@ -234,6 +236,19 @@ class Settings {
 				);
 			}
 		}
+	}
+
+	/**
+	 * Renders the marketing card template.
+	 *
+	 * This function loads the marketing card template file from the 'pro/views' directory.
+	 * It uses load_template() to ensure proper inclusion within the WordPress ecosystem.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function render_marketing_card(): void {
+		load_template( ZIOR_DRAGDROP_PLUGIN_DIR . 'views/marketing.php', false );
 	}
 
 	/**
