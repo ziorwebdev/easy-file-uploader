@@ -9,7 +9,7 @@
  * @since      1.0.0
  */
 
-namespace ZIOR\DragDrop\Classes;
+namespace ZIOR\DragDrop\Classes\Integrations;
 
 use ElementorPro\Modules\Forms\Classes;
 use function ZIOR\DragDrop\Functions\decrypt_data;
@@ -171,7 +171,7 @@ class Uploader {
 		add_action( 'wp_ajax_nopriv_easy_dragdrop_upload', array( $this, 'handle_easy_dragdrop_upload' ), 10 );
 		add_action( 'wp_ajax_easy_dragdrop_remove', array( $this, 'handle_easy_dragdrop_remove' ), 10 );
 		add_action( 'wp_ajax_nopriv_easy_dragdrop_remove', array( $this, 'handle_easy_dragdrop_remove' ), 10 );
-		add_action( 'easy_dragdrop_process_field', array( $this, 'process_easy_dragdrop_field' ), 10, 2 );
+		add_filter( 'easy_dragdrop_process_field', array( $this, 'process_easy_dragdrop_field' ), 10, 3 );
 
 		add_filter( 'easy_dragdrop_validate_file_type', array( $this, 'validate_file_type' ), 10, 3 );
 		add_filter( 'easy_dragdrop_validate_file_size', array( $this, 'validate_file_size' ), 10, 3 );
@@ -295,14 +295,14 @@ class Uploader {
 	 * Processes the DragDrop field by moving files from the temporary directory to the upload directory.
 	 *
 	 * @since 1.0.0
-	 * @param array               $field         The field data.
-	 * @param Classes\Form_Record $record        The form record instance.
+	 * @param string $field_id The field ID.
+	 * @param array  $files The field data.
+	 * @param mixed  $record The form record instance.
+	 * @return array The processed files.
 	 */
-	public function process_easy_dragdrop_field( array $field, Classes\Form_Record $record ): void {
-		$raw_values = (array) $field['raw_value']; // Ensure $raw_values is always an array.
-
-		if ( empty( $raw_values ) ) {
-			return;
+	public function process_easy_dragdrop_field( $field_id, array $files, mixed $record = null ): array {
+		if ( empty( $files ) ) {
+			return array();
 		}
 
 		$upload_dir  = wp_upload_dir();
@@ -310,7 +310,7 @@ class Uploader {
 		$value_urls  = array();
 		$value_paths = array();
 
-		foreach ( $raw_values as $unique_id ) {
+		foreach ( $files as $unique_id ) {
 			if ( empty( $unique_id ) ) {
 				continue;
 			}
@@ -330,9 +330,10 @@ class Uploader {
 			$this->delete_files( dirname( $source ) );
 		}
 
-		// Store updated values in the record.
-		$record->update_field( $field['id'], 'value', implode( ', ', $value_urls ) );
-		$record->update_field( $field['id'], 'raw_value', implode( ', ', $value_paths ) );
+		// Allow other developers to do something with the processed files.
+		do_action( 'easy_dragdrop_processed_files', $field_id, $value_paths, $value_urls, $record );
+
+		return $value_urls;
 	}
 
 	/**

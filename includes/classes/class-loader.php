@@ -12,9 +12,9 @@
 namespace ZIOR\DragDrop\Classes;
 
 use ZIOR\DragDrop\Classes\Assets;
-use ZIOR\DragDrop\Classes\Register;
+use ZIOR\DragDrop\Classes\Integrations\Register;
 use ZIOR\DragDrop\Classes\Settings;
-use ZIOR\DragDrop\Classes\Uploader as UploaderClass;
+use ZIOR\DragDrop\Classes\Integrations\Uploader as UploaderClass;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -70,10 +70,11 @@ class Loader {
 
 				$classes = array(
 					'Assets'            => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-assets.php',
-					'ElementorUploader' => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/class-elementoruploader.php',
-					'Register'          => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-register.php',
+					'ElementorUploader' => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/fields/class-elementoruploader.php',
+					'CF7Uploader'       => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/fields/class-cf7uploader.php',
+					'Register'          => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/class-register.php',
 					'Settings'          => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-settings.php',
-					'Uploader'          => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-uploader.php',
+					'Uploader'          => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/class-uploader.php',
 				);
 
 				$class_name = explode( '\\', $class_path );

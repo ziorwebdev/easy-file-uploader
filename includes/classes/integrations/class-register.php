@@ -9,9 +9,10 @@
  * @since      1.0.0
  */
 
-namespace ZIOR\DragDrop\Classes;
+namespace ZIOR\DragDrop\Classes\Integrations;
 
-use ZIOR\DragDrop\Classes\Integrations\ElementorUploader;
+use ZIOR\DragDrop\Classes\Integrations\Fields\ElementorUploader;
+use ZIOR\DragDrop\Classes\Integrations\Fields\CF7Uploader;
 use ElementorPro\Modules\Forms\Classes\Fields;
 use ElementorPro\Modules\Forms\Registrars\Form_Fields_Registrar;
 
@@ -43,7 +44,16 @@ class Register {
 	 * @return void
 	 */
 	public function __construct() {
+		/**
+		 * Register Elementor form fields
+		 */
 		add_action( 'elementor_pro/forms/fields/register', array( $this, 'register_elementor_form_fields' ), 10 );
+
+		/**
+		 * Register CF7 form fields
+		 */
+		$cf7_uploader = CF7Uploader::get_instance();
+		add_action( 'wpcf7_init', array( $cf7_uploader, 'register' ), 10 );
 	}
 
 	/**

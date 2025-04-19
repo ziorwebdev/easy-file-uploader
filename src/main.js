@@ -1,8 +1,6 @@
 import createdragDropInstance from "./dragdrop/main.js";
 
 $(document).ready(function () {
-    const submitButton = $("form").find(".elementor-field-type-submit .elementor-button");
-    const submitButtonText = $(submitButton).find(".elementor-button-text").text();
     const dragDropInstances = new Map();
     const dragDropUploaderFields = $(".easy-dragdrop-upload");
     const dragDropUploader = EasyDragDropUploader || {};
@@ -25,13 +23,19 @@ $(document).ready(function () {
             }
         }
 
+        const submitButtonElement = $(this).closest("form").find("[type=\"submit\"]");
+        const submitButtonText = getSubmitButtonText(submitButtonElement);
+
         const dragDropInstance = createdragDropInstance($(this)[0], configuration);
+        dragDropInstance.submitButtonElement =submitButtonElement;
+        dragDropInstance.submitButtonText =submitButtonText;
 
         /**
          * Update the submit button when a file is added or processed
          */
-        dragDropInstance.on("addfile", updateSubmitButton);
-        dragDropInstance.on("processfiles", updateSubmitButton);
+        dragDropInstance.on("addfile", updateSubmitButton.bind(dragDropInstance));
+        dragDropInstance.on("processfiles", updateSubmitButton.bind(dragDropInstance));
+
         /**
          * Raised event when a FilePond instance is created
          * @event easy_dragdrop_instance_created
@@ -41,6 +45,39 @@ $(document).ready(function () {
 
         dragDropInstances.set(this, dragDropInstance);
     });
+
+    /**
+     * Get the text of the submit button
+     * @param {jQuery} submitButtonElement - The jQuery object representing the submit button
+     * @returns {string} The text of the submit button
+     */
+    function getSubmitButtonText(submitButtonElement) {
+        const submitButtonText = submitButtonElement.is("button")
+            ? (submitButtonElement.find(".elementor-button-text").text().trim() || submitButtonElement.text().trim())
+            : submitButtonElement.is("input")
+                ? submitButtonElement.val().trim()
+                : "";
+
+        return submitButtonText;
+    }
+
+    /**
+     * Set the text of the submit button
+     * @param {jQuery} submitButtonElement - The jQuery object representing the submit button
+     * @param {string} submitButtonText - The text to set on the submit button
+     */
+    function setSubmitButtonText(submitButtonElement, submitButtonText) {
+        if ($(submitButtonElement).is("input")) {
+            $(submitButtonElement).val(submitButtonText);
+        } else {
+            const $textSpan = $(submitButtonElement).find(".elementor-button-text");
+            if ($textSpan.length) {
+                $textSpan.text(submitButtonText);
+            } else {
+                $(submitButtonElement).text(submitButtonText);
+            }
+        }
+    }
 
     /**
      * Checks if any FilePond instance is uploading
@@ -66,17 +103,19 @@ $(document).ready(function () {
      * Update the submit button when a file is added or processed
      */
     function updateSubmitButton() {
+        const submitButtonText = $(this)[0].submitButtonText;
+        const submitButtonElement = $(this)[0].submitButtonElement;
         const isUploading = hasUploadingInstances();
 
         // If isUploading or this current the current instance, disable the submit button
         if (isUploading) {
-            $(submitButton).addClass("easy-dragdrop-upload-button--disabled");
-            $(submitButton).prop("disabled", isUploading);
-            $(submitButton).find(".elementor-button-text").text("Uploading...");
+            $(submitButtonElement).addClass("easy-dragdrop-upload-button--disabled");
+            $(submitButtonElement).prop("disabled", isUploading);
+            setSubmitButtonText(submitButtonElement, "Uploading...");
         } else {
-            $(submitButton).removeClass("easy-dragdrop-upload-button--disabled");
-            $(submitButton).prop("disabled", false);
-            $(submitButton).find(".elementor-button-text").text(submitButtonText);
+            $(submitButtonElement).removeClass("easy-dragdrop-upload-button--disabled");
+            $(submitButtonElement).prop("disabled", false);
+            setSubmitButtonText(submitButtonElement, submitButtonText);
         }
     }
 
