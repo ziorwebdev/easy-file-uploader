@@ -1,6 +1,8 @@
-import createFilePondInstance from "./dragdrop/main.js";
+import createdragDropInstance from "./dragdrop/main.js";
 
-$(document).ready(function() {
+$(document).ready(function () {
+    const submitButton = $("form").find(".elementor-field-type-submit .elementor-button");
+    const submitButtonText = $(submitButton).find(".elementor-button-text").text();
     const dragDropInstances = new Map();
     const dragDropUploaderFields = $(".easy-dragdrop-upload");
     const dragDropUploader = EasyDragDropUploader || {};
@@ -23,17 +25,60 @@ $(document).ready(function() {
             }
         }
 
-        const filePondInstance = createFilePondInstance($(this)[0], configuration);
+        const dragDropInstance = createdragDropInstance($(this)[0], configuration);
 
+        /**
+         * Update the submit button when a file is added or processed
+         */
+        dragDropInstance.on("addfile", updateSubmitButton);
+        dragDropInstance.on("processfiles", updateSubmitButton);
         /**
          * Raised event when a FilePond instance is created
          * @event easy_dragdrop_instance_created
          * @property {object} filePondInstance - The created FilePond instance
          */
-        $(document).trigger("easy_dragdrop_instance_created", filePondInstance);
+        $(document).trigger("easy_dragdrop_instance_created", dragDropInstance);
 
-        dragDropInstances.set(this, filePondInstance);
+        dragDropInstances.set(this, dragDropInstance);
     });
+
+    /**
+     * Checks if any FilePond instance is uploading
+     * @returns {boolean} True if any instance is uploading, false otherwise
+     */
+    function hasUploadingInstances() {
+        for (const value of dragDropInstances.values()) {
+            const files = value.getFiles();
+            if (
+                files.some(file =>
+                    file.status !== 5 &&
+                    ![6, 8, 10].includes(file.status)
+                )
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Update the submit button when a file is added or processed
+     */
+    function updateSubmitButton() {
+        const isUploading = hasUploadingInstances();
+
+        // If isUploading or this current the current instance, disable the submit button
+        if (isUploading) {
+            $(submitButton).addClass("easy-dragdrop-upload-button--disabled");
+            $(submitButton).prop("disabled", isUploading);
+            $(submitButton).find(".elementor-button-text").text("Uploading...");
+        } else {
+            $(submitButton).removeClass("easy-dragdrop-upload-button--disabled");
+            $(submitButton).prop("disabled", false);
+            $(submitButton).find(".elementor-button-text").text(submitButtonText);
+        }
+    }
 
     /**
      * Clears all FilePond instances when an Elementor form submission is successful.

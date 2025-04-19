@@ -4,3 +4,9 @@
     width: 100%;
     display: block;
 }
+
+.easy-dragdrop-upload-button--disabled {
+    background-color: #eee !important;
+    color: #999 !important;
+    cursor: not-allowed;
+}
