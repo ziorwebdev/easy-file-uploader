@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="wrap">
 	<h2><?php esc_html_e( 'Easy DragDrop File Uploader Settings', 'easy-file-uploader' ); ?></h2>
-	<div class="dragdrop-settings-container">
+	<div class="easy-dragdrop-settings-container">
 		<form method="post" action="options.php">
 			<?php
 			settings_fields( $args['options_group'] );
@@ -23,3 +23,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php do_action( 'easy_dragdrop_settings_after' ); ?>
 	</div>
 </div>
+
