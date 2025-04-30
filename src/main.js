@@ -128,6 +128,15 @@ $(document).ready(function () {
     $(document).on("submit_success", function() {
         dragDropInstances.forEach((instance) => instance.removeFiles());
     });
+
+    /**
+     * Clears all FilePond instances when a CF7 form is successfully submitted.
+     * @event wpcf7mailsent
+     * @param {Event} event - The event object
+     */
+    $(document).on("wpcf7mailsent", function(event) {
+        dragDropInstances.forEach((instance) => instance.removeFiles());
+    });
 });
 
 /**
