@@ -52,6 +52,10 @@ This plugin uses the [FilePond](https://pqina.nl/filepond/) library to handle fi
 
 == Changelog ==
 
+= 1.1.0 =
+- Integrate DragDrop with CF7 Form.
+- Improve FAQ.
+
 = 1.0.2 =
 - Initial release.
 - Integrated DragDrop with Elementor Pro Forms.
