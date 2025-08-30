@@ -44,7 +44,7 @@
 ### Q: Where are the uploaded files stored?  
 **A:** Files are stored in the WordPress Media Library or a custom directory, based on your settings.
 
-### Q: Can I restrict allowed file types?  
+### Q: Can I restrict the allowed file types??  
 **A:** Yes, you can configure allowed file types in the **plugin settings**.
 
 ## Contributing

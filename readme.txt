@@ -35,7 +35,7 @@ Easy DragDrop File Uploader currently supports Elementor Pro Forms and Contact F
 = Where are uploaded files stored? =  
 By default, uploaded files are stored in the WordPress uploads directory.
 
-= Can I restrict file types? =  
+= Can I restrict the allowed file types? =  
 Yes, you can set allowed file types in the plugin settings.
 
 = Where can I find the full source code of this plugin? =  
