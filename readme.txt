@@ -1,8 +1,8 @@
 === Easy DragDrop File Uploader ===
 Contributors: reygcalantaol  
-Tags: file upload, elementor, dragdrop, drag and drop, ajax upload  
+Tags: file upload, elementor, dragdrop, drag and drop, ajax upload
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 6.8.2
 Requires PHP: 8.0
 Stable tag: 1.1.0
 License: GPL-2.0-or-later
@@ -20,6 +20,7 @@ Enhances Elementor Pro Forms and Contact Form 7 with a drag and drop uploader fo
 - **Secure Upload Handling** – Adheres to WordPress security best practices.
 - **Customizable Settings** – Configure file size limits, allowed file types, and more.
 - **Styled for Elementor** – Seamlessly integrates with Elementor Pro Forms.
+- **Forms Supported** – Elementor Pro Form and Contact Form 7 (CF7). Get <a href="#" target="_blank">pro</a> version for additional supported forms.
 
 == Installation ==
 

@@ -144,7 +144,7 @@ class Uploader {
 
 		while ( $wp_filesystem->exists( $new_destination ) ) {
 			$new_destination = sprintf( '%s/%s-%d%s', $dir, $filename, $counter, $extension );
-			++$counter; // Use pre-increment as per PHPCS.
+			++$counter;
 		}
 
 		if ( $wp_filesystem->move( $source, $new_destination ) ) {
@@ -160,11 +160,12 @@ class Uploader {
 	/**
 	 * Constructor.
 	 *
-	 * Hooks into WordPress to enqueue scripts and styles.
+	 * Hooks into the uploader.
 	 *
 	 * @since 1.0.0
 	 */
 	public function __construct() {
+		// Set the temporary file path.
 		$this->temp_file_path = wp_upload_dir()['basedir'] . '/easy-dragdrop-uploader-temp';
 
 		add_action( 'wp_ajax_easy_dragdrop_upload', array( $this, 'handle_easy_dragdrop_upload' ), 10 );
@@ -272,17 +273,25 @@ class Uploader {
 		}
 
 		$unique_id      = wp_generate_uuid4();
-		$temp_file_path = $this->temp_file_path . '/' . $unique_id;
+		$temp_file_path = apply_filters( 'easy_dragdrop_temp_file_path', $this->temp_file_path . '/' . $unique_id );
 
 		wp_mkdir_p( $temp_file_path );
 
 		if ( $this->move_file( $uploaded_file['tmp_name'], $temp_file_path . '/' . $uploaded_file['name'] ) ) {
+			// Let other developers to do something with the uploaded file.
+			do_action( 'easy_dragdrop_upload_success', $uploaded_file, $temp_file_path );
+
+			// Send the success response.
 			wp_send_json_success(
 				array(
 					'file_id' => $unique_id . '/' . $uploaded_file['name'],
 				)
 			);
 		} else {
+			// Let other developers to do something with the error.
+			do_action( 'easy_dragdrop_upload_failure', $uploaded_file, $temp_file_path );
+
+			// Send the error response.
 			wp_send_json_error(
 				array(
 					'error' => 'Failed to move uploaded file.',

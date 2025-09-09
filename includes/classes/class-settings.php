@@ -165,8 +165,8 @@ class Settings {
 	 */
 	public function add_settings_page(): void {
 		add_options_page(
-			__( 'Easy DragDrop Uploader', 'easy-file-uploader' ),
-			__( 'Easy DragDrop Uploader', 'easy-file-uploader' ),
+			__( 'Easy DragDrop File Uploader', 'easy-file-uploader' ),
+			__( 'Easy DragDrop File Uploader', 'easy-file-uploader' ),
 			'manage_options',
 			'easy-file-uploader',
 			array( $this, 'render_settings_page' ),

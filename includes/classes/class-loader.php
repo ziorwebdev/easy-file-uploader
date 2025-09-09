@@ -70,8 +70,8 @@ class Loader {
 
 				$classes = array(
 					'Assets'            => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-assets.php',
-					'ElementorUploader' => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/fields/class-elementoruploader.php',
 					'CF7Uploader'       => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/fields/class-cf7uploader.php',
+					'ElementorUploader' => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/fields/class-elementoruploader.php',
 					'Register'          => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/class-register.php',
 					'Settings'          => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-settings.php',
 					'Uploader'          => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/class-uploader.php',

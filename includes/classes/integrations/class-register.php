@@ -45,15 +45,18 @@ class Register {
 	 */
 	public function __construct() {
 		/**
-		 * Register Elementor form fields
+		 * Register Elementor form pro dragdrop uploader field
 		 */
 		add_action( 'elementor_pro/forms/fields/register', array( $this, 'register_elementor_form_fields' ), 10 );
 
 		/**
-		 * Register CF7 form fields
+		 * Register CF7 form pro dragdrop uploader field
 		 */
 		$cf7_uploader = CF7Uploader::get_instance();
 		add_action( 'wpcf7_init', array( $cf7_uploader, 'register' ), 10 );
+
+		// Let other developers to register their own uploader.
+		do_action( 'zior_dragdrop_register_uploader' );
 	}
 
 	/**
