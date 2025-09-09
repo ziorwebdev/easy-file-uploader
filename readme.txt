@@ -53,6 +53,11 @@ This plugin uses the [FilePond](https://pqina.nl/filepond/) library to handle fi
 
 == Changelog ==
 
+= 1.1.2 =
+- Path form-data to 4.0.4
+- Added filter hook "easy_dragdrop_temp_file_path",
+- Added action hook "easy_dragdrop_upload_failure"
+
 = 1.1.0 =
 - Integrate DragDrop with CF7 Form.
 - Improve FAQ.
