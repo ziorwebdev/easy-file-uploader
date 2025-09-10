@@ -306,7 +306,7 @@ class Uploader {
 	 *
 	 * @since 1.0.0
 	 * @param array $field The field data.
-	 * @param mixed  $record The form record instance.
+	 * @param mixed $record The form record instance.
 	 * @return array The processed files.
 	 */
 	public function process_field( array $field, mixed $record = null ): array {

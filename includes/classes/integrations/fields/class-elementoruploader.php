@@ -50,7 +50,7 @@ class ElementorUploader extends Field_Base {
 	 * Process the easy_dragdrop_upload field.
 	 *
 	 * @since 1.0.0
-	 * @param array $field The field data.
+	 * @param array  $field The field data.
 	 * @param string $value_paths The field data.
 	 * @param array  $value_urls The field data.
 	 * @param mixed  $record The form record instance.
@@ -180,7 +180,7 @@ class ElementorUploader extends Field_Base {
 		);
 
 		// Allow developers to modify the field controls.
-		$field_controls = apply_filters( 'easy_dragdrop_elementor_field_controls', $control_data['fields'], $this->get_type() );
+		$field_controls         = apply_filters( 'easy_dragdrop_elementor_field_controls', $control_data['fields'], $this->get_type() );
 		$control_data['fields'] = $this->inject_field_controls( $field_controls, $custom_controls );
 
 		$widget->update_control( 'form_fields', $control_data );
@@ -274,7 +274,5 @@ class ElementorUploader extends Field_Base {
 
 		// Allow other developers to process the field values.
 		$files = apply_filters( 'easy_dragdrop_process_field', $field, $record );
-
-		return;
 	}
 }

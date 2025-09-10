@@ -94,8 +94,8 @@ class CF7Uploader {
 	 * Process the easy_dragdrop_upload field.
 	 *
 	 * @since 1.0.0
-	 * @param array $posted_data The posted data.
-	 * @param string $value_orig The original value.
+	 * @param array  $posted_data The posted form submission data to be processed.
+	 * @param string $value_orig  The raw field value before any sanitization or transformation.
 	 * @return array The processed posted data.
 	 */
 	public function set_posted_data( array $posted_data ): array {
