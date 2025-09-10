@@ -34,38 +34,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class ElementorUploader extends Field_Base {
 
 	/**
-	 * Retrieves easy dragdrop fields from the given field array and sets the 'attachment_type'.
-	 *
-	 * This function filters the provided fields array to return only those with
-	 * 'field_type' set to 'easy-dragdrop-upload'. Additionally, it assigns the value
-	 * of 'easy_dragdrop_attachment_type' to 'attachment_type' if it exists.
-	 *
-	 * @param array $fields The array of form fields.
-	 * @return array The filtered array containing only DragDrop fields with updated 'attachment_type'.
-	 */
-	private function get_option_setting_fields( array $fields ): array {
-		$setting_fields = array();
-
-		foreach ( $fields as $field ) {
-			// Ensure the field is a dragdrop upload field.
-			if ( ! isset( $field['field_type'] ) || 'easy-dragdrop-upload' !== $field['field_type'] ) {
-				$setting_fields[] = $field;
-
-				continue;
-			}
-
-			// Set 'attachment_type' to 'easy_dragdrop_attachment_type' if it exists.
-			if ( isset( $field['easy_dragdrop_attachment_type'] ) ) {
-				$field['attachment_type'] = $field['easy_dragdrop_attachment_type'];
-			}
-
-			$dragdrop_fields[] = $field;
-		}
-
-		return $setting_fields;
-	}
-
-	/**
 	 * Constructor.
 	 *
 	 * Hooks into WordPress to enqueue scripts and styles.
@@ -75,24 +43,28 @@ class ElementorUploader extends Field_Base {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'easy_dragdrop_processed_files', array( $this, 'process_easy_dragdrop_files' ), 10, 4 );
+		add_action( 'easy_dragdrop_process_files', array( $this, 'process_files' ), 10, 4 );
 	}
 
 	/**
 	 * Process the easy_dragdrop_upload field.
 	 *
 	 * @since 1.0.0
-	 * @param string $field_id The field ID.
-	 * @param array  $value_paths The field data.
+	 * @param array $field The field data.
+	 * @param string $value_paths The field data.
 	 * @param array  $value_urls The field data.
 	 * @param mixed  $record The form record instance.
 	 */
-	public function process_easy_dragdrop_files( string $field_id, array $value_paths, array $value_urls, mixed $record ) {
-		// Store updated values in the record.
-		if ( $record ) {
-			$record->update_field( $field_id, 'value', implode( ', ', $value_urls ) );
-			$record->update_field( $field_id, 'raw_value', implode( ', ', $value_paths ) );
+	public function process_files( array $field, string $value_paths, array $value_urls, mixed $record = null ) {
+		if ( ! $record ) {
+			return;
 		}
+
+		$field_id = $field['id'];
+
+		// Store updated values in the record.
+		$record->update_field( $field_id, 'value', implode( ', ', $value_urls ) );
+		$record->update_field( $field_id, 'raw_value', $value_paths );
 	}
 
 	/**
@@ -150,7 +122,7 @@ class ElementorUploader extends Field_Base {
 		}
 
 		$default_max_file_size = get_default_max_file_size();
-		$field_controls        = array(
+		$custom_controls       = array(
 			'easy_dragdrop_max_file_size'         => array(
 				'name'         => 'easy_dragdrop_max_file_size',
 				'label'        => esc_html__( 'Max. File Size', 'easy-file-uploader' ),
@@ -207,7 +179,9 @@ class ElementorUploader extends Field_Base {
 			),
 		);
 
-		$control_data['fields'] = $this->inject_field_controls( $control_data['fields'], $field_controls );
+		// Allow developers to modify the field controls.
+		$field_controls = apply_filters( 'easy_dragdrop_elementor_field_controls', $control_data['fields'], $this->get_type() );
+		$control_data['fields'] = $this->inject_field_controls( $field_controls, $custom_controls );
 
 		$widget->update_control( 'form_fields', $control_data );
 	}
@@ -289,14 +263,18 @@ class ElementorUploader extends Field_Base {
 	 * @param Classes\Form_Record  $record       The form record instance.
 	 * @param Classes\Ajax_Handler $ajax_handler The AJAX handler instance.
 	 */
-	public function process_field( $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ) {
-		$raw_values = ! is_array( $field['raw_value'] ) ? array( $field['raw_value'] ) : $field['raw_value'];
+	public function process_field( mixed $field, Classes\Form_Record $record, Classes\Ajax_Handler $ajax_handler ): void {
+		if ( ! $field ) {
+			return;
+		}
 
-		if ( empty( $raw_values[0] ) ) {
+		if ( empty( $field['raw_value'] ) || ( is_array( $field['raw_value'] ) && count( $field['raw_value'] ) === 0 ) ) {
 			return;
 		}
 
 		// Allow other developers to process the field values.
-		do_action( 'easy_dragdrop_process_field', $field['id'], $raw_values, $record );
+		$files = apply_filters( 'easy_dragdrop_process_field', $field, $record );
+
+		return;
 	}
 }

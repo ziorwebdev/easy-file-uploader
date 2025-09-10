@@ -87,7 +87,7 @@ class CF7Uploader {
 
 		add_filter( 'wpcf7_mail_tag_replaced_easy_dragdrop_upload', array( $this, 'replace_easy_dragdrop_upload_mail_tag' ), 10, 4 );
 		add_filter( 'wpcf7_mail_tag_replaced_easy_dragdrop_upload*', array( $this, 'replace_easy_dragdrop_upload_mail_tag' ), 10, 4 );
-		add_filter( 'wpcf7_posted_data', array( $this, 'set_posted_data' ), 10, 3 );
+		add_filter( 'wpcf7_posted_data', array( $this, 'set_posted_data' ), 20 );
 	}
 
 	/**
@@ -95,16 +95,22 @@ class CF7Uploader {
 	 *
 	 * @since 1.0.0
 	 * @param array $posted_data The posted data.
+	 * @param string $value_orig The original value.
 	 * @return array The processed posted data.
 	 */
-	public function set_posted_data( $posted_data ) {
+	public function set_posted_data( array $posted_data ): array {
 		$files = $posted_data['form_fields'];
 
 		foreach ( $files as $key => $file ) {
 			// Allow other developers to process the field values.
-			$processed_files = apply_filters( 'easy_dragdrop_process_field', $key, $file );
+			$value = ! is_array( $file ) ? array( $file ) : $file;
+			$field = array(
+				'id'        => $key,
+				'value'     => $value,
+				'raw_value' => $value,
+			);
 
-			$posted_data[ $key ] = $processed_files;
+			$posted_data[ $key ] = apply_filters( 'easy_dragdrop_process_field', $field );
 		}
 
 		return $posted_data;

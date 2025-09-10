@@ -2,7 +2,7 @@
 /**
  * Uploader class for the DragDrop File Uploader plugin.
  *
- * This class integrates the FilePond uploader with Elementor Pro forms,
+ * This class integrates the FilePond uploader with forms,
  * providing a seamless drag-and-drop upload experience in WordPress.
  *
  * @package    ZIOR\DragDrop
@@ -11,7 +11,6 @@
 
 namespace ZIOR\DragDrop\Classes\Integrations;
 
-use ElementorPro\Modules\Forms\Classes;
 use function ZIOR\DragDrop\Functions\decrypt_data;
 use function ZIOR\DragDrop\Functions\get_default_max_file_size;
 
@@ -21,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Handles drag-and-drop file uploads within Elementor Pro forms.
+ * Handles drag-and-drop file uploads within forms.
  *
  * @package    ZIOR\DragDrop
  * @since      1.0.0
@@ -172,7 +171,7 @@ class Uploader {
 		add_action( 'wp_ajax_nopriv_easy_dragdrop_upload', array( $this, 'handle_easy_dragdrop_upload' ), 10 );
 		add_action( 'wp_ajax_easy_dragdrop_remove', array( $this, 'handle_easy_dragdrop_remove' ), 10 );
 		add_action( 'wp_ajax_nopriv_easy_dragdrop_remove', array( $this, 'handle_easy_dragdrop_remove' ), 10 );
-		add_filter( 'easy_dragdrop_process_field', array( $this, 'process_easy_dragdrop_field' ), 10, 3 );
+		add_filter( 'easy_dragdrop_process_field', array( $this, 'process_field' ), 10, 2 );
 
 		add_filter( 'easy_dragdrop_validate_file_type', array( $this, 'validate_file_type' ), 10, 3 );
 		add_filter( 'easy_dragdrop_validate_file_size', array( $this, 'validate_file_size' ), 10, 3 );
@@ -244,7 +243,9 @@ class Uploader {
 			return;
 		}
 
-		$files         = map_deep( $_FILES['form_fields'], 'sanitize_text_field' );
+		// For Elementor Pro forms, get the uploaded files from form_fields_array.
+		$files = map_deep( $_FILES['form_fields'], 'sanitize_text_field' );
+
 		$uploaded_file = $this->get_uploaded_file( $files );
 
 		// Retrieve and validate file properties.
@@ -304,20 +305,20 @@ class Uploader {
 	 * Processes the DragDrop field by moving files from the temporary directory to the upload directory.
 	 *
 	 * @since 1.0.0
-	 * @param string $field_id The field ID.
-	 * @param array  $files The field data.
+	 * @param array $field The field data.
 	 * @param mixed  $record The form record instance.
 	 * @return array The processed files.
 	 */
-	public function process_easy_dragdrop_field( $field_id, array $files, mixed $record = null ): array {
-		if ( empty( $files ) ) {
-			return array();
-		}
-
+	public function process_field( array $field, mixed $record = null ): array {
 		$upload_dir  = wp_upload_dir();
 		$upload_path = apply_filters( 'easy_dragdrop_upload_path', $upload_dir['path'] );
 		$value_urls  = array();
 		$value_paths = array();
+		$files       = is_array( $field['raw_value'] ) ? $field['raw_value'] : array( $field['raw_value'] );
+
+		if ( empty( $files ) ) {
+			return array();
+		}
 
 		foreach ( $files as $unique_id ) {
 			if ( empty( $unique_id ) ) {
@@ -339,8 +340,10 @@ class Uploader {
 			$this->delete_files( dirname( $source ) );
 		}
 
+		$value_paths = implode( ', ', $value_paths );
+
 		// Allow other developers to do something with the processed files.
-		do_action( 'easy_dragdrop_processed_files', $field_id, $value_paths, $value_urls, $record );
+		do_action( 'easy_dragdrop_process_files', $field, $value_paths, $value_urls, $record );
 
 		return $value_urls;
 	}

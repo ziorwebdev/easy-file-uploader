@@ -49,7 +49,7 @@ class Assets {
 		/**
 		 * Allow other plugins or addons to enqueue additional scripts and styles.
 		 */
-		do_action( 'enqueue_easy_dragdrop_scripts' );
+		do_action( 'enqueue_easy_dragdrop_scripts', $uploader_configurations );
 
 		// Enqueue main uploader styles and scripts.
 		wp_enqueue_style( 'easy-dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.css', array(), ZIOR_DRAGDROP_PLUGIN_VERSION );
