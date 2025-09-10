@@ -22,13 +22,13 @@ jobs:
           git clone https://x-access-token:${GH_TOKEN}@github.com/ZIORWebDev/easy-file-uploader-pro.git pro-repo
           cd pro-repo
           
-          # Fetch all branches to ensure develop exists
+          # Fetch all branches to ensure easy-file-uploader exists
           git fetch origin
-          if git show-ref --verify --quiet refs/remotes/origin/develop; then
-            git checkout develop
+          if git show-ref --verify --quiet refs/remotes/origin/easy-file-uploader; then
+            git checkout easy-file-uploader
           else
-            git checkout -b develop
-            git push origin develop
+            git checkout -b easy-file-uploader
+            git push origin easy-file-uploader
           fi
           
           # Add Free repo as remote and fetch its main branch
@@ -64,4 +64,4 @@ jobs:
           git commit --amend --no-edit || echo "No changes to amend"
           
           # Push the merged changes
-          git push origin develop
+          git push origin easy-file-uploader
