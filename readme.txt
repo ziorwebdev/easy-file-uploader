@@ -20,7 +20,7 @@ Enhances Elementor Pro Forms and Contact Form 7 with a drag and drop uploader fo
 - **Secure Upload Handling** – Adheres to WordPress security best practices.
 - **Customizable Settings** – Configure file size limits, allowed file types, and more.
 - **Styled for Elementor** – Seamlessly integrates with Elementor Pro Forms.
-- **Forms Supported** – Elementor Pro Form and Contact Form 7 (CF7). Get <a href="#" target="_blank">pro</a> version for additional supported forms.
+- **Forms Supported** – Elementor Pro Form and Contact Form 7 (CF7). Get <a href="https://my.pluggable.io/plugin/filepond-wp-integration-pro/" target="_blank">pro</a> version for additional supported forms.
 
 == Installation ==
 
@@ -54,7 +54,7 @@ This plugin uses the [FilePond](https://pqina.nl/filepond/) library to handle fi
 == Changelog ==
 
 = 1.1.2 =
-- Path form-data to 4.0.4
+- Patch form-data dependency to version 4.0.4
 - Added filter hook "easy_dragdrop_temp_file_path",
 - Added action hook "easy_dragdrop_upload_failure"
 
