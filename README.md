@@ -41,10 +41,10 @@
 ### Q: What forms are supported by the Easy DragDrop File Uploader?
 **A:** Easy DragDrop File Uploader currently supports Elementor Pro Forms and Contact Form 7 (CF7).
 
-### Q: Where are the uploaded files stored?  
+### Q: Where are the uploaded files stored?
 **A:** Files are stored in the WordPress Media Library or a custom directory, based on your settings.
 
-### Q: Can I restrict the allowed file types??  
+### Q: Can I restrict the allowed file types?
 **A:** Yes, you can configure allowed file types in the **plugin settings**.
 
 ## Contributing
