@@ -11,10 +11,7 @@
 
 namespace ZIOR\DragDrop\Classes;
 
-use ZIOR\DragDrop\Classes\Assets;
-use ZIOR\DragDrop\Classes\Integrations\Register;
-use ZIOR\DragDrop\Classes\Settings;
-use ZIOR\DragDrop\Classes\Integrations\Uploader as UploaderClass;
+use ZIOR\DragDrop\Classes;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -85,9 +82,9 @@ class Loader {
 			}
 		);
 
-		Settings::get_instance();
-		Assets::get_instance();
-		UploaderClass::get_instance();
-		Register::get_instance();
+		Classes\Settings::get_instance();
+		Classes\Assets::get_instance();
+		Classes\Integrations\Uploader::get_instance();
+		Classes\Integrations\Register::get_instance();
 	}
 }

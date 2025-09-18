@@ -164,13 +164,27 @@ class Settings {
 	 * @return void
 	 */
 	public function add_settings_page(): void {
-		add_options_page(
+		add_menu_page(
 			__( 'Easy DragDrop File Uploader', 'easy-file-uploader' ),
-			__( 'Easy DragDrop File Uploader', 'easy-file-uploader' ),
+			__( 'Easy File Uploader', 'easy-file-uploader' ),
 			'manage_options',
 			'easy-file-uploader',
 			array( $this, 'render_settings_page' ),
+			'dashicons-upload',
+			65
 		);
+
+		// Add "Settings" as a submenu
+		add_submenu_page(
+			'easy-file-uploader',
+			__( 'Settings', 'easy-file-uploader' ),
+			__( 'Settings', 'easy-file-uploader' ),
+			'manage_options',
+			'easy-file-uploader-settings',
+			array( $this, 'render_settings_page' )
+		);
+
+		remove_submenu_page( 'easy-file-uploader', 'easy-file-uploader' );
 	}
 
 	/**
