@@ -174,7 +174,7 @@ class Settings {
 			65
 		);
 
-		// Add "Settings" as a submenu
+		// Add "Settings" as a submenu.
 		add_submenu_page(
 			'easy-file-uploader',
 			__( 'Settings', 'easy-file-uploader' ),
