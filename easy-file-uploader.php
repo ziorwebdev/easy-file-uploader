@@ -5,7 +5,7 @@
  * Description:  Enhances Elementor Pro Forms and Contact Form 7 with a drag and drop uploader for seamless file uploads.
  * Author:       ZIORWEB.DEV
  * Author URI:   https://ziorweb.dev
- * Version:      1.1.2
+ * Version:      1.1.5
  * Requires WP:  6.0
  * License:      GPL-2.0-or-later
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.txt
