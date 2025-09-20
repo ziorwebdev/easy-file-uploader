@@ -2,29 +2,11 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 jobs:
-  phpcs:
-    uses: ./.github/workflows/phpcs.yml
-
-  eslint:
-    uses: ./.github/workflows/eslint.yml
-
   sync:
-    if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/sync.yml
-    needs: [phpcs, eslint]
     secrets: inherit
-
-  package:
-    if: github.ref == 'refs/heads/main'
-    uses: ./.github/workflows/package.yml
-    needs: [phpcs, eslint]
-
-  release:
-    if: github.ref == 'refs/heads/main'
-    uses: ./.github/workflows/release.yml
-    needs: package
