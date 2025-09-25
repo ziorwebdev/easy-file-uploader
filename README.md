@@ -12,7 +12,7 @@
 
 ## Installation
 
-1. Install and activate the plugin via **Plugins → Add New Plugin** in WordPress.
+1. Install and activate the plugin via **Plugins → Add New Plugin** in WordPress. Search for "Easy DragDrop File Uploader".
 2. Go to **Settings → DragDrop Uploader** to configure the plugin.
 3. Edit an Elementor Pro Form and add the **DragDrop Upload** field.
 
