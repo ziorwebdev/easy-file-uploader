@@ -22,5 +22,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<li><span>✔</span> One (1) year support and updates</li>
 	</ul>
 	<p class="pricing">For as low as <strong>$39.90 / year</strong></p>
-	<a href="https://pluggable.io/plugin/filepond-wp-integration-pro/" target="_blank" class="button-primary">Get Pro</a>
+	<a href="https://ziorweb.dev/plugin/easy-dragdrop-file-uploader-pro" target="_blank" class="button-primary">Get Pro</a>
 </div>

@@ -22,7 +22,7 @@ Enhances Elementor Pro Forms and Contact Form 7 with a drag and drop uploader fo
 - **Styled for Elementor** – Seamlessly integrates with Elementor Pro Forms.
 - **Forms Supported** – Elementor Pro Form and Contact Form 7 (CF7).
 
-**Get the <a href="https://pluggable.io/plugins/filepond-wp-integration-pro" target="_blank">premium</a> version for more features.**
+**Get the <a href="https://ziorweb.dev/plugin/easy-dragdrop-file-uploader-pro" target="_blank">premium</a> version for more features.**
 
 == Installation ==
 
