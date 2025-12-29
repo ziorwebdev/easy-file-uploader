@@ -13,6 +13,7 @@ namespace ZIOR\DragDrop\Classes;
 
 use ZIOR\DragDrop\Classes\Loader;
 use function ZIOR\DragDrop\Functions\get_plugin_version;
+use function ZIOR\DragDrop\Functions\get_default_max_file_size;
 
 /**
  * The core plugin class for ZIOR Drag Drop.
@@ -61,6 +62,24 @@ class Plugin {
 
 		$loader = Loader::get_instance();
 		$loader->load();
+	}
+
+	/**
+	 * Sets default plugin options.
+	 *
+	 * @since 1.1.7
+	 * @return void
+	 */
+	private function set_default_options() {
+		// Set default upload button label.
+		update_option( 'easy_dragdrop_button_label', 'Browse Files' );
+
+		// Set default file types.
+		update_option( 'easy_dragdrop_file_types_allowed', 'jpg,jpeg,png,gif,bmp,webp,tiff,tif' );
+
+		// Set the max file size. This is based on the server's upload_max_filesize.
+		$default_max_file_size = get_default_max_file_size();
+		update_option( 'easy_dragdrop_max_file_size', $default_max_file_size );
 	}
 
 	/**
@@ -126,7 +145,9 @@ class Plugin {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function activate_plugin(): void {}
+	public function activate_plugin(): void {
+		$this->set_default_options();
+	}
 
 	/**
 	 * Deactivate the plugin.

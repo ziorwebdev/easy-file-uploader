@@ -1,0 +1,22 @@
+{
+  // Prettier for JS/CSS/HTML
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+
+	"phpsab.allowedAutoRulesets": [
+		".phpcs.xml",
+		".phpcs.xml.dist",
+		"phpcs.xml",
+		"phpcs.xml.dist",
+		"phpcs.ruleset.xml",
+		"ruleset.xml"
+	],
+	"phpsab.executablePathCBF": "",
+	"[php]": {
+		"editor.defaultFormatter": "valeryanm.vscode-phpsab",
+	},
+	"phpsab.snifferMode": "onType",
+	"phpsab.standard": "WordPress",
+	"phpsab.snifferEnable": false
+}

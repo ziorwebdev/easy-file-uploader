@@ -412,10 +412,7 @@ class Settings {
 	 * @return void
 	 */
 	public function max_file_size_callback(): void {
-		// Retrieve the max file size setting from the database, defaulting to the available max upload size.
-		$default_max_file_size = get_default_max_file_size();
-
-		$max_file_size = get_option( 'easy_dragdrop_max_file_size', $default_max_file_size );
+		$max_file_size = get_option( 'easy_dragdrop_max_file_size' );
 		$max_file_size = (int) $max_file_size; // Ensure it is strictly an integer.
 
 		// Output a number input field with proper escaping and value handling.
