@@ -2,7 +2,7 @@
 Contributors: reygcalantaol  
 Tags: file upload, elementor, dragdrop, drag and drop, ajax upload
 Requires at least: 6.0
-Tested up to: 6.8.2
+Tested up to: 6.9
 Requires PHP: 8.0
 Stable tag: 1.1.6
 License: GPL-2.0-or-later
