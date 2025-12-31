@@ -124,7 +124,7 @@ function get_uploader_configurations(): array {
 		$uploader_configurations['labelMaxFileSizeExceeded'] = $file_size_error;
 	}
 
-	return apply_filters( 'easy_dragdrop_uploader_configurations', $uploader_configurations );
+	return apply_filters( 'easy_dragdrop_uploader_configurations', $uploader_configurations, $plugin_options );
 }
 
 /**

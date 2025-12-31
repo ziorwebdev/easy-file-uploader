@@ -56,7 +56,11 @@ class Assets {
 		wp_enqueue_script( 'easy-dragdrop-uploader', ZIOR_DRAGDROP_PLUGIN_URL . 'dist/main.min.js', array( 'jquery' ), ZIOR_DRAGDROP_PLUGIN_VERSION, true );
 
 		// Localize script to pass PHP variables to JavaScript.
-		wp_localize_script( 'easy-dragdrop-uploader', 'EasyDragDropUploader', $uploader_configurations );
+		wp_add_inline_script(
+			'easy-dragdrop-uploader',
+			'window.EasyDragDropUploader = ' . wp_json_encode( $uploader_configurations ) . ';',
+			'before'
+		);
 	}
 
 	/**

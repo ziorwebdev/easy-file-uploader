@@ -147,6 +147,9 @@ class Plugin {
 	 */
 	public function activate_plugin(): void {
 		$this->set_default_options();
+
+		// Let developers hook on plugin activate.
+		do_action( 'easy_dragdrop_plugin_activate' );
 	}
 
 	/**
