@@ -44,7 +44,7 @@ jobs:
         run: |
           REPO_NAME=$(basename "$GITHUB_WORKSPACE")
           PACKAGE_VERSION=$(jq -r .version package.json)
-          PACKAGE_FILE="${REPO_NAME}-${PACKAGE_VERSION}.zip"
+          PACKAGE_FILE="${REPO_NAME}.zip"
 
           echo "Packaging $REPO_NAME version $PACKAGE_VERSION"
 
