@@ -49,8 +49,8 @@ jobs:
           echo "Packaging $REPO_NAME version $PACKAGE_VERSION"
 
           # Create zip one level up to avoid nesting
-          cd ..
-          zip -r "$PACKAGE_FILE" "$REPO_NAME" -x@"$GITHUB_WORKSPACE/$REPO_NAME/.zipignore"
+          cd "$GITHUB_WORKSPACE"
+          zip -r "$PACKAGE_FILE" "$REPO_NAME" -x@"$GITHUB_WORKSPACE/.zipignore"
 
           # Move the zip back to workflow directory
           mv "$PACKAGE_FILE" "$GITHUB_WORKSPACE/"

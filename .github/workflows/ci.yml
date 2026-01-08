@@ -5,13 +5,13 @@ on:
     branches: [main]
 
 jobs:
-  sync:
-    uses: ./.github/workflows/sync.yml
-    secrets: inherit
+  # sync:
+  #   uses: ./.github/workflows/sync.yml
+  #   secrets: inherit
 
   package:
     uses: ./.github/workflows/package.yml
 
-  release:
-    uses: ./.github/workflows/release.yml
-    needs: package
+  # release:
+  #   uses: ./.github/workflows/release.yml
+  #   needs: package
