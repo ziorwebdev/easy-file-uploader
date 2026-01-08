@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -35,23 +37,29 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Build Plugin Assets
+        run: yarn build
+
       - name: Package Plugin
         run: |
-          PACKAGE_NAME=$(jq -r .name package.json)
+          REPO_NAME=$(basename "$GITHUB_WORKSPACE")
           PACKAGE_VERSION=$(jq -r .version package.json)
-          DATETIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          PACKAGE_FILE="${REPO_NAME}-${PACKAGE_VERSION}.zip"
 
-          echo "Package Name: $PACKAGE_NAME"
-          echo "Package Version: $PACKAGE_VERSION"
+          echo "Packaging $REPO_NAME version $PACKAGE_VERSION"
 
-          yarn build
-          yarn run package
+          # Create zip one level up to avoid nesting
+          cd ..
+          zip -r "$PACKAGE_FILE" "$REPO_NAME" -x@"$REPO_NAME/.zipignore"
 
-          PACKAGE_FILE="${PACKAGE_NAME}.zip"
+          # Move the zip back to workflow directory
+          mv "$PACKAGE_FILE" "$GITHUB_WORKSPACE/"
+
+          # Set environment variable for later steps
+          echo "PACKAGE_FILE=$PACKAGE_FILE" >> "$GITHUB_ENV"
 
       - name: Upload Package Artifact
         uses: actions/upload-artifact@v4
         with:
           name: package
-          path: |
-            *.zip
+          path: ${{ env.PACKAGE_FILE }}

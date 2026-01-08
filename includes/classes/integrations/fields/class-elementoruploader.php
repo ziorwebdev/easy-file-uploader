@@ -44,12 +44,6 @@ class ElementorUploader extends Field_Base {
 		parent::__construct();
 
 		add_action( 'easy_dragdrop_process_files', array( $this, 'process_files' ), 10, 4 );
-		add_action( 'elementor_pro/forms/render_field/easy-dragdrop-upload', array( $this, 'render_field' ), 10, 3 );
-	}
-
-	public function render_field( $item, $item_index, $form ) {
-		error_log( '$item_index: ' . $item_index );
-		error_log( '$item: ' . print_r( $item, true ) );
 	}
 
 	/**

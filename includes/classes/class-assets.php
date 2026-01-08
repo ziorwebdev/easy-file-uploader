@@ -44,7 +44,6 @@ class Assets {
 	 * @return void
 	 */
 	public function enqueue_admin_scripts() {
-		error_log( 'enqueue_admin_scripts: ' );
 		wp_enqueue_script(
 			'easy-dragdrop-uploader-editor',
 			ZIORWEBDEV_DRAGDROP_PLUGIN_URL . 'dist/admin/main.min.js',
