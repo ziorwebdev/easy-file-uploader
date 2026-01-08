@@ -5,13 +5,13 @@
  * This file contains the definition of the Loader class, which is responsible
  * for loading the necessary classes for the Easy DragDrop Uploader plugin.
  *
- * @package ZIOR\DragDrop
+ * @package ZIORWebDev\DragDrop
  * @since 1.0.0
  */
 
-namespace ZIOR\DragDrop\Classes;
+namespace ZIORWebDev\DragDrop\Classes;
 
-use ZIOR\DragDrop\Classes;
+use ZIORWebDev\DragDrop\Classes;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class is responsible for loading the necessary classes for the Easy DragDrop Uploader plugin.
  *
- * @package ZIOR\DragDrop
+ * @package ZIORWebDev\DragDrop
  * @since 1.0.0
  */
 class Loader {
@@ -61,17 +61,17 @@ class Loader {
 		// Set up SPL autoloader.
 		spl_autoload_register(
 			function ( $class_path ) {
-				if ( ! preg_match( '/^ZIOR\\\\DragDrop.+$/', $class_path ) ) {
+				if ( ! preg_match( '/^ZIORWebDev\\\\DragDrop.+$/', $class_path ) ) {
 					return;
 				}
 
 				$classes = array(
-					'Assets'            => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-assets.php',
-					'CF7Uploader'       => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/fields/class-cf7uploader.php',
-					'ElementorUploader' => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/fields/class-elementoruploader.php',
-					'Register'          => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/class-register.php',
-					'Settings'          => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-settings.php',
-					'Uploader'          => ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/class-uploader.php',
+					'Assets'            => ZIORWEBDEV_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-assets.php',
+					'CF7Uploader'       => ZIORWEBDEV_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/fields/class-cf7uploader.php',
+					'ElementorUploader' => ZIORWEBDEV_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/fields/class-elementoruploader.php',
+					'Register'          => ZIORWEBDEV_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/class-register.php',
+					'Settings'          => ZIORWEBDEV_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-settings.php',
+					'Uploader'          => ZIORWEBDEV_DRAGDROP_PLUGIN_DIR . 'includes/classes/integrations/class-uploader.php',
 				);
 
 				$class_name = explode( '\\', $class_path );

@@ -13,7 +13,7 @@
  * Domain Path:  /languages
  * Tested up to: 6.9
  *
- * @package ZIOR\DragDrop
+ * @package ZIORWebDev\DragDrop
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,27 +29,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/gpl-2.0.txt>.
  */
 
-use ZIOR\DragDrop\Classes\Plugin;
+use ZIORWebDev\DragDrop\Classes\Plugin;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! defined( 'ZIOR_DRAGDROP_PLUGIN_DIR' ) ) {
-	define( 'ZIOR_DRAGDROP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+if ( ! defined( 'ZIORWEBDEV_DRAGDROP_PLUGIN_DIR' ) ) {
+	define( 'ZIORWEBDEV_DRAGDROP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 }
 
-if ( ! defined( 'ZIOR_DRAGDROP_PLUGIN_URL' ) ) {
-	define( 'ZIOR_DRAGDROP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+if ( ! defined( 'ZIORWEBDEV_DRAGDROP_PLUGIN_URL' ) ) {
+	define( 'ZIORWEBDEV_DRAGDROP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 }
 
-if ( ! defined( 'ZIOR_DRAGDROP_PLUGIN_FILE' ) ) {
-	define( 'ZIOR_DRAGDROP_PLUGIN_FILE', __FILE__ );
+if ( ! defined( 'ZIORWEBDEV_DRAGDROP_PLUGIN_FILE' ) ) {
+	define( 'ZIORWEBDEV_DRAGDROP_PLUGIN_FILE', __FILE__ );
 }
 
-require_once ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/functions.php';
-require_once ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-plugin.php';
+require_once ZIORWEBDEV_DRAGDROP_PLUGIN_DIR . 'includes/functions.php';
+require_once ZIORWEBDEV_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-plugin.php';
 
 $plugin_instance = Plugin::get_instance( __FILE__ );
 

@@ -1,6 +1,6 @@
 <?php
-use function ZIOR\DragDrop\Functions\get_allowed_html;
-use function ZIOR\DragDrop\Functions\get_default_max_file_size;
+use function ZIORWebDev\DragDrop\Functions\get_allowed_html;
+use function ZIORWebDev\DragDrop\Functions\get_default_max_file_size;
 
 $field_types   = $args['field_types'] ?? array();
 $tgg           = $args['tgg'] ?? null;

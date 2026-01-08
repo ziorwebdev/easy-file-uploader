@@ -6,11 +6,11 @@
  * such as ACF field values and plugin version. Used to dynamically supply data
  * to the drag drop UI and scripts.
  *
- * @package ZIOR\DragDrop
+ * @package ZIORWebDev\DragDrop
  * @since 1.0.0
  */
 
-namespace ZIOR\DragDrop\Functions;
+namespace ZIORWebDev\DragDrop\Functions;
 
 use Mimey\MimeTypes;
 

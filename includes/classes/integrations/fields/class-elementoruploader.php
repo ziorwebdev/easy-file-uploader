@@ -5,19 +5,19 @@
  * This file contains the definition of the Elementor Uploader class, which is responsible
  * for integrating the Easy DragDrop Uploader plugin with Elementor forms.
  *
- * @package    ZIOR\DragDrop
+ * @package    ZIORWebDev\DragDrop
  * @since      1.0.0
  */
 
-namespace ZIOR\DragDrop\Classes\Integrations\Fields;
+namespace ZIORWebDev\DragDrop\Classes\Integrations\Fields;
 
 use ElementorPro\Modules\Forms\Fields\Field_Base;
 use Elementor\Controls_Manager;
 use ElementorPro\Plugin;
 use ElementorPro\Modules\Forms\Classes;
-use function ZIOR\DragDrop\Functions\convert_extentions_to_mime_types;
-use function ZIOR\DragDrop\Functions\get_allowed_html;
-use function ZIOR\DragDrop\Functions\get_default_max_file_size;
+use function ZIORWebDev\DragDrop\Functions\convert_extentions_to_mime_types;
+use function ZIORWebDev\DragDrop\Functions\get_allowed_html;
+use function ZIORWebDev\DragDrop\Functions\get_default_max_file_size;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class extends the Elementor Field_Base class and integrates the Easy DragDrop Uploader plugin with Elementor forms.
  *
- * @package    ZIOR\DragDrop
+ * @package    ZIORWebDev\DragDrop
  * @since      1.0.0
  */
 class ElementorUploader extends Field_Base {
@@ -44,6 +44,12 @@ class ElementorUploader extends Field_Base {
 		parent::__construct();
 
 		add_action( 'easy_dragdrop_process_files', array( $this, 'process_files' ), 10, 4 );
+		add_action( 'elementor_pro/forms/render_field/easy-dragdrop-upload', array( $this, 'render_field' ), 10, 3 );
+	}
+
+	public function render_field( $item, $item_index, $form ) {
+		error_log( '$item_index: ' . $item_index );
+		error_log( '$item: ' . print_r( $item, true ) );
 	}
 
 	/**

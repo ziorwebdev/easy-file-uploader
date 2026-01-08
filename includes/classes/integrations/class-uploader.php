@@ -5,14 +5,14 @@
  * This class integrates the FilePond uploader with forms,
  * providing a seamless drag-and-drop upload experience in WordPress.
  *
- * @package    ZIOR\DragDrop
+ * @package    ZIORWebDev\DragDrop
  * @since      1.0.0
  */
 
-namespace ZIOR\DragDrop\Classes\Integrations;
+namespace ZIORWebDev\DragDrop\Classes\Integrations;
 
-use function ZIOR\DragDrop\Functions\decrypt_data;
-use function ZIOR\DragDrop\Functions\get_default_max_file_size;
+use function ZIORWebDev\DragDrop\Functions\decrypt_data;
+use function ZIORWebDev\DragDrop\Functions\get_default_max_file_size;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Handles drag-and-drop file uploads within forms.
  *
- * @package    ZIOR\DragDrop
+ * @package    ZIORWebDev\DragDrop
  * @since      1.0.0
  */
 class Uploader {

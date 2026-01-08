@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d3be195aa49f99d1d07ca17123fad0ab",
+    "content-hash": "15c32a333305eb01e67bb365f14747e6",
     "packages": [
         {
             "name": "ascteam/mimey",
