@@ -5,11 +5,11 @@
  * This file contains the definition of the CF7 Uploader class, which is responsible
  * for integrating the Easy DragDrop Uploader plugin with CF7 forms.
  *
- * @package    ZIOR\DragDrop
+ * @package    ZIORWebDev\DragDrop
  * @since      1.0.0
  */
 
-namespace ZIOR\DragDrop\Classes\Integrations\Fields;
+namespace ZIORWebDev\DragDrop\Classes\Integrations\Fields;
 
 use WPCF7_FormTag;
 use WPCF7_Submission;
@@ -17,14 +17,14 @@ use WPCF7_TagGenerator;
 use WPCF7_TagGeneratorGenerator;
 use WPCF7_MailTag;
 
-use function ZIOR\DragDrop\Functions\convert_extentions_to_mime_types;
+use function ZIORWebDev\DragDrop\Functions\convert_extentions_to_mime_types;
 
 /**
  * CF7 Uploader Class
  *
  * This class extends the Elementor Field_Base class and integrates the Easy DragDrop Uploader plugin with Elementor forms.
  *
- * @package    ZIOR\DragDrop
+ * @package    ZIORWebDev\DragDrop
  * @since      1.0.0
  */
 class CF7Uploader {
@@ -312,6 +312,6 @@ class CF7Uploader {
 			'tgg'         => $tgg,
 		);
 
-		load_template( ZIOR_DRAGDROP_PLUGIN_DIR . 'views/cf7-field.php', false, $args );
+		load_template( ZIORWEBDEV_DRAGDROP_PLUGIN_DIR . 'views/cf7-field.php', false, $args );
 	}
 }

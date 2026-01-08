@@ -2,7 +2,7 @@
 /**
  * Settings page HTML markup for Easy DragDrop File Uploader marketing.
  *
- * @package ZIOR\DragDrop
+ * @package ZIORWebDev\DragDrop
  * @since 1.0.0
  */
 

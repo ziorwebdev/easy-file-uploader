@@ -5,14 +5,14 @@
  * This file contains the definition of the Settings class, which is responsible
  * for handling the settings page and functionality for the Easy DragDrop Uploader plugin.
  *
- * @package    ZIOR\DragDrop
+ * @package    ZIORWebDev\DragDrop
  * @since      1.0.0
  */
 
-namespace ZIOR\DragDrop\Classes;
+namespace ZIORWebDev\DragDrop\Classes;
 
-use function ZIOR\DragDrop\Functions\get_options;
-use function ZIOR\DragDrop\Functions\get_default_max_file_size;
+use function ZIORWebDev\DragDrop\Functions\get_options;
+use function ZIORWebDev\DragDrop\Functions\get_default_max_file_size;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class handles the settings page and functionality for the Easy DragDrop Uploader plugin.
  *
- * @package    ZIOR\DragDrop
+ * @package    ZIORWebDev\DragDrop
  * @since      1.0.0
  */
 class Settings {
@@ -50,7 +50,7 @@ class Settings {
 	 * @return void
 	 */
 	private function load_template( string $template_name, array $data = array() ): void {
-		$template_file = ZIOR_DRAGDROP_PLUGIN_DIR . sprintf( 'views/%s.php', $template_name );
+		$template_file = ZIORWEBDEV_DRAGDROP_PLUGIN_DIR . sprintf( 'views/%s.php', $template_name );
 
 		if ( ! file_exists( $template_file ) ) {
 			return;
@@ -262,7 +262,7 @@ class Settings {
 	 * @return void
 	 */
 	public function render_marketing_card(): void {
-		load_template( ZIOR_DRAGDROP_PLUGIN_DIR . 'views/marketing.php', false );
+		load_template( ZIORWEBDEV_DRAGDROP_PLUGIN_DIR . 'views/marketing.php', false );
 	}
 
 	/**

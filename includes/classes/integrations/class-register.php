@@ -5,14 +5,14 @@
  * This file contains the definition of the Register class, which is responsible
  * for registering the Easy DragDrop Uploader plugin with Elementor forms.
  *
- * @package    ZIOR\DragDrop
+ * @package    ZIORWebDev\DragDrop
  * @since      1.0.0
  */
 
-namespace ZIOR\DragDrop\Classes\Integrations;
+namespace ZIORWebDev\DragDrop\Classes\Integrations;
 
-use ZIOR\DragDrop\Classes\Integrations\Fields\ElementorUploader;
-use ZIOR\DragDrop\Classes\Integrations\Fields\CF7Uploader;
+use ZIORWebDev\DragDrop\Classes\Integrations\Fields\ElementorUploader;
+use ZIORWebDev\DragDrop\Classes\Integrations\Fields\CF7Uploader;
 use ElementorPro\Modules\Forms\Classes\Fields;
 use ElementorPro\Modules\Forms\Registrars\Form_Fields_Registrar;
 

@@ -5,15 +5,15 @@
  * This class bootstraps the plugin, loads dependencies, sets up internationalization,
  * and initializes core services including the plugin updater.
  *
- * @package ZIOR\DragDrop
+ * @package ZIORWebDev\DragDrop
  * @since 1.0.0
  */
 
-namespace ZIOR\DragDrop\Classes;
+namespace ZIORWebDev\DragDrop\Classes;
 
-use ZIOR\DragDrop\Classes\Loader;
-use function ZIOR\DragDrop\Functions\get_plugin_version;
-use function ZIOR\DragDrop\Functions\get_default_max_file_size;
+use ZIORWebDev\DragDrop\Classes\Loader;
+use function ZIORWebDev\DragDrop\Functions\get_plugin_version;
+use function ZIORWebDev\DragDrop\Functions\get_default_max_file_size;
 
 /**
  * The core plugin class for ZIOR Drag Drop.
@@ -23,7 +23,7 @@ use function ZIOR\DragDrop\Functions\get_default_max_file_size;
  *
  * Implements the singleton pattern to ensure only one instance is used.
  *
- * @package ZIOR\DragDrop
+ * @package ZIORWebDev\DragDrop
  * @since 1.0.0
  */
 class Plugin {
@@ -91,8 +91,8 @@ class Plugin {
 	 * @return void
 	 */
 	private function include_classes(): void {
-		require_once ZIOR_DRAGDROP_PLUGIN_DIR . 'vendor/autoload.php';
-		require_once ZIOR_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-loader.php';
+		require_once ZIORWEBDEV_DRAGDROP_PLUGIN_DIR . 'vendor/autoload.php';
+		require_once ZIORWEBDEV_DRAGDROP_PLUGIN_DIR . 'includes/classes/class-loader.php';
 	}
 
 	/**
@@ -102,8 +102,8 @@ class Plugin {
 	 * @return void
 	 */
 	private function setup_constants(): void {
-		if ( ! defined( 'ZIOR_DRAGDROP_PLUGIN_VERSION' ) ) {
-			define( 'ZIOR_DRAGDROP_PLUGIN_VERSION', $this->version );
+		if ( ! defined( 'ZIORWEBDEV_DRAGDROP_PLUGIN_VERSION' ) ) {
+			define( 'ZIORWEBDEV_DRAGDROP_PLUGIN_VERSION', $this->version );
 		}
 	}
 
