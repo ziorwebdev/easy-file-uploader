@@ -4,7 +4,7 @@ Tags: file upload, elementor, dragdrop, drag and drop, ajax upload
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.1.6
+Stable tag: 1.1.8
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -54,6 +54,9 @@ This plugin uses the [FilePond](https://pqina.nl/filepond/) library to handle fi
 3. Screenshot of the Elementor form builder with the DragDrop upload field.
 
 == Changelog ==
+
+= 1.1.8 =
+- Fix: Elementor editor preview for drag and drop uploader field
 
 = 1.1.6 =
 - Add default settings values for button label, max file size, and file types
