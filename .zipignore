@@ -1,19 +1,19 @@
-.github/**
-src/**
-node_modules/**
-.vscode/**
-.git/**
+easy-file-uploader/.github/**
+easy-file-uploader/src/**
+easy-file-uploader/node_modules/**
+easy-file-uploader/.vscode/**
+easy-file-uploader/.git/**
 
-.gitignore
-LICENSE.txt
-README.md
-readme.txt
-.cursorrc.json
-.gitattributes
+easy-file-uploader/.gitignore
+easy-file-uploader/LICENSE.txt
+easy-file-uploader/README.md
+easy-file-uploader/readme.txt
+easy-file-uploader/.cursorrc.json
+easy-file-uploader/.gitattributes
 
-*.lock
-.prettierignore
-.prettierrc
-.zipignore
+easy-file-uploader/*.lock
+easy-file-uploader/.prettierignore
+easy-file-uploader/.prettierrc
+easy-file-uploader/.zipignore
 
-webpack.config.js
+easy-file-uploader/webpack.config.js
