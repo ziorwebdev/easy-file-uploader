@@ -15,5 +15,7 @@ easy-file-uploader/*.lock
 easy-file-uploader/.prettierignore
 easy-file-uploader/.prettierrc
 easy-file-uploader/.zipignore
+easy-file-uploader/package.json
+easy-file-uploader/package-lock.json
 
 easy-file-uploader/webpack.config.js
