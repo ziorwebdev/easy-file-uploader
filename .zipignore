@@ -5,9 +5,8 @@ easy-file-uploader/.vscode/**
 easy-file-uploader/.git/**
 
 easy-file-uploader/.gitignore
-easy-file-uploader/LICENSE.txt
+easy-file-uploader/LICENSES.txt
 easy-file-uploader/README.md
-easy-file-uploader/readme.txt
 easy-file-uploader/.cursorrc.json
 easy-file-uploader/.gitattributes
 

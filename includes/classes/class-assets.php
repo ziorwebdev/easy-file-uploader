@@ -34,8 +34,20 @@ class Assets {
 	 * Hooks asset loading into WordPress and Elementor.
 	 */
 	private function __construct() {
+		/**
+		 * Load scripts and styles in the frontend.
+		 */
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
+
+		/**
+		 * Load scripts and styles in the Elementor editor.
+		 */
 		add_action( 'elementor/editor/after_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ), 10 );
+
+		/**
+		 * Load scripts and styles in WordPress admin.
+		 */
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ), 10 );
 	}
 
 	/**
@@ -44,6 +56,13 @@ class Assets {
 	 * @return void
 	 */
 	public function enqueue_admin_scripts() {
+		wp_enqueue_style(
+			'easy-dragdrop-uploader',
+			ZIORWEBDEV_DRAGDROP_PLUGIN_URL . 'dist/admin/main.min.css',
+			array(),
+			ZIORWEBDEV_DRAGDROP_PLUGIN_VERSION
+		);
+
 		wp_enqueue_script(
 			'easy-dragdrop-uploader-editor',
 			ZIORWEBDEV_DRAGDROP_PLUGIN_URL . 'dist/admin/main.min.js',
