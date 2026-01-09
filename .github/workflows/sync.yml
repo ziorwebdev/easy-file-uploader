@@ -38,6 +38,10 @@ jobs:
           # Set Git user identity to avoid commit errors
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # ✅ Register 'ours' merge driver to protect PRO-only paths (like .github/**)
+          git config merge.ours.driver true
+          git config merge.ours-noadd.driver true
           
           # Merge Free repo into PRO repo while always preferring Free's changes
           git merge free/main --allow-unrelated-histories --strategy=recursive --strategy-option=theirs || (
