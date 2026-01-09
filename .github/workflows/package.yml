@@ -42,11 +42,21 @@ jobs:
 
       - name: Package Plugin
         run: |
+          MAIN_FILE=$(grep -rl "Plugin Name:" --include="*.php" . | head -n 1)
+          echo "Main plugin file: $MAIN_FILE"
+
+          parse_field() {
+            grep -i "$1:" "$MAIN_FILE" | head -n1 \
+              | sed -E "s/^\s*\*\s*//" \
+              | sed -E "s|$1:[[:space:]]*||i" \
+              | xargs
+          }
+
+          VERSION="$(parse_field 'Version')"
           REPO_NAME=$(basename "$GITHUB_WORKSPACE")
-          PACKAGE_VERSION=$(jq -r .version package.json)
           PACKAGE_FILE="${REPO_NAME}.zip"
 
-          echo "Packaging $REPO_NAME version $PACKAGE_VERSION"
+          echo "Packaging $REPO_NAME version $VERSION"
 
           # Create zip one level up to avoid nesting
           cd ..
